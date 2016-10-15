@@ -10,7 +10,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/dashboard', function(req, res, next){
-    res.send("welcome to admin dashboard");
+    res.render("admin/manage");
 });
 
 module.exports = router;

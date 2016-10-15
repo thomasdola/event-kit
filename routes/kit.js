@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET Wedding. */
 router.get('/wedding', function(req, res, next) {
-    res.send('respond with a resource');
+    res.render('kit/wedding');
 });
 
 /* GET Party. */

@@ -1,0 +1,32 @@
+body{
+    background-color: #f2e5f2;
+}
+
+.main-content{
+    background-color: white;
+    height: 85vh;
+}
+
+.ui.vertical.segment{
+    padding: 0;
+    background-color: white;
+    border: 0;
+    margin-bottom: 20px;
+
+}
+
+.ui.secondary.pointing.menu {
+    border: 0;
+}
+
+.ui.labeled.icon.menu{
+    box-shadow: none;
+    border: none;
+    background-color: #800080;
+    border-radius: 0;
+    height: inherit;
+}
+
+.ui.labeled.icon.menu .item{
+    color: #ffffff;
+}

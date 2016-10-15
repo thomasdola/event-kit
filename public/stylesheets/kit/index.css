@@ -1,0 +1,236 @@
+body{
+    background-color: #f2e5f2;
+}
+
+.ui.container.main-content{
+    background-color: white;
+    height: 85vh;
+    min-width: 1000px;
+}
+
+.ui.vertical.segment{
+    padding: 0;
+    background-color: white;
+    border: 0;
+    margin-bottom: 20px;
+}
+
+.ui.secondary.pointing.menu {
+    border: 0;
+}
+
+.ui.menu.box-header, .ui.menu.service-list-header{
+    border-width: 0;
+    border-radius: 0;
+    margin-bottom: 0;
+    box-shadow: none;
+}
+
+.ui.menu.service-list-header{
+    border-width: 0 0 1px 0;
+}
+
+.ui.segment.category-list{
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border-width: 1px 0 1px 0;
+    height: 15%;
+    padding: .3em;
+}
+
+.ui.cards > .card.service-category{
+    margin: 0 1em;
+    height: 100%;
+    width: 90px;
+    border-radius: 0;
+    box-shadow: none;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+}
+
+.ui.cards > .card.service-category > .image, .ui.card > .image{
+    height: 90px;
+}
+
+.ui.cards > .card.service-category > .content{
+    font-size: .7em;
+    padding: .3em;
+}
+
+.ui.horizontal.segments.categories-calculator{
+    margin: 0;
+    box-shadow: none;
+    border: 0;
+}
+
+.ui.segment.service-list{
+    height: 80%;
+    width: 300px;
+    min-width: 300px;
+    padding: 0;
+}
+
+.ui.segment.service-list > .three.cards.link{
+    margin: 0;
+    display: flex;
+    justify-content: center;
+}
+
+.ui.segment.service-list > .three.cards.link > .card.service-item{
+    width: 190px;
+    box-shadow: none;
+    border-radius: 0;
+    border: 1px solid rgba(34, 36, 38, 0.15);
+    margin: .5em;
+    height: 172px;
+}
+
+.card.service-item > .image{
+    /* image ratio is 3/2 */
+    width: 188px;
+    height: 125px;
+}
+
+.card.service-item > .dimmer{
+    border-radius: 0;
+}
+
+.ui.cards > .card > .content, .ui.card > .content{
+    font-size: .8em;
+}
+
+.ui.segment.service-list > .three.cards.link > .card.service-item > .content{
+    padding: .3em;
+}
+
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list{
+    /*background-color: #6DFFFF;*/
+    padding: 0;
+    width: 40px;
+}
+
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list > .ui.segment.picked-item-list{
+    height: 75%;
+}
+
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list .one.wide.column.action_button{
+    opacity: 0;
+}
+
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list > .ui.segment.picked-items-sum{
+    border-top: 1px solid rgba(34, 36, 38, 0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /*background-color: #00B5AD;*/
+    height: 5%;
+}
+
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list > .ui.segment.picked-item-list,
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list > .ui.segment.picked-items-sum{
+    border-radius: 0;
+}
+
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list > .ui.segment.picked-item-list > .ui.divided.list > .item{
+    height: 50px;
+    padding: .3em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list > .ui.segment.picked-item-list > .ui.divided.list > .item:hover{
+    color: rgba(34, 36, 38, 0.15);
+}
+
+.ui.horizontal.segments.categories-calculator > .ui.segment.service-picked-list > .ui.segment.picked-item-list > .ui.divided.list > .item:hover .action_button{
+    opacity: 1;
+    /*color: rgba(0, 0, 0, 0.87);*/
+}
+
+.remove_button:hover, .hide_button:hover{
+    color: #00B7FF;
+    cursor: pointer;
+}
+
+/*Review Modal styles*/
+.ui.modal.Review__Modal{
+    border-radius: 0;
+    height: 600px;
+    width: 500px;
+}
+
+.ui.modal.Review__Modal > .header{
+    padding: 0;
+    border-bottom: 0;
+}
+
+.ui.modal.Review__Modal > .header > .segment{
+    height: 50px;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ui.modal.Review__Modal > .content, .ui.modal.Review__Modal > .wide.column{
+    padding: 0;
+}
+
+.ui.modal.Review__Modal > .content > .ui.segment{
+    border-radius: 0;
+    box-shadow: none;
+    border: 0;
+    height: 500px;
+}
+
+.ui.modal.Review__Modal > .content > .ui.segment > .divided.list > .item{
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.ui.modal.Review__Modal > .actions{
+    border-radius: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+/*service zoom styles*/
+.ui.modal.Zoom__Modal{
+    border-radius: 0;
+    /*height: 400px;*/
+    width: 500px;
+}
+
+.ui.modal.Zoom__Modal > .header{
+    padding: 0;
+    border-bottom: 0;
+}
+
+.ui.modal.Zoom__Modal > .header > .segment{
+    /*height: 50px;*/
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.ui.modal.Zoom__Modal > .content{
+    padding: 0;
+    /*height: 334px;*/
+}
+
+.ui.modal.Zoom__Modal > .content > .ui.segment{
+    border-radius: 0;
+    box-shadow: none;
+    border: 0;
+    height: 500px;
+}
+
+.ui.modal.Zoom__Modal > .actions{
+    border-radius: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+

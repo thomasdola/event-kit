@@ -27,7 +27,7 @@ router.post('/login', function(req, res, next){
 /* GET manage/auth/logout */
 router.get('/logout', function(req, res, next) {
     req.logout();
-    req.redirect('/manage/auth/login')
+    res.redirect('/manage/auth/login')
 });
 
 module.exports = router;
