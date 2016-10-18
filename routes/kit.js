@@ -2,17 +2,17 @@ var express = require('express');
 var router = express.Router();
 
 /* GET Wedding. */
-router.get('/wedding', function(req, res, next) {
+router.get('/wedding/*', function(req, res, next) {
     res.render('kit/wedding');
 });
 
 /* GET Party. */
-router.get('/party', function(req, res, next) {
-    res.send('respond with a resource');
+router.get('/party/*', function(req, res, next) {
+    res.render('kit/party');
 });
 
 /* GET Funeral. */
-router.get('/funeral', function(req, res, next) {
+router.get('/funeral/*', function(req, res, next) {
     res.send('respond with a resource');
 });
 

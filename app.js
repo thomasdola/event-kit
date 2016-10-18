@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const passport = require('passport');
 const flash = require('connect-flash');
+const lsRoutes = require('express-ls-routes');
 const app = express();
 
 const dbInit = require('./db/init');
@@ -43,6 +44,7 @@ const routes = require('./routes/index');
 const auth = require('./routes/auth');
 const kit = require('./routes/kit');
 const admin = require('./routes/admin');
+const api = require('./routes/api/index');
 
 /* view engine setup */
 app.set('views', path.join(__dirname, 'views'));
@@ -53,6 +55,12 @@ app.use('/', routes);
 app.use('/kit', kit);
 app.use('/manage/auth', auth);
 app.use('/manage/', authMiddleware(), admin);
+app.use('/api/', api);
+
+app.get('/routes', function (req, res) {
+  // res.json(200, req.routes)
+  res.send('aaaaoooo');
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

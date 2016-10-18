@@ -45,7 +45,7 @@
 }
 
 #services{
-    background-color: #f2f2f2;
+    /*background-color: #f2f2f2;*/
 }
 
 .service-segment-group.ui.horizontal.segments {
@@ -112,4 +112,36 @@
         margin-top: 0.5em;
         font-size: 1.5em;
     }
+}
+
+
+.ui.primary.button.Getting__Started__Button{
+    background-color:  	#D4AF37;
+}
+
+.ui.primary.button.Getting__Started__Button:hover{
+    background-color:  	#FFD700;
+}
+
+.ui.horizontal.divider.header::before, .ui.horizontal.divider.header::after{
+    color: #D4AF37;
+}
+
+.ui.vertical.stripe p{
+    font-size: 1.2em;
+}
+
+.ui.vertical.stripe .horizontal.divider{
+    margin: 1em;
+}
+
+.ui.button.Home__Page__Action__Button{
+    background-color: #551A8B;
+    color: #ffffff;
+}
+
+.ui.button.Home__Page__Action__Button:hover{
+    background-color: #ffffff;
+    color: #551A8B;
+    border: 1px solid #551A8B;
 }

@@ -4,10 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "nodemon": "nodemon -i node_modules -i semantic",
-    "seed": "node ./db/seed/index"
+    "nodemon": "nodemon -i node_modules -i semantic -i spas",
+    "build": "webpack -d",
+    "seed": "node ./db/seed/index",
+    "routes": "routes"
   },
   "dependencies": {
+    "axios": "^0.15.1",
     "bcrypt": "^0.8.7",
     "bluebird": "^3.4.6",
     "body-parser": "~1.15.1",
@@ -19,22 +22,29 @@
     "express-session": "^1.14.1",
     "jade": "~1.11.0",
     "jquery": "^3.1.1",
+    "lodash": "^4.16.4",
     "mongoose": "^4.6.3",
     "morgan": "~1.7.0",
+    "numeral": "^1.5.3",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "react": "^15.3.2",
+    "react-custom-scrollbars": "^4.0.0",
     "react-dom": "^15.3.2",
     "react-redux": "^4.4.5",
     "react-router": "^2.8.1",
     "react-router-redux": "^4.0.6",
+    "react-slick": "^0.14.5",
     "redux": "^3.6.0",
     "redux-thunk": "^2.1.0",
     "semantic-ui": "^2.2.4",
+    "semantic-ui-react": "^0.56.1",
     "serve-favicon": "~2.3.0",
+    "slick-carousel": "^1.6.0",
     "smooth-scroll": "github:cferdinandi/smooth-scroll"
   },
   "devDependencies": {
+    "Faker": "^0.7.2",
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-loader": "^6.2.5",
@@ -42,8 +52,12 @@
     "babel-preset-react": "^6.16.0",
     "enzyme": "^2.4.1",
     "expect": "^1.20.2",
+    "express-ls-routes": "^1.0.2",
     "mocha": "^3.1.2",
     "supertest": "^2.0.0",
     "webpack": "^1.13.2"
+  },
+  "config": {
+    "routes": "./app.js"
   }
 }
