@@ -1,42 +1,43 @@
-import React, { Component } from 'react';
-import { Popup, Button, Header, Icon, Image, Modal, Form } from 'semantic-ui-react';
 import _ from 'lodash';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Popup, Button, Header, Icon, Image, Modal, Form } from 'semantic-ui-react';
 
-class InitialBudgetModal extends Component{
+import { saveBudget } from '../../actions/budget';
+import { askForInitialBudget } from '../../selectors';
+
+export class InitialBudgetModal extends Component{
 
     constructor(props){
         super(props);
 
         this.state = {
-            open: true,
+            open: this.props.ask,
             dimmer: 'blurring',
-            amount: ''
+            amount: '',
+            error: false
         }
 
         this.close = this.close.bind(this);
-        this.handleOnChange = this.handleOnChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.onSetBudget = this.onSetBudget.bind(this);
-    }
-
-    componentDidMount() {
-        this.setState({
-            open: !this.props.budget
-        })
     }
 
     onSetBudget(e){
         e.preventDefault();
         const amount = this.state.amount;
         if(!amount) return;
-        this.props.onSetBudget(amount);
+        this.props.saveBudget(amount);
         this.close();
     }
 
-    handleOnChange(e){
+    handleChange(e){
         const amount = e.target.value;
-        if( !_.isInteger(_.toNumber(amount))) return;
-        this.setState({amount: amount});
-        console.log(amount);
+        if( !_.isInteger(_.toNumber(amount))){
+            return this.setState({error: true});
+        }
+        this.setState({amount: amount, error: true});
     }
     
 
@@ -51,31 +52,27 @@ class InitialBudgetModal extends Component{
                     borderRadius: 0,
                     width: 200
                 };
-        //       ModalHeaderStyles = {
-        //         padding: 0,
-        //         borderBottom: 0
-        //       },
-        //       ModalActionsStyles = {
-        //           borderRadius: 0,
-        //           display: 'flex',
-        //           flexDirection: 'row',
-        //           justifyContent: 'space-between'
-        //       }
+        const { amount, error } = this.state;
 
         return (
-            <Modal open={this.state.open} className="Initial__Budget__Modal" size={'small'}>
-                <Modal.Header className="center aligned">Kindly enter your event budget</Modal.Header>
+            <Modal open={false} className="Initial__Budget__Modal" size={'small'}>
+                <Modal.Header className="Modal__Header center aligned">Kindly enter your event budget</Modal.Header>
 
-                <Modal.Content>
-                    <form className="ui form">
+                <Modal.Content className="Modal__Content">
+                    <form className="ui form Modal__Form">
                         <div className="field">
                                 <input
+                                    className={`${error ? 'field error' : ''}`}
                                     value={this.state.amount}
                                     type="text"
-                                    onChange={this.handleOnChange}
+                                    onChange={this.handleChange}
                                     placeholder="Budget..."/>
                             </div>
-                        <button className="ui button submit fluid" onClick={this.onSetBudget}>save</button>
+                        <button 
+                            className={`ui button submit fluid ${ amount ? '' : 'disabled' }`} 
+                            onClick={this.onSetBudget}>
+                                save
+                        </button>
                     </form>
                 </Modal.Content>
             </Modal>
@@ -83,4 +80,15 @@ class InitialBudgetModal extends Component{
     }
 }
 
-export default InitialBudgetModal;
+InitialBudgetModal.PropTypes = {
+    ask: React.PropTypes.bool.isRequired,
+    saveBudget: React.PropTypes.func.isRequired
+};
+
+const mapStateToProps = (state) => ({
+    ask: askForInitialBudget(state)
+});
+
+const mapDispatchToProps = (dispatch) => bindActionCreators({saveBudget}, dispatch);
+
+export default connect(mapStateToProps, mapDispatchToProps)(InitialBudgetModal);

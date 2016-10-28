@@ -1,38 +1,36 @@
-import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
-import isBudgetChangingModeOn from './budget-changing-mode-reducer';
-import isFilterPriceModeOn from './price-filter-mode-reducer';
-import isCartReviewModeOn from './cart-review-mode-reducer';
-import isServiceZoomModeOn from './service-zoom-mode-reducer';
-import budget from './budget-reducer';
-import balance from './balance';
-import filterPriceRange from './filter-price-range-reducer';
-import cartTotal from './cart-total';
-import cartItems from './cart-items';
-import loadingServices, { loadingServiceProgress } from './loading-services-progress-reducer';
-import services from './services-reducers';
-import categories, { selectedCategory, serviceBeingZoomed } from './categories-reducer';
-import loadingCategories from './loading-categories-progress-reducer';
+import { combineReducers } from 'redux';
 
-
-
+import balance from './balance-reducer';
+import budget, { budgetChangingMode } from './budget-reducer';
+import cartItems, { cartTotal, cartReviewMode, cartItemEditMode, selectedCartItem } from './cart-reducers';
+import categories, { selectedCategory } from './categories-reducer';
+import services, { selectedService, serviceInZoom, serviceZoomMode, servicesImages } from './services-reducers';
+import { filterMode, filterPriceRange } from './filter-reducers';
+import { loadingCategories, loadingService, loadingServices } from './loading-reducers';
+import { stepsMenuOpened, steps, activeStep } from './steps-menu-reducer';
 
 export default combineReducers({
     routing: routerReducer,
-    isBudgetChangingModeOn,
-    isFilterPriceModeOn,
-    isCartReviewModeOn,
-    isServiceZoomModeOn,
-    budget,
-    filterPriceRange,
-    cartTotal,
-    cartItems,
-    balance,
+    loadingCategories,
+    loadingService,
     loadingServices,
-    loadingServiceProgress,
     services,
+    serviceZoomMode,
+    serviceInZoom,
+    servicesImages,
+    budget,
+    budgetChangingMode,
+    cartItems,
+    cartReviewMode,
+    selectedCartItem,
+    cartItemEditMode,
+    cartTotal,
     categories,
     selectedCategory,
-    loadingCategories,
-    serviceBeingZoomed
+    filterMode,
+    filterPriceRange,
+    stepsMenuOpened,
+    steps,
+    activeStep
 });

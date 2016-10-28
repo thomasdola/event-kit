@@ -1,5 +1,5 @@
-import { AMOUNT_OUT_RANGE, AMOUNT_IN_RANGE } from '../helpers/constants';
+import * as types from '../helpers/constants';
 
-export const balanceIsOutOfRange = () => ({type: AMOUNT_OUT_RANGE});
+export const balanceIsOutOfRange = () => ({type: types.AMOUNT_OUT_OF_RANGE()});
 
-export const balanceIsInRange = () => ({type: AMOUNT_IN_RANGE});
+export const balanceIsInRange = () => ({type: types.AMOUNT_IN_RANGE()});

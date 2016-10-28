@@ -1,0 +1,22 @@
+0px 0px 30px rgb(204, 204, 204)
+
+
+<div className="five wide column Edit__Button Item__Action">
+                        
+                        </div>
+
+                        <div className="five wide column Visibility__Button Item__Action"
+                        ref='toggleButton' 
+                        style={[styles.toggleButton]} onClick={this.toggle}>
+                             <span className="ui icon">
+                                <i className={`icon ${hidden ? "unhide" : "hide"}`}/>
+                            </span>
+                        </div>
+
+                        <div className="five wide column Remove__Button Item__Action"
+                        ref='removeButton'
+                        style={[styles.removeButton]} onClick={this.remove}>
+                            <span className="ui icon">
+                                <i className="trash icon"/>
+                            </span>
+                        </div>

@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var WebpackNotifierPlugin = require('webpack-notifier');
 
 module.exports = {
     entry: {
@@ -10,16 +11,15 @@ module.exports = {
         path: path.join(__dirname, 'public/javascripts/spas'),
         filename: '[name].app.js'
     },
-    watch: true,
+    plugins: [
+        new WebpackNotifierPlugin(),
+    ],
     module: {
         loaders: [
             {
                 test: /\.jsx?/,
                 include: /spas/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015', 'react']
-                }
+                loader: 'babel-loader'
             }
         ]
     },

@@ -1,18 +1,18 @@
-import { CLOSE_CHANGE_BUDGET_FORM, CHANGE_BUDGET, SAVE_BUDGET } from '../helpers/constants';
+import * as types from '../helpers/constants';
 
-export const changeBudget = () => {
+export const openChangeBudgetPopup = () => {
     return {
-        type: CHANGE_BUDGET
+        type: types.OPEN_CHANGE_BUDGET_POPUP()
     };
 };
-export const closeForm = () => {
+export const closeChangeBudgetPopup = () => {
     return {
-        type: CLOSE_CHANGE_BUDGET_FORM
+        type: types.CLOSE_CHANGE_BUDGET_POPUP()
     };
 };
 export const saveBudget = (newBudget) => {
     return {
-        type: SAVE_BUDGET,
+        type: types.SAVE_BUDGET(),
         data: newBudget
     };
 };
