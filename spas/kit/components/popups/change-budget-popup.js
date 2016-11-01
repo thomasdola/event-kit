@@ -9,7 +9,7 @@ const styles = {
         padding: `.3em`,
         height: `40px`
     }
-}
+};
 
 class ChangeBudgetPopup extends React.Component{
     constructor(props){
@@ -37,7 +37,7 @@ class ChangeBudgetPopup extends React.Component{
         const { saveBudget, closeForm } = this.props;
         saveBudget(amount);
         this.setState({amount: ''});
-        closeForm();
+        this.props.closePopup();
     }
 
     cancel(e){

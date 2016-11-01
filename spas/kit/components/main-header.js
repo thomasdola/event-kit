@@ -21,7 +21,8 @@ const styles = {
         borderWidth: '0',
         height: '4vh',
         marginBottom: '0',
-        boxShadow: 'rgba(34, 36, 38, 0.14902) 0px 1px 10px 0px'
+        boxShadow: 'rgba(34, 36, 38, 0.14902) 0px 1px 10px 0px',
+        zIndex: '30000'
     },
     reviewButton: {
         borderRadius: '5px 0 0 0',
@@ -131,9 +132,9 @@ export class MainHeader extends React.Component{
         const { balance, budget, cartTotal, balanceIsInRange, balanceIsOutOfRange, stepsMenuOpened, budgetChangingMode } = this.props;
         // const actualBalance = _.subtract(_.toNumber(balance.amount), _.toNumber(cartTotal));
 
-        if(balance.amount){
-            balanceBoxStyle = _.lt(balance.amount, _.toNumber(cartTotal)) ? styles.balanceOutStyle : styles.balanceInStyle;
-        } 
+        // if(balance.amount){
+        //     balanceBoxStyle = _.lt(balance.amount, _.toNumber(cartTotal)) ? styles.balanceOutStyle : styles.balanceInStyle;
+        // } 
     
         const changeBudgetItem = (
             <div 
@@ -182,14 +183,21 @@ export class MainHeader extends React.Component{
                     
                 
                     <div className="item Balance__Box" 
-                        style={balanceBoxStyle}
                         >
-                        <Label basic floating 
-                            style={styles.warningLabel}
-                            pointing='below'>
-                            Please enter a value
-                        </Label>
-                        Balance: <span>&#8373; <b>{numeral(balance.amount).format('0,0.00')}</b></span>
+                        
+                        { 
+                            balance < 0 
+                            ? (
+                                <Label basic floating 
+                                    className='animated fadeIn'
+                                    style={styles.warningLabel}
+                                    pointing='below'>
+                                    Please enter a value
+                                </Label>
+                            )
+                            : null
+                        }
+                        Balance: <span>&#8373; <b>{numeral(Math.abs(balance)).format('0,0.00')}</b></span>
                     </div>
                 </div>
 

@@ -3,6 +3,8 @@ import Radium from 'radium';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { getCartTotalSelector } from '../../selectors'
+
 const styles = {
     default: {
         boxShadow: '0 0 10px rgba(175, 175, 175, 0.50)',
@@ -38,6 +40,8 @@ export class CartTotal extends React.Component{
     }
 }
 
-const mapStateToProps = ({ cartTotal }) => ({ cartTotal });
+const mapStateToProps = state => ({ 
+    cartTotal: getCartTotalSelector(state) 
+});
 
 export default connect(mapStateToProps)(Radium(CartTotal));

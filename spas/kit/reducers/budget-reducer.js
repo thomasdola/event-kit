@@ -1,6 +1,6 @@
 import * as types from '../helpers/constants'
 
-export default (state = null, action) => {
+export default (state = 0, action) => {
     switch(action.type){
         case types.SAVE_BUDGET(): 
             return action.data;

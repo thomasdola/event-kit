@@ -1,4 +1,5 @@
 import * as cartActions from '../actions/cart';
+import { openServiceZoomModal } from '../actions/services';
 import * as types from '../helpers/constants';
 
 import _ from 'lodash';
@@ -6,8 +7,8 @@ import expect from 'expect';
 
 import cartReducer, { 
     cartReviewMode as cartReviewModeReducer,
-    cartTotal as cartTotalReducer,
-    cartItemEditMode, selectedCartItem 
+    cartTotal as cartTotalReducer, packageChoosingMode,
+    cartItemEditMode, selectedCartItem, serviceToBePicked
 } from './cart-reducers';
 
 describe('cartItemsReducer', () => {
@@ -120,7 +121,7 @@ describe('cartItemsReducer', () => {
         it('should maintain state when passed UNKNOWN_ACTION', () => {
             const initialState = 0;
             const newState = cartTotalReducer(initialState, {type: types.UNKNOWN_ACTION});
-            expect(newState).toEqual(0);
+            expect(newState).toEqual(initialState);
         });
     });
 
@@ -141,7 +142,7 @@ describe('cartItemsReducer', () => {
         it('should maintain state when passed UNKNOWN_ACTION', () => {
             const initialState = true;
             const newState = cartReviewModeReducer(initialState, {type: types.UNKNOWN_ACTION});
-            expect(newState).toEqual(true);
+            expect(newState).toEqual(initialState);
         });
     });
 
@@ -162,7 +163,7 @@ describe('cartItemsReducer', () => {
         it('should maintain state when passed UNKNOWN_ACTION', () => {
             const initialState = true;
             const newState = cartItemEditMode(initialState, {type: types.UNKNOWN_ACTION});
-            expect(newState).toEqual(true);
+            expect(newState).toEqual(initialState);
         });
     });
 
@@ -179,6 +180,55 @@ describe('cartItemsReducer', () => {
             const initialState = {};
             const newState = selectedCartItem(initialState, {type: types.UNKNOWN_ACTION});
             expect(newState).toEqual({});
+        });
+    });
+
+    describe('serviceToBePickedReducer', () => {
+
+        it('should have selected cart item when passed CHOOSE_ITEM_PACKAGE', () => {
+            const initialState = null;
+            const item = 1;
+            const newState = serviceToBePicked(initialState, cartActions.chooseItemPackage(item));
+            expect(newState).toEqual(item);
+        });
+
+        it('should maintain state when passed UNKNOWN_ACTION', () => {
+            const initialState = null;
+            const newState = serviceToBePicked(initialState, {type: types.UNKNOWN_ACTION});
+            expect(newState).toEqual(initialState);
+        });
+    });
+
+    describe('packageChoosingModeReducer', () => {
+
+        it('should change to true when passed CHOOSE_ITEM_PACKAGE', () => {
+            const initialState = false;
+            const newState = packageChoosingMode(initialState, cartActions.chooseItemPackage(1));
+            expect(newState).toEqual(true);
+        });
+
+        it('should change to false when passed DONE_CHOOSING_PACKAGE', () => {
+            const initialState = true;
+            const newState = packageChoosingMode(initialState, cartActions.doneChoosingPackage());
+            expect(newState).toEqual(false);
+        });
+
+        it('should change to false when passed OPEN_SERVICE_ZOOM_MODAL', () => {
+            const initialState = true;
+            const newState = packageChoosingMode(initialState, openServiceZoomModal());
+            expect(newState).toEqual(false);
+        });
+
+        it('should change to false when passed REVIEW_CART', () => {
+            const initialState = true;
+            const newState = packageChoosingMode(initialState, cartActions.reviewCartItems());
+            expect(newState).toEqual(false);
+        });
+
+        it('should maintain state when passed UNKNOWN_ACTION', () => {
+            const initialState = true;
+            const newState = packageChoosingMode(initialState, {type: types.UNKNOWN_ACTION()});
+            expect(newState).toEqual(initialState);
         });
     });
 });

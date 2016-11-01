@@ -8,9 +8,11 @@ import { hideCartItem, showCartItem, removeCartItem, editItemPackage, updateCart
 
 const styles = {
     default: {
-        height: '93%'
+        height: '93%',
+        paddingTop: '.2em',
+        position: 'relative'
     }
-}
+};
 
 export class CartItemList extends React.Component {
 
@@ -48,7 +50,7 @@ export class CartItemList extends React.Component {
     render(){
         const { cartItems, cartItemEditMode, selectedCartItem } = this.props;
 
-        console.log('cartItemEditMode from list -> ', cartItemEditMode)
+        // console.log('cartItemEditMode from list -> ', cartItemEditMode);
 
         const items = cartItems.map(item => {
             return (
@@ -56,13 +58,13 @@ export class CartItemList extends React.Component {
                     item={item}
                     key={item.id}
                     toggleVisibility={this.handleToggle} 
-                    editCartItemMode={cartItemEditMode}
+                    editCartItemMode={cartItemEditMode && selectedCartItem.id === item.id}
                     edit={this.handleEdit}
                     update={this.handleUpdate}
                     closePopup={this.handleClosePopup}
                     remove={this.handleRemove}/>
             )
-        })
+        });
 
         return (
             <div 
@@ -72,18 +74,18 @@ export class CartItemList extends React.Component {
                     { items }
                 </div>
 
-                <PackagesPopup
-                    open={cartItemEditMode}
-                    service={selectedCartItem}
-                    update={this.handleUpdate}
-                    cancel={this.handleClosePopup}
-                />
+                {/*<PackagesPopup*/}
+                    {/*open={cartItemEditMode}*/}
+                    {/*service={selectedCartItem}*/}
+                    {/*update={this.handleUpdate}*/}
+                    {/*cancel={this.handleClosePopup}*/}
+                {/*/>*/}
 
             </div>
         );
     }
     
-};
+}
 
 CartItemList.PropTypes = {
     hideCartItem: React.PropTypes.func.isRequired,

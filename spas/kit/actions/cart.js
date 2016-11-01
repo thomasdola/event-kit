@@ -40,3 +40,9 @@ export const editItemPackage = cartItem => ({ type: types.EDIT_ITEM_PACKAGE(), d
 export const closePackagesPopup = () => ({ type: types.CLOSE_PACKAGES_POPUP() });
 
 export const updateCartItemPackage = cartItem => ({type: types.UPDATE_CART_ITEM_PACKAGE(), data: cartItem});
+
+export const chooseItemPackage = itemId => ({type: types.CHOOSE_ITEM_PACKAGE(), data: itemId});
+
+export const doneChoosingPackage = () => ({type: types.DONE_CHOOSING_PACKAGE()});
+
+

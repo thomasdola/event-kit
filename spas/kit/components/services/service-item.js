@@ -1,7 +1,7 @@
 import numeral from 'numeral';
 import Radium from 'radium';
 import React from 'react';
-import ReactDOM from 'react-dom';
+import PackagesPopup from '../popups/packages-popup';
 import { Card, Image, Label, Icon, Button } from 'semantic-ui-react';
 
 const styles = {
@@ -30,7 +30,7 @@ const styles = {
             content: 'none'
         }
     }
-}
+};
 
 class ServiceItem extends React.Component{
 
@@ -39,10 +39,21 @@ class ServiceItem extends React.Component{
 
         this.handleAdd = this.handleAdd.bind(this);
         this.handleZoom = this.handleZoom.bind(this);
+        this.handleOpen = this.handleOpen.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleAddFromPopup = this.handleAddFromPopup.bind(this);
     }
 
     handleAdd(e){
         const { onAddToCart, item } = this.props;
+        if(!item.fixed){
+
+        }
+        onAddToCart(item);
+    }
+
+    handleAddFromPopup(item){
+        const { onAddToCart } = this.props;
         onAddToCart(item);
     }
 
@@ -50,15 +61,21 @@ class ServiceItem extends React.Component{
         const { onZoomService, item: {id} } = this.props;
         onZoomService(id);
     }
+
+    handleOpen(e){
+        this.props.openPackagesPopup();
+    }
+
+    handleClose(e){
+        this.props.closePackagesPopup();
+    }
     
 
     render(){
 
-        const { item } = this.props;
+        const { item, packageChoosingMode } = this.props;
 
-        const formatted = (
-            <span>&#8373; <b>{numeral(item.amount).format('0,0.00')}</b></span>
-        );
+        const addTrigger = (<Button className="Add__Button" icon='add to cart' onClick={this.handleOpen}/>);
 
         return (
             <div key="keyForServiceCard" className="card Service__Item" style={styles.card}>
@@ -70,10 +87,28 @@ class ServiceItem extends React.Component{
                         className="Action__Buttons">
 
                         {
-                            Radium.getState(this.state, 'keyForServiceCard', ':hover') 
+                            Radium.getState(this.state, 'keyForServiceCard', ':hover') || packageChoosingMode
                             ? (
                                 <Button.Group icon size='mini'>
-                                    <Button className="Add__Button" icon='add to cart' onClick={this.handleAdd}/>
+                                    {
+                                        item.fixed
+                                            ? (
+                                            <Button className="Add__Button" icon='add to cart' onClick={this.handleAdd}/>
+                                        )
+                                            : (
+                                            <PackagesPopup
+                                                trigger={addTrigger}
+                                                open={packageChoosingMode}
+                                                service={this.props.item}
+                                                update={this.handleAddFromPopup}
+                                                cancel={this.handleClose}
+                                                positioning="top center"
+                                                positiveButton="add"
+                                            />
+                                        )
+                                    }
+
+
                                     <Button className="Zoom__Button" icon='zoom' onClick={this.handleZoom}/>
                                 </Button.Group>
                             )
@@ -94,6 +129,7 @@ class ServiceItem extends React.Component{
 
                 </div>
                 <Label className="Service__Name" attached='bottom'>{item.name}</Label>
+
             </div>
         );
     }
@@ -102,7 +138,10 @@ class ServiceItem extends React.Component{
 ServiceItem.PropTypes = {
     item: React.PropTypes.object.isRequired,
     onAddToCart: React.PropTypes.func.isRequired,
-    onZoomService: React.PropTypes.func.isRequired
+    onZoomService: React.PropTypes.func.isRequired,
+    openPackagesPopup: React.PropTypes.func.isRequired,
+    closePackagesPopup: React.PropTypes.func.isRequired,
+    packageChoosingMode: React.PropTypes.bool.isRequired
 };
 
 

@@ -6,7 +6,6 @@ import { bindActionCreators } from 'redux';
 
 import CategoryItem from './category-item';
 import { selectCategory } from '../../actions/categories';
-import { fetchServices } from '../../actions/services';
 
 const styles = {
     default: {
@@ -16,6 +15,7 @@ const styles = {
         boxShadow: 'rgba(34, 36, 38, 0.14902) 0px 1px 10px 0px',
         height: '11vh',
         padding: '.6em',
+        // zIndex: 30000
     }
 };
 
@@ -50,7 +50,7 @@ export class CategoryItemList extends React.Component{
                 onHoverIn={this.handleMouseOver}
                 onHoverOut={this.handleMouseOut}
                 onSelect={this.handleClick}/>
-        ))
+        ));
 
         return(
             <div 

@@ -10,7 +10,8 @@ body{
     padding: 0;
     background-color: white;
     border: 0;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+    box-shadow: 0px 0px 5px 0px rgba(175, 175, 175, 0.004);
 }
 
 .ui.secondary.pointing.menu {
@@ -133,47 +134,47 @@ body{
 }*/
 
 /*Review Modal styles*/
-.ui.modal.Review__Modal{
-    border-radius: 0;
-    height: 600px;
-    width: 500px;
-}
+/*.ui.modal.Review__Modal{*/
+    /*border-radius: 0;*/
+    /*height: 600px;*/
+    /*width: 500px;*/
+/*}*/
 
-.ui.modal.Review__Modal > .header{
-    padding: 0;
-    border-bottom: 0;
-}
+/*.ui.modal.Review__Modal > .header{*/
+    /*padding: 0;*/
+    /*border-bottom: 0;*/
+/*}*/
 
-.ui.modal.Review__Modal > .header > .segment{
-    height: 50px;
-    border-radius: 0;
-    box-shadow: none;
-}
+/*.ui.modal.Review__Modal > .header > .segment{*/
+    /*height: 50px;*/
+    /*border-radius: 0;*/
+    /*box-shadow: none;*/
+/*}*/
 
-.ui.modal.Review__Modal > .content, .ui.modal.Review__Modal > .wide.column{
-    padding: 0;
-}
+/*.ui.modal.Review__Modal > .content, .ui.modal.Review__Modal > .wide.column{*/
+    /*padding: 0;*/
+/*}*/
 
-.ui.modal.Review__Modal > .content > .ui.segment{
-    border-radius: 0;
-    box-shadow: none;
-    border: 0;
-    height: 500px;
-}
+/*.ui.modal.Review__Modal > .content > .ui.segment{*/
+    /*border-radius: 0;*/
+    /*box-shadow: none;*/
+    /*border: 0;*/
+    /*height: 500px;*/
+/*}*/
 
-.ui.modal.Review__Modal > .content > .ui.segment > .divided.list > .item{
-    height: 40px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+/*.ui.modal.Review__Modal > .content > .ui.segment > .divided.list > .item{*/
+    /*height: 40px;*/
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*justify-content: center;*/
+/*}*/
 
-.ui.modal.Review__Modal > .actions{
-    border-radius: 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
+/*.ui.modal.Review__Modal > .actions{*/
+    /*border-radius: 0;*/
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*justify-content: space-between;*/
+/*}*/
 
 
 /*service zoom styles*/

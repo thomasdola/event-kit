@@ -8,6 +8,7 @@ import InitialBudgetModal from './modals/initial-budget-modal';
 import MainHeader from './main-header';
 import ServicesAndCart from './services-and-cart';
 import ServiceZoomModal from './modals/service-zoom-modal';
+import ClientDetailsModal from './modals/client-details-modal';
 import StepMenuPopup from './popups/step-menu-popup';
 
 const styles = {
@@ -29,6 +30,7 @@ const Main = ({ children }) => {
             <CartReviewModal/>
             <ServiceZoomModal/>
             <InitialBudgetModal/>
+            <ClientDetailsModal/>
             
             <StepMenuPopup/>
         </Container>

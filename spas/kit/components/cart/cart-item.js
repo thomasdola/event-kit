@@ -86,9 +86,19 @@ export class CartItem extends React.Component{
     }
 
     render(){
-        const { item: { name, amount, hidden, fixed, id }, editCartItemMode, update, closePopup } = this.props;
+        const {
+            item: { name, amount, hidden, fixed, id },
+            editCartItemMode, update, closePopup } = this.props;
 
-        console.log('editCartItemMode => ', editCartItemMode);
+        const editTrigger = (
+            <div className={`column Edit__Button Item__Action ${editCartItemMode ? 'disabled' : ''}`}
+                 ref='editButton'
+                 style={[styles.editButton]} onClick={this.edit}>
+                <span className="ui icon">
+                    <i className="pencil icon"/>
+                </span>
+            </div>
+        );
         
         return(
             <div className="item Cart__Item" 
@@ -101,39 +111,45 @@ export class CartItem extends React.Component{
 
                     <div className="four wide column Action__Buttons">
 
-                        { Radium.getState(this.state, 'keyForCartItem', ':hover') 
+                        { Radium.getState(this.state, 'keyForCartItem', ':hover') || editCartItemMode
                         ? (
                             <div className="ui three column grid"
                                 style={[styles.actionButtons]}
                                 >
 
-                                { fixed ? null : (
+                                { fixed || hidden ? null : (
 
-                                    <div className="column Edit__Button Item__Action"
-                                        ref='editButton'
-                                        style={[styles.editButton]} onClick={this.edit}>
-                                        <span className="ui icon">
-                                            <i className="pencil icon"/>
-                                        </span>
-                                    </div>
+                                    <PackagesPopup
+                                        trigger={editTrigger}
+                                        open={editCartItemMode}
+                                        service={this.props.item}
+                                        update={update}
+                                        cancel={closePopup}
+                                        positioning="left center"
+                                        positiveButton="update"
+                                    />
 
                                 ) }
 
-                                <div className="column Visibility__Button Item__Action"
-                                    ref='toggleButton' 
-                                    style={[styles.toggleButton]} onClick={this.toggle}>
-                                    <span className="ui icon">
-                                        <i className={`icon ${hidden ? "unhide" : "hide"}`}/>
-                                    </span>
-                                </div>
+                                { editCartItemMode ? null : (
+                                    <div className="column Visibility__Button Item__Action"
+                                         ref='toggleButton'
+                                         style={[styles.toggleButton]} onClick={this.toggle}>
+                                            <span className="ui icon">
+                                                <i className={`icon ${hidden ? "unhide" : "hide"}`}/>
+                                            </span>
+                                    </div>
+                                )}
 
-                                <div className="column Remove__Button Item__Action"
-                                    ref='removeButton'
-                                    style={[styles.removeButton]} onClick={this.remove}>
-                                    <span className="ui icon">
-                                        <i className="trash icon"/>
-                                    </span>
-                                </div>
+                                { editCartItemMode ? null : (
+                                    <div className="column Remove__Button Item__Action"
+                                         ref='removeButton'
+                                         style={[styles.removeButton]} onClick={this.remove}>
+                                            <span className="ui icon">
+                                            <i className="trash icon"/>
+                                            </span>
+                                    </div>
+                                )}
                                 
                             </div>
                         ) 
@@ -147,6 +163,8 @@ export class CartItem extends React.Component{
                     </div>
                 </div>
 
+
+
             </div>
         );
     }
@@ -156,7 +174,8 @@ CartItem.PropTypes = {
     toggle: React.PropTypes.func.isRequired,
     remove: React.PropTypes.func.isRequired,
     edit: React.PropTypes.func.isRequired,
-    item: React.PropTypes.object.isRequired
+    item: React.PropTypes.object.isRequired,
+    editCartItemMode: React.PropTypes.bool.isRequired
 };
 
 export default Radium(CartItem);

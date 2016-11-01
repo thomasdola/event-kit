@@ -11,7 +11,7 @@ const styles = {
         padding: `${.3}em`,
         height: `${40}px`
     }
-}
+};
 
 class ServiceFilterPopup extends React.Component{
     constructor(props){
@@ -21,7 +21,7 @@ class ServiceFilterPopup extends React.Component{
             fromAmount: this.props.filterPriceRange.from,
             toAmount: this.props.filterPriceRange.to,
             error: ''
-        }
+        };
 
         this.handleClick = this.handleClick.bind(this);
         this.handleFromAmountChange = this.handleFromAmountChange.bind(this);
@@ -77,13 +77,13 @@ class ServiceFilterPopup extends React.Component{
 
         const { fromAmount, toAmount, error } = this.state;
 
-        const enabled = Number.parseInt(toAmount, 10) > Number.parseInt(fromAmount, 10) ? true : false;
+        const enabled = Number.parseInt(toAmount, 10) > Number.parseInt(fromAmount, 10);
 
         return (
             <Popup flowing 
                 open={this.props.open}
                 on='click'
-                positioning='top center'
+                positioning='bottom right'
                 trigger={this.props.trigger}
                 className="__filter_form Service__Filter__Popup"
                 style = {styles.default}>

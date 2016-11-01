@@ -17,7 +17,7 @@ const props = {
             id: 'two',
             name: 'two',
             amount: 200,
-            hidden: true
+            hidden: false
         }
     ],
     budget: 100,
@@ -70,8 +70,7 @@ describe('CartReviewModal Component', () => {
         });
         
         it('renders one item', () => {
-            expect(cartReviewModalShallowWrapper.find('.Cart__Review__Item').length).toBe(1);
-            expect(cartReviewModalShallowWrapper.find('.Cart__Review__Item').length).toNotBe(2);
+            expect(cartReviewModalShallowWrapper.find('.Cart__Review__Item').length).toBe(2);
         });
     });
 

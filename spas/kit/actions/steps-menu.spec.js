@@ -10,35 +10,27 @@ const middleware = [thunk];
 const mockStore = configureMockStore(middleware);
 
 describe('Steps Menu Actions Creator', () => {
-    
+
     describe('openStepsMenu', () => {
-        
+
         it('should create OPEN_STEPS_MENU action', () => {
             expect(actions.openStepsMenu().type).toEqual(types.OPEN_STEPS_MENU());
         });
     });
 
     describe('closeStepsMenu', () => {
-        
+
         it('should create CLOSE_STEPS_MENU action', () => {
             expect(actions.closeStepsMenu().type).toEqual(types.CLOSE_STEPS_MENU());
         });
     });
 
-    describe('selectStep', () => {
-        
-        it('should create SELECT_STEP action', () => {
-            const step = {id: 1, name: 'step one'};
-            expect(actions.selectStep(step.id)).toEqual({type: types.SELECT_STEP(), data: step.id});
-        });
-    });
-
     describe('fetchSteps', () => {
-        
+
         it('should create START_LOADING_STEPS, RECEIVE_STEPS, FINIISH_LOADING_STEPS actions', () => {
             nock(types.URL())
                 .get('/api/steps')
-                .reply(200, []);
+                .reply(200, [{id: 1}]);
 
             const expectedActions = [
                 {type: types.START_LOADING_STEPS()},
@@ -48,7 +40,9 @@ describe('Steps Menu Actions Creator', () => {
 
             const store = mockStore({});
             return store.dispatch(actions.fetchSteps()).then(() => {
-                expect(store.getActions()).toEqual(expectedActions);
+                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
+                expect(store.getActions()[1].type).toEqual(expectedActions[1].type);
+                expect(store.getActions()[2].type).toEqual(expectedActions[2].type);
             });
         });
 

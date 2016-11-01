@@ -104,4 +104,21 @@ describe('Cart Actions Creator', () => {
             expect(expectedAction).toEqual(actualAction);
         });
     });
+
+    describe('chooseItemPackage', () => {
+        it('should create CHOOSE_ITEM_PACKAGE action', () => {
+            const item = {id: 1, name: 'service one'};
+            const expectedAction = {type: types.CHOOSE_ITEM_PACKAGE(), data: item.id};
+            const actualAction = cartActions.chooseItemPackage(item.id);
+            expect(expectedAction).toEqual(actualAction);
+        });
+    });
+
+    describe('doneChoosingPackage', () => {
+        it('should create CHOOSE_ITEM_PACKAGE action', () => {
+            const expectedAction = {type: types.DONE_CHOOSING_PACKAGE()};
+            const actualAction = cartActions.doneChoosingPackage();
+            expect(expectedAction).toEqual(actualAction);
+        });
+    });
 });

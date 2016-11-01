@@ -24,7 +24,8 @@ const props = {
     },
     editCartItemMode: true,
     updateItem: () => {},
-    cancel: () => {}
+    cancel: () => {},
+    open: true
 };
 
 const setupShallow = () => shallow(<PackagesPopup {...props}/>);
@@ -75,7 +76,7 @@ describe('PackagesPopup Component', () => {
 
         it('has the provided data -> editCartItemMode', () => {
             const wrapper = setupShallow();
-            expect(wrapper.find(Popup).prop('open')).toBe(true);
+            expect(wrapper.find(Popup).shallow().prop('open')).toBe(true);
         });
 
         it('should be aware of the selected package', () => {

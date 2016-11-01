@@ -11,7 +11,7 @@ const mockStore = configureMockStore(middleware);
 
 
 describe('Services Actions Creator', () => {
-    
+
     describe('openFilterPopup', () => {
         it('should create OPEN_FILTER_POPUP action', () => {
             expect(types.OPEN_FILTER_POPUP()).toEqual(servicesActions.openFilterPopup().type);
@@ -54,7 +54,7 @@ describe('Services Actions Creator', () => {
             nock(types.URL())
                 .get(`/api/categories/${categoryId}/services?from=${from}&to=${to}`)
                 .reply(200, []);
-            
+
             const expectedActions = [
                 {type: types.START_LOADING_SERVICES()},
                 {type: types.RECEIVE_SERVICES(), data: []},
@@ -63,12 +63,12 @@ describe('Services Actions Creator', () => {
 
             const store = mockStore({});
             return store.dispatch(servicesActions.fetchServices(categoryId, {from, to})).then(() => {
-                expect(store.getActions()).toEqual(expectedActions);                
+                expect(store.getActions()).toEqual(expectedActions);
             });
         });
 
         it('should create START_LOADING_SERVICES, FAILED_LOADING_SERVICES and FINISH_LOADING_SERVICES actions', () => {
-            
+
             const wrongUri = `/api/categories/${categoryId}/servic?from=${from}&to=${to}`;
             nock(types.URL())
                 .get(wrongUri)
@@ -99,7 +99,7 @@ describe('Services Actions Creator', () => {
             nock(types.URL())
                 .get(`/api/services/${serviceId}`)
                 .reply(200, {});
-            
+
             const expectedActions = [
                 {type: types.START_LOADING_SERVICE()},
                 {type: types.RECEIVE_SERVICE(), data: {}},
@@ -108,7 +108,7 @@ describe('Services Actions Creator', () => {
 
             const store = mockStore({});
             return store.dispatch(servicesActions.fetchService(serviceId)).then(() => {
-                expect(store.getActions()).toEqual(expectedActions);                
+                expect(store.getActions()).toEqual(expectedActions);
             });
         });
 
@@ -127,7 +127,7 @@ describe('Services Actions Creator', () => {
             const store = mockStore({});
             return store.dispatch(servicesActions.fetchServiceIfNeeded(serviceId)).then(() => {
                 expect(store.getActions()).toEqual(expectedActions);
-            }); 
+            });
         });
 
         it('should create RECEIVE_SERVICE if not needed', () => {
@@ -142,7 +142,7 @@ describe('Services Actions Creator', () => {
             const store = mockStore({servicesImages: [{id: 1, images: []}], selectedService: 1});
             return store.dispatch(servicesActions.fetchServiceIfNeeded(serviceId)).then(() => {
                 expect(store.getActions()).toEqual(expectedActions);
-            }); 
+            });
         });
 
         it('should create START_LOADING_SERVICE, FAILED_LOADING_SERVICE and FINISH_LOADING_SERVICE actions', () => {

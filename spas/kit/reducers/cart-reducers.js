@@ -10,7 +10,7 @@ import _ from 'lodash';
 //     return newCollection;
 // };
 
-const updateItemAndMaintainPoisition = (collection, item, key, newValue) => {
+const updateItemAndMaintainPosition = (collection, item, key, newValue) => {
     const itemIndex = _.findIndex(collection, {id: item.id});
     const changedItem = _.assign({}, item, {[key]: newValue});
     const newCollection = _.reject(collection, {id: item.id});
@@ -25,19 +25,19 @@ export default (state = [], action) => {
             return [...state, action.data];
         case types.SHOW_CART_ITEM():
             return [
-                ...updateItemAndMaintainPoisition(
+                ...updateItemAndMaintainPosition(
                     state, _.find(state, {id: action.data.id}), 
                     'hidden', false)
                 ];
         case types.HIDE_CART_ITEM():
             return [
-                ...updateItemAndMaintainPoisition(
+                ...updateItemAndMaintainPosition(
                     state, _.find(state, {id: action.data.id}), 
                     'hidden', true)
                 ];
         case types.UPDATE_CART_ITEM_PACKAGE():
             return [
-                ...updateItemAndMaintainPoisition(
+                ...updateItemAndMaintainPosition(
                     state, _.find(state, {id: action.data.id}), 
                     'amount', action.data.amount)
                 ];
@@ -96,7 +96,7 @@ export const cartItemEditMode = (state = false, action) => {
         default: 
             return state;
     }
-}
+};
 
 export const selectedCartItem = (state = {packages: []}, action) => {
     switch(action.type){
@@ -105,4 +105,28 @@ export const selectedCartItem = (state = {packages: []}, action) => {
         default:
             return state;
     }
-}
+};
+
+export const serviceToBePicked = (state = null, action) => {
+    switch(action.type){
+        case types.CHOOSE_ITEM_PACKAGE():
+            return action.data;
+        default:
+            return state;
+    }
+};
+
+export const packageChoosingMode = (state = false, action) => {
+    switch(action.type){
+        case types.CHOOSE_ITEM_PACKAGE():
+            return true;
+        case types.DONE_CHOOSING_PACKAGE():
+        case types.OPEN_SERVICE_ZOOM_MODAL():
+        case types.REVIEW_CART():
+        case types.SELECT_CATEGORY():
+        case types.SELECT_STEP():
+            return false;
+        default:
+            return state;
+    }
+};

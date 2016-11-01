@@ -59,6 +59,28 @@ var data = {
             ]
         },
         {
+            id: 'kdjfaldkcfjaslk',
+            categoryId: 'fakkldjkfajsdklfjkasd',
+            name: 'service ten',
+            amount: 1500,
+            img: '/images/logo.png',
+            fixed: false,
+            packages: [
+                {
+                    amount: 1500,
+                    range: [0,50]
+                },
+                {
+                    amount: 3000,
+                    range: [51,150]
+                },
+                {
+                    amount: 5000,
+                    range: [151,250]
+                }
+            ]
+        },
+        {
             id: 'kdjfaldklfjaslu',
             categoryId: 'fakkldjkfajsdklfjkasr',
             name: 'service two',
@@ -116,7 +138,11 @@ router.get('/categories/:categoryId/services', function(req, res, next){
 router.get('/services/:serviceId/images', (req, res) => {
     const serviceId = req.params.serviceId;
     res.json(data.images.filter(service => service.id === serviceId));
-})
+});
+
+router.post('/orders', (req, res) => {
+    res.sendStatus(200);
+});
 
 
 

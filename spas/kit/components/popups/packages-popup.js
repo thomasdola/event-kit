@@ -1,3 +1,5 @@
+import _ from 'lodash';
+import numeral from 'numeral';
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -5,10 +7,10 @@ import { Popup, List, Button, Form, Radio } from 'semantic-ui-react';
 
 const styles = {
     default: {
-        positioning: 'absolute',
-        top: '24%',
-        right: '25%',
-        transform: 'translate(50%)',
+        // positioning: 'absolute',
+        // top: '21.5%',
+        // right: '15%',
+        // transform: 'translate(50%)',
         width: '300px'
     }
 };
@@ -25,31 +27,36 @@ export default class PackagesPopup extends React.Component{
             }
         };
 
-        this.handCancel = this.handleCancel.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleChange(pack){
         this.setState({selectedPackage: pack});
     }
 
-    handleUpdate(){}
+    handleUpdate(){
+        const { service, update, cancel } = this.props;
+        const updatedService = _.assign({}, service, {amount: this.state.selectedPackage.amount});
+        update(updatedService);
+        cancel();
+    }
 
     handleCancel(){
-        console.log(this);
+        this.props.cancel();
     }
 
 
     render(){
-        const { service, open } = this.props;
-
-        console.log('open -> ', open);
+        const { service, open, trigger, positioning, positiveButton } = this.props;
 
         const renderedList = service.packages.map(pack => (
             <List.Item key={Math.random()}>
                 <List.Content floated='right'>
                     <Radio
                         key={Math.random()}
-                        label={`${pack.amount}`}
+                        label={`\u20B5 ${numeral(pack.amount).format('0,0.00')}`}
                         value={`${pack.amount}`}
                         checked={this.state.selectedPackage.amount === pack.amount}
                         onChange={e => this.handleChange(pack)}
@@ -63,14 +70,13 @@ export default class PackagesPopup extends React.Component{
 
         return(
             <Popup
-                flowing
-                basic
-                className={`animated ${open ? 'slideInUp' : 'slideOutUp'}`}
-                positioning='left center'
+                flowing={true}
+                trigger={trigger}
+                className={`Choose__Package__Popup`}
+                positioning={positioning}
                 on='click' 
                 style={styles.default}
-                open={open}
-                className="Choose__Package__Popup">
+                open={open}>
                 
                 <Popup.Header>
                     {service.name}
@@ -78,20 +84,26 @@ export default class PackagesPopup extends React.Component{
 
                 <Popup.Content>
 
-                    <List divided 
+                    <List
+                        divided={true}
                         verticalAlign='middle'>
 
                         { service.packages && renderedList }
                     
                     </List>
 
-                    <Button 
+                    <Button
                         onClick={this.handleUpdate}
-                        className='Update__Package' size='mini'>udpate</Button>
+                        className={`Update__Package ${this.state.selectedPackage.amount ? '' : 'disabled'}`} size='mini'>
+                        {positiveButton}
+                    </Button>
 
                     <Button 
                         onClick={this.handleCancel}
-                        className='Cancel' size='mini'>cancel</Button>
+                        className='Cancel' size='mini'>cancel
+                    </Button>
+
+
 
                 </Popup.Content>
 
@@ -99,3 +111,13 @@ export default class PackagesPopup extends React.Component{
         );
     };
 }
+
+PackagesPopup.PropTypes = {
+    open: React.PropTypes.bool.isRequired,
+    service: React.PropTypes.object,
+    cancel: React.PropTypes.func.isRequired,
+    update: React.PropTypes.func.isRequired,
+    trigger: React.PropTypes.node,
+    positioning: React.PropTypes.string.isRequired,
+    positiveButton: React.PropTypes.string.isRequired
+};

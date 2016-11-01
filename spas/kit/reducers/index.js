@@ -1,11 +1,12 @@
 import { routerReducer } from 'react-router-redux';
 import { combineReducers } from 'redux';
 
-import balance from './balance-reducer';
 import budget, { budgetChangingMode } from './budget-reducer';
-import cartItems, { cartTotal, cartReviewMode, cartItemEditMode, selectedCartItem } from './cart-reducers';
+import cartItems, { cartTotal, cartReviewMode, cartItemEditMode,
+    selectedCartItem, serviceToBePicked, packageChoosingMode } from './cart-reducers';
 import categories, { selectedCategory } from './categories-reducer';
-import services, { selectedService, serviceInZoom, serviceZoomMode, servicesImages } from './services-reducers';
+import services, { serviceInZoom, serviceZoomMode, servicesImages } from './services-reducers';
+import { clientDetailsMode, verifyingNumber, phoneVerificationMode, checkingOut, requestingCode } from './checkout-reducers';
 import { filterMode, filterPriceRange } from './filter-reducers';
 import { loadingCategories, loadingService, loadingServices } from './loading-reducers';
 import { stepsMenuOpened, steps, activeStep } from './steps-menu-reducer';
@@ -23,7 +24,9 @@ export default combineReducers({
     budgetChangingMode,
     cartItems,
     cartReviewMode,
+    packageChoosingMode,
     selectedCartItem,
+    serviceToBePicked,
     cartItemEditMode,
     cartTotal,
     categories,
@@ -32,5 +35,10 @@ export default combineReducers({
     filterPriceRange,
     stepsMenuOpened,
     steps,
-    activeStep
+    activeStep,
+    clientDetailsMode,
+    checkingOut,
+    verifyingNumber,
+    phoneVerificationMode,
+    requestingCode
 });

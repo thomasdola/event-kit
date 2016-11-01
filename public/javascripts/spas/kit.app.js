@@ -77,9 +77,9 @@
 	
 	var _routes2 = _interopRequireDefault(_routes);
 	
-	var _categories = __webpack_require__(/*! ./actions/categories */ 1142);
+	var _categories = __webpack_require__(/*! ./actions/categories */ 1150);
 	
-	var _stepsMenu = __webpack_require__(/*! ./actions/steps-menu */ 1156);
+	var _stepsMenu = __webpack_require__(/*! ./actions/steps-menu */ 1158);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -9279,6 +9279,12 @@
 	var UPDATE_CART_ITEM_PACKAGE = exports.UPDATE_CART_ITEM_PACKAGE = function UPDATE_CART_ITEM_PACKAGE() {
 	  return 'UPDATE_CART_ITEM_PACKAGE';
 	};
+	var CHOOSE_ITEM_PACKAGE = exports.CHOOSE_ITEM_PACKAGE = function CHOOSE_ITEM_PACKAGE() {
+	  return 'CHOOSE_ITEM_PACKAGE';
+	};
+	var DONE_CHOOSING_PACKAGE = exports.DONE_CHOOSING_PACKAGE = function DONE_CHOOSING_PACKAGE() {
+	  return 'DONE_CHOOSING_PACKAGE';
+	};
 	
 	// balance
 	var AMOUNT_OUT_OF_RANGE = exports.AMOUNT_OUT_OF_RANGE = function AMOUNT_OUT_OF_RANGE() {
@@ -9329,6 +9335,44 @@
 	};
 	var LOADING_STEPS_FAILED = exports.LOADING_STEPS_FAILED = function LOADING_STEPS_FAILED() {
 	  return 'LOADING_STEPS_FAILED';
+	};
+	
+	// checkout
+	var PROCEED_TO_CHECKOUT = exports.PROCEED_TO_CHECKOUT = function PROCEED_TO_CHECKOUT() {
+	  return 'PROCEED_TO_CHECKOUT';
+	};
+	var CLOSE_CLIENT_DETAILS_MODAL = exports.CLOSE_CLIENT_DETAILS_MODAL = function CLOSE_CLIENT_DETAILS_MODAL() {
+	  return 'CLOSE_CLIENT_DETAILS_MODAL';
+	};
+	var DONE_CHECKING_OUT = exports.DONE_CHECKING_OUT = function DONE_CHECKING_OUT() {
+	  return 'DONE_CHECKING_OUT';
+	};
+	var START_CHECKING_OUT = exports.START_CHECKING_OUT = function START_CHECKING_OUT() {
+	  return 'START_CHECKING_OUT';
+	};
+	var FINISH_CHECKING_OUT = exports.FINISH_CHECKING_OUT = function FINISH_CHECKING_OUT() {
+	  return 'FINISH_CHECKING_OUT';
+	};
+	var CHECKING_OUT_FAILED = exports.CHECKING_OUT_FAILED = function CHECKING_OUT_FAILED() {
+	  return 'CHECKING_OUT_FAILED';
+	};
+	var START_VERIFYING_NUMBER = exports.START_VERIFYING_NUMBER = function START_VERIFYING_NUMBER() {
+	  return 'START_VERIFYING_NUMBER';
+	};
+	var FINISH_VERIFYING_NUMBER = exports.FINISH_VERIFYING_NUMBER = function FINISH_VERIFYING_NUMBER() {
+	  return 'FINISH_VERIFYING_NUMBER';
+	};
+	var VERIFYING_NUMBER_FAILED = exports.VERIFYING_NUMBER_FAILED = function VERIFYING_NUMBER_FAILED() {
+	  return 'VERIFYING_NUMBER_FAILED';
+	};
+	var START_REQUESTING_CODE = exports.START_REQUESTING_CODE = function START_REQUESTING_CODE() {
+	  return 'START_REQUESTING_CODE';
+	};
+	var FINISH_REQUESTING_CODE = exports.FINISH_REQUESTING_CODE = function FINISH_REQUESTING_CODE() {
+	  return 'FINISH_REQUESTING_CODE';
+	};
+	var REQUESTING_CODE_FAILED = exports.REQUESTING_CODE_FAILED = function REQUESTING_CODE_FAILED() {
+	  return 'REQUESTING_CODE_FAILED';
 	};
 	
 	// testing
@@ -39004,31 +39048,29 @@
 	
 	var _redux = __webpack_require__(/*! redux */ 478);
 	
-	var _balanceReducer = __webpack_require__(/*! ./balance-reducer */ 567);
-	
-	var _balanceReducer2 = _interopRequireDefault(_balanceReducer);
-	
-	var _budgetReducer = __webpack_require__(/*! ./budget-reducer */ 569);
+	var _budgetReducer = __webpack_require__(/*! ./budget-reducer */ 567);
 	
 	var _budgetReducer2 = _interopRequireDefault(_budgetReducer);
 	
-	var _cartReducers = __webpack_require__(/*! ./cart-reducers */ 570);
+	var _cartReducers = __webpack_require__(/*! ./cart-reducers */ 568);
 	
 	var _cartReducers2 = _interopRequireDefault(_cartReducers);
 	
-	var _categoriesReducer = __webpack_require__(/*! ./categories-reducer */ 571);
+	var _categoriesReducer = __webpack_require__(/*! ./categories-reducer */ 570);
 	
 	var _categoriesReducer2 = _interopRequireDefault(_categoriesReducer);
 	
-	var _servicesReducers = __webpack_require__(/*! ./services-reducers */ 572);
+	var _servicesReducers = __webpack_require__(/*! ./services-reducers */ 571);
 	
 	var _servicesReducers2 = _interopRequireDefault(_servicesReducers);
 	
-	var _filterReducers = __webpack_require__(/*! ./filter-reducers */ 573);
+	var _checkoutReducers = __webpack_require__(/*! ./checkout-reducers */ 575);
 	
-	var _loadingReducers = __webpack_require__(/*! ./loading-reducers */ 574);
+	var _filterReducers = __webpack_require__(/*! ./filter-reducers */ 572);
 	
-	var _stepsMenuReducer = __webpack_require__(/*! ./steps-menu-reducer */ 575);
+	var _loadingReducers = __webpack_require__(/*! ./loading-reducers */ 573);
+	
+	var _stepsMenuReducer = __webpack_require__(/*! ./steps-menu-reducer */ 574);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -39045,7 +39087,9 @@
 	    budgetChangingMode: _budgetReducer.budgetChangingMode,
 	    cartItems: _cartReducers2.default,
 	    cartReviewMode: _cartReducers.cartReviewMode,
+	    packageChoosingMode: _cartReducers.packageChoosingMode,
 	    selectedCartItem: _cartReducers.selectedCartItem,
+	    serviceToBePicked: _cartReducers.serviceToBePicked,
 	    cartItemEditMode: _cartReducers.cartItemEditMode,
 	    cartTotal: _cartReducers.cartTotal,
 	    categories: _categoriesReducer2.default,
@@ -39054,14 +39098,19 @@
 	    filterPriceRange: _filterReducers.filterPriceRange,
 	    stepsMenuOpened: _stepsMenuReducer.stepsMenuOpened,
 	    steps: _stepsMenuReducer.steps,
-	    activeStep: _stepsMenuReducer.activeStep
+	    activeStep: _stepsMenuReducer.activeStep,
+	    clientDetailsMode: _checkoutReducers.clientDetailsMode,
+	    checkingOut: _checkoutReducers.checkingOut,
+	    verifyingNumber: _checkoutReducers.verifyingNumber,
+	    phoneVerificationMode: _checkoutReducers.phoneVerificationMode,
+	    requestingCode: _checkoutReducers.requestingCode
 	});
 
 /***/ },
 /* 567 */
-/*!**********************************************!*\
-  !*** ./spas/kit/reducers/balance-reducer.js ***!
-  \**********************************************/
+/*!*********************************************!*\
+  !*** ./spas/kit/reducers/budget-reducer.js ***!
+  \*********************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -39069,30 +39118,35 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
+	exports.budgetChangingMode = undefined;
 	
 	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
 	
 	var types = _interopRequireWildcard(_constants);
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	exports.default = function () {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { amount: null, isInRange: true };
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
 	    var action = arguments[1];
 	
 	    switch (action.type) {
 	        case types.SAVE_BUDGET():
-	            return _lodash2.default.assign({}, state, { amount: _lodash2.default.toNumber(action.data) });
-	        case types.AMOUNT_IN_RANGE():
-	            return _lodash2.default.assign({}, state, { isInRange: true });
-	        case types.AMOUNT_OUT_OF_RANGE():
-	            return _lodash2.default.assign({}, state, { isInRange: false });
+	            return action.data;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var budgetChangingMode = exports.budgetChangingMode = function budgetChangingMode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.OPEN_CHANGE_BUDGET_POPUP():
+	            return true;
+	        case types.CLOSE_CHANGE_BUDGET_POPUP():
+	            return false;
 	        default:
 	            return state;
 	    }
@@ -39100,6 +39154,163 @@
 
 /***/ },
 /* 568 */
+/*!********************************************!*\
+  !*** ./spas/kit/reducers/cart-reducers.js ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.packageChoosingMode = exports.serviceToBePicked = exports.selectedCartItem = exports.cartItemEditMode = exports.cartReviewMode = exports.cartTotal = undefined;
+	
+	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
+	
+	var types = _interopRequireWildcard(_constants);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+	
+	// const updateItemAndMaintainPoisition = (collection, item, {key, value}) => {
+	//     const itemIndex = _.findIndex(collection, {id: item.id});
+	//     const changedItem = _.assign({}, item, {key: value});
+	//     const newCollection = _.reject(collection, {id: item.id});
+	//     newCollection.splice(itemIndex, 0, changedItem);
+	//     return newCollection;
+	// };
+	
+	var updateItemAndMaintainPosition = function updateItemAndMaintainPosition(collection, item, key, newValue) {
+	    var itemIndex = _lodash2.default.findIndex(collection, { id: item.id });
+	    var changedItem = _lodash2.default.assign({}, item, _defineProperty({}, key, newValue));
+	    var newCollection = _lodash2.default.reject(collection, { id: item.id });
+	    newCollection.splice(itemIndex, 0, changedItem);
+	    return newCollection;
+	};
+	
+	exports.default = function () {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.ADD_ITEM_TO_CART():
+	            return [].concat(_toConsumableArray(state), [action.data]);
+	        case types.SHOW_CART_ITEM():
+	            return [].concat(_toConsumableArray(updateItemAndMaintainPosition(state, _lodash2.default.find(state, { id: action.data.id }), 'hidden', false)));
+	        case types.HIDE_CART_ITEM():
+	            return [].concat(_toConsumableArray(updateItemAndMaintainPosition(state, _lodash2.default.find(state, { id: action.data.id }), 'hidden', true)));
+	        case types.UPDATE_CART_ITEM_PACKAGE():
+	            return [].concat(_toConsumableArray(updateItemAndMaintainPosition(state, _lodash2.default.find(state, { id: action.data.id }), 'amount', action.data.amount)));
+	        case types.REMOVE_CART_ITEM():
+	        case types.REMOVE_HIDDEN_CART_ITEM():
+	            return _lodash2.default.reject(state, function (item) {
+	                return item.id === action.data.id;
+	            });
+	        default:
+	            return state;
+	    }
+	};
+	
+	var cartTotal = exports.cartTotal = function cartTotal() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.ADD_ITEM_TO_CART():
+	            return _lodash2.default.add(_lodash2.default.toNumber(state), _lodash2.default.toNumber(action.data.amount));
+	        case types.SHOW_CART_ITEM():
+	            return _lodash2.default.add(_lodash2.default.toNumber(state), _lodash2.default.toNumber(action.data.amount));
+	        case types.HIDE_CART_ITEM():
+	            return _lodash2.default.subtract(_lodash2.default.toNumber(state), _lodash2.default.toNumber(action.data.amount));
+	        case types.REMOVE_CART_ITEM():
+	            return _lodash2.default.subtract(_lodash2.default.toNumber(state), _lodash2.default.toNumber(action.data.amount));
+	        default:
+	            return state;
+	    }
+	};
+	
+	var cartReviewMode = exports.cartReviewMode = function cartReviewMode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.REVIEW_CART():
+	            return true;
+	        case types.CLOSE_CART_REVIEW():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var cartItemEditMode = exports.cartItemEditMode = function cartItemEditMode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.EDIT_ITEM_PACKAGE():
+	            return true;
+	        case types.CLOSE_PACKAGES_POPUP():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var selectedCartItem = exports.selectedCartItem = function selectedCartItem() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { packages: [] };
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.EDIT_ITEM_PACKAGE():
+	            return action.data;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var serviceToBePicked = exports.serviceToBePicked = function serviceToBePicked() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.CHOOSE_ITEM_PACKAGE():
+	            return action.data;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var packageChoosingMode = exports.packageChoosingMode = function packageChoosingMode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.CHOOSE_ITEM_PACKAGE():
+	            return true;
+	        case types.DONE_CHOOSING_PACKAGE():
+	        case types.OPEN_SERVICE_ZOOM_MODAL():
+	        case types.REVIEW_CART():
+	        case types.SELECT_CATEGORY():
+	        case types.SELECT_STEP():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+
+/***/ },
+/* 569 */
 /*!****************************!*\
   !*** ./~/lodash/lodash.js ***!
   \****************************/
@@ -56091,180 +56302,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(/*! ./../webpack/buildin/module.js */ 486)(module)))
 
 /***/ },
-/* 569 */
-/*!*********************************************!*\
-  !*** ./spas/kit/reducers/budget-reducer.js ***!
-  \*********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.budgetChangingMode = undefined;
-	
-	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
-	
-	var types = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	exports.default = function () {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.SAVE_BUDGET():
-	            return action.data;
-	        default:
-	            return state;
-	    }
-	};
-	
-	var budgetChangingMode = exports.budgetChangingMode = function budgetChangingMode() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.OPEN_CHANGE_BUDGET_POPUP():
-	            return true;
-	        case types.CLOSE_CHANGE_BUDGET_POPUP():
-	            return false;
-	        default:
-	            return state;
-	    }
-	};
-
-/***/ },
 /* 570 */
-/*!********************************************!*\
-  !*** ./spas/kit/reducers/cart-reducers.js ***!
-  \********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.selectedCartItem = exports.cartItemEditMode = exports.cartReviewMode = exports.cartTotal = undefined;
-	
-	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
-	
-	var types = _interopRequireWildcard(_constants);
-	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	// const updateItemAndMaintainPoisition = (collection, item, {key, value}) => {
-	//     const itemIndex = _.findIndex(collection, {id: item.id});
-	//     const changedItem = _.assign({}, item, {key: value});
-	//     const newCollection = _.reject(collection, {id: item.id});
-	//     newCollection.splice(itemIndex, 0, changedItem);
-	//     return newCollection;
-	// };
-	
-	var updateItemAndMaintainPoisition = function updateItemAndMaintainPoisition(collection, item, key, newValue) {
-	    var itemIndex = _lodash2.default.findIndex(collection, { id: item.id });
-	    var changedItem = _lodash2.default.assign({}, item, _defineProperty({}, key, newValue));
-	    var newCollection = _lodash2.default.reject(collection, { id: item.id });
-	    newCollection.splice(itemIndex, 0, changedItem);
-	    return newCollection;
-	};
-	
-	exports.default = function () {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.ADD_ITEM_TO_CART():
-	            return [].concat(_toConsumableArray(state), [action.data]);
-	        case types.SHOW_CART_ITEM():
-	            return [].concat(_toConsumableArray(updateItemAndMaintainPoisition(state, _lodash2.default.find(state, { id: action.data.id }), 'hidden', false)));
-	        case types.HIDE_CART_ITEM():
-	            return [].concat(_toConsumableArray(updateItemAndMaintainPoisition(state, _lodash2.default.find(state, { id: action.data.id }), 'hidden', true)));
-	        case types.UPDATE_CART_ITEM_PACKAGE():
-	            return [].concat(_toConsumableArray(updateItemAndMaintainPoisition(state, _lodash2.default.find(state, { id: action.data.id }), 'amount', action.data.amount)));
-	        case types.REMOVE_CART_ITEM():
-	        case types.REMOVE_HIDDEN_CART_ITEM():
-	            return _lodash2.default.reject(state, function (item) {
-	                return item.id === action.data.id;
-	            });
-	        default:
-	            return state;
-	    }
-	};
-	
-	var cartTotal = exports.cartTotal = function cartTotal() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.ADD_ITEM_TO_CART():
-	            return _lodash2.default.add(_lodash2.default.toNumber(state), _lodash2.default.toNumber(action.data.amount));
-	        case types.SHOW_CART_ITEM():
-	            return _lodash2.default.add(_lodash2.default.toNumber(state), _lodash2.default.toNumber(action.data.amount));
-	        case types.HIDE_CART_ITEM():
-	            return _lodash2.default.subtract(_lodash2.default.toNumber(state), _lodash2.default.toNumber(action.data.amount));
-	        case types.REMOVE_CART_ITEM():
-	            return _lodash2.default.subtract(_lodash2.default.toNumber(state), _lodash2.default.toNumber(action.data.amount));
-	        default:
-	            return state;
-	    }
-	};
-	
-	var cartReviewMode = exports.cartReviewMode = function cartReviewMode() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.REVIEW_CART():
-	            return true;
-	        case types.CLOSE_CART_REVIEW():
-	            return false;
-	        default:
-	            return state;
-	    }
-	};
-	
-	var cartItemEditMode = exports.cartItemEditMode = function cartItemEditMode() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.EDIT_ITEM_PACKAGE():
-	            return true;
-	        case types.CLOSE_PACKAGES_POPUP():
-	            return false;
-	        default:
-	            return state;
-	    }
-	};
-	
-	var selectedCartItem = exports.selectedCartItem = function selectedCartItem() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { packages: [] };
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.EDIT_ITEM_PACKAGE():
-	            return action.data;
-	        default:
-	            return state;
-	    }
-	};
-
-/***/ },
-/* 571 */
 /*!*************************************************!*\
   !*** ./spas/kit/reducers/categories-reducer.js ***!
   \*************************************************/
@@ -56281,7 +56319,7 @@
 	
 	var types = _interopRequireWildcard(_constants);
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -56314,7 +56352,7 @@
 	};
 
 /***/ },
-/* 572 */
+/* 571 */
 /*!************************************************!*\
   !*** ./spas/kit/reducers/services-reducers.js ***!
   \************************************************/
@@ -56331,7 +56369,7 @@
 	
 	var types = _interopRequireWildcard(_constants);
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -56406,7 +56444,7 @@
 	};
 
 /***/ },
-/* 573 */
+/* 572 */
 /*!**********************************************!*\
   !*** ./spas/kit/reducers/filter-reducers.js ***!
   \**********************************************/
@@ -56423,7 +56461,7 @@
 	
 	var types = _interopRequireWildcard(_constants);
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -56458,7 +56496,7 @@
 	};
 
 /***/ },
-/* 574 */
+/* 573 */
 /*!***********************************************!*\
   !*** ./spas/kit/reducers/loading-reducers.js ***!
   \***********************************************/
@@ -56520,7 +56558,7 @@
 	};
 
 /***/ },
-/* 575 */
+/* 574 */
 /*!*************************************************!*\
   !*** ./spas/kit/reducers/steps-menu-reducer.js ***!
   \*************************************************/
@@ -56580,6 +56618,128 @@
 	};
 
 /***/ },
+/* 575 */
+/*!************************************************!*\
+  !*** ./spas/kit/reducers/checkout-reducers.js ***!
+  \************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.requestingCode = exports.verifyingNumber = exports.checkingOut = exports.congratulationsMode = exports.phoneVerificationMode = exports.clientDetailsMode = exports.clientDetails = undefined;
+	
+	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
+	
+	var types = _interopRequireWildcard(_constants);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var clientDetails = exports.clientDetails = function clientDetails() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { officialName: null, address: null, email: null, phoneNumber: null };
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.SUBMIT_CLIENT_DETAILS():
+	            return (0, _lodash.assign)({}, state, action.data);
+	        default:
+	            return state;
+	    }
+	};
+	
+	var clientDetailsMode = exports.clientDetailsMode = function clientDetailsMode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.PROCEED_TO_CHECKOUT():
+	            return true;
+	        case types.CLOSE_CLIENT_DETAILS_MODAL():
+	        case types.DONE_CHECKING_OUT():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var phoneVerificationMode = exports.phoneVerificationMode = function phoneVerificationMode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.FINISH_CHECKING_OUT():
+	            return true;
+	        case types.DONE_CHECKING_OUT():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var congratulationsMode = exports.congratulationsMode = function congratulationsMode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.DONE_CHECKING_OUT():
+	            return true;
+	        case types.CLOSE_CONGRATULATIONS_MODAL():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var checkingOut = exports.checkingOut = function checkingOut() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.START_CHECKING_OUT():
+	            return true;
+	        case types.CHECKING_OUT_FAILED():
+	        case types.FINISH_CHECKING_OUT():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var verifyingNumber = exports.verifyingNumber = function verifyingNumber() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.START_VERIFYING_NUMBER():
+	            return true;
+	        case types.VERIFYING_NUMBER_FAILED():
+	        case types.FINISH_VERIFYING_NUMBER():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var requestingCode = exports.requestingCode = function requestingCode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.START_REQUESTING_CODE():
+	            return true;
+	        case types.FINISH_REQUESTING_CODE():
+	        case types.REQUESTING_CODE_FAILED():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+
+/***/ },
 /* 576 */
 /*!************************************!*\
   !*** ./~/redux-thunk/lib/index.js ***!
@@ -56633,11 +56793,11 @@
 	
 	var _main2 = _interopRequireDefault(_main);
 	
-	var _servicesContainer = __webpack_require__(/*! ./components/services/services-container */ 1162);
+	var _servicesContainer = __webpack_require__(/*! ./components/services/services-container */ 1165);
 	
 	var _servicesContainer2 = _interopRequireDefault(_servicesContainer);
 	
-	var _serviceZoomModal = __webpack_require__(/*! ./components/modals/service-zoom-modal */ 1168);
+	var _serviceZoomModal = __webpack_require__(/*! ./components/modals/service-zoom-modal */ 1172);
 	
 	var _serviceZoomModal2 = _interopRequireDefault(_serviceZoomModal);
 	
@@ -56672,27 +56832,31 @@
 	
 	var _cartReviewModal2 = _interopRequireDefault(_cartReviewModal);
 	
-	var _categoryItemList = __webpack_require__(/*! ./categories/category-item-list */ 1139);
+	var _categoryItemList = __webpack_require__(/*! ./categories/category-item-list */ 1147);
 	
 	var _categoryItemList2 = _interopRequireDefault(_categoryItemList);
 	
-	var _initialBudgetModal = __webpack_require__(/*! ./modals/initial-budget-modal */ 1151);
+	var _initialBudgetModal = __webpack_require__(/*! ./modals/initial-budget-modal */ 1152);
 	
 	var _initialBudgetModal2 = _interopRequireDefault(_initialBudgetModal);
 	
-	var _mainHeader = __webpack_require__(/*! ./main-header */ 1153);
+	var _mainHeader = __webpack_require__(/*! ./main-header */ 1154);
 	
 	var _mainHeader2 = _interopRequireDefault(_mainHeader);
 	
-	var _servicesAndCart = __webpack_require__(/*! ./services-and-cart */ 1157);
+	var _servicesAndCart = __webpack_require__(/*! ./services-and-cart */ 1159);
 	
 	var _servicesAndCart2 = _interopRequireDefault(_servicesAndCart);
 	
-	var _serviceZoomModal = __webpack_require__(/*! ./modals/service-zoom-modal */ 1168);
+	var _serviceZoomModal = __webpack_require__(/*! ./modals/service-zoom-modal */ 1172);
 	
 	var _serviceZoomModal2 = _interopRequireDefault(_serviceZoomModal);
 	
-	var _stepMenuPopup = __webpack_require__(/*! ./popups/step-menu-popup */ 1169);
+	var _clientDetailsModal = __webpack_require__(/*! ./modals/client-details-modal */ 1173);
+	
+	var _clientDetailsModal2 = _interopRequireDefault(_clientDetailsModal);
+	
+	var _stepMenuPopup = __webpack_require__(/*! ./popups/step-menu-popup */ 1175);
 	
 	var _stepMenuPopup2 = _interopRequireDefault(_stepMenuPopup);
 	
@@ -56718,6 +56882,7 @@
 	        _react2.default.createElement(_cartReviewModal2.default, null),
 	        _react2.default.createElement(_serviceZoomModal2.default, null),
 	        _react2.default.createElement(_initialBudgetModal2.default, null),
+	        _react2.default.createElement(_clientDetailsModal2.default, null),
 	        _react2.default.createElement(_stepMenuPopup2.default, null)
 	    );
 	};
@@ -93779,7 +93944,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -93799,9 +93964,17 @@
 	
 	var _redux = __webpack_require__(/*! redux */ 478);
 	
+	var _checkout = __webpack_require__(/*! ../../actions/checkout */ 1138);
+	
+	var checkoutActions = _interopRequireWildcard(_checkout);
+	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
-	var _cart = __webpack_require__(/*! ../../actions/cart */ 1138);
+	var _selectors = __webpack_require__(/*! ../../selectors */ 1144);
+	
+	var _cart = __webpack_require__(/*! ../../actions/cart */ 1146);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -93810,6 +93983,47 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var styles = {
+	    main: {
+	        width: '500px',
+	        borderRadius: 0,
+	        height: '600px'
+	    },
+	    header: {
+	        padding: 0,
+	        borderBottom: 0,
+	
+	        segment: {
+	            height: '50px',
+	            boxShadow: 'none',
+	            borderRadius: 0
+	        }
+	    },
+	    content: {
+	        padding: 0,
+	
+	        segment: {
+	            border: 0,
+	            borderRadius: 0,
+	            height: '500px',
+	            boxShadow: 'none'
+	        },
+	        item: {
+	            height: '40px',
+	            display: 'flex',
+	            flexDirection: 'column',
+	            justifyContent: 'center'
+	        }
+	    },
+	
+	    actions: {
+	        borderRadius: 0,
+	        display: 'flex',
+	        flexDirection: 'row',
+	        justifyContent: 'space-between'
+	    }
+	};
 	
 	var CartReviewModal = exports.CartReviewModal = function (_React$Component) {
 	    _inherits(CartReviewModal, _React$Component);
@@ -93838,7 +94052,9 @@
 	        }
 	    }, {
 	        key: 'handleSubmit',
-	        value: function handleSubmit(e) {}
+	        value: function handleSubmit(e) {
+	            this.props.proceedToCheckout();
+	        }
 	    }, {
 	        key: 'render',
 	        value: function render() {
@@ -93849,16 +94065,15 @@
 	            var cartReviewMode = _props.cartReviewMode;
 	
 	
-	            var visibleItems = _lodash2.default.filter(cartItems, { hidden: false });
-	            // const visibleItems = cartItems;
-	
-	            var items = visibleItems.map(function (_ref) {
+	            var items = cartItems.map(function (_ref) {
 	                var name = _ref.name;
 	                var amount = _ref.amount;
 	                var id = _ref.id;
 	                return _react2.default.createElement(
 	                    'div',
-	                    { className: 'Cart__Review__Item item', key: id },
+	                    {
+	                        style: styles.content.item,
+	                        className: 'Cart__Review__Item item', key: id },
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'ui grid' },
@@ -93886,17 +94101,26 @@
 	                );
 	            });
 	
-	            var ready = !_lodash2.default.isEmpty(visibleItems);
+	            var ready = !_lodash2.default.isEmpty(cartItems);
 	
 	            return _react2.default.createElement(
 	                _semanticUiReact.Modal,
-	                { className: 'Review__Modal Cart__Review__Modal small', open: cartReviewMode },
+	                {
+	                    size: 'small',
+	                    style: styles.main,
+	                    dimmer: this.state.dimmer,
+	                    className: 'Cart__Review__Modal',
+	                    open: cartReviewMode },
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'header' },
+	                    {
+	                        style: styles.header,
+	                        className: 'header' },
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: 'ui segment' },
+	                        {
+	                            style: styles.header.segment,
+	                            className: 'ui segment' },
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'ui grid' },
@@ -93935,10 +94159,14 @@
 	                ),
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'Cart__Review__Modal__Content content' },
+	                    {
+	                        style: styles.content,
+	                        className: 'Cart__Review__Modal__Content content' },
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: 'ui segment' },
+	                        {
+	                            style: styles.content.segment,
+	                            className: 'ui segment' },
 	                        _react2.default.createElement(
 	                            'div',
 	                            { className: 'ui divided list' },
@@ -93948,7 +94176,9 @@
 	                ),
 	                _react2.default.createElement(
 	                    'div',
-	                    { className: 'actions' },
+	                    {
+	                        style: styles.actions,
+	                        className: 'actions' },
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'ui mini button Close__Modal', onClick: this.handleClose },
@@ -93981,24 +94211,23 @@
 	    budget: _react2.default.PropTypes.number,
 	    cartReviewMode: _react2.default.PropTypes.bool,
 	    cartTotal: _react2.default.PropTypes.number
+	
 	};
 	
-	var mapStateToProps = function mapStateToProps(_ref2, ownProps) {
-	    var cartItems = _ref2.cartItems;
-	    var budget = _ref2.budget;
-	    var cartTotal = _ref2.cartTotal;
-	    var cartReviewMode = _ref2.cartReviewMode;
-	
+	var mapStateToProps = function mapStateToProps(state) {
 	    return {
-	        cartItems: cartItems,
-	        budget: budget,
-	        cartTotal: cartTotal,
-	        cartReviewMode: cartReviewMode
+	        cartItems: (0, _selectors.getVisibleItemsSelector)(state),
+	        budget: state.budget,
+	        cartTotal: (0, _selectors.getCartTotalSelector)(state),
+	        cartReviewMode: state.cartReviewMode
 	    };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
-	    return (0, _redux.bindActionCreators)({ closeCartReview: _cart.closeCartReview }, dispatch);
+	    return (0, _redux.bindActionCreators)({
+	        closeCartReview: _cart.closeCartReview,
+	        proceedToCheckout: _checkout.proceedToCheckout
+	    }, dispatch);
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(CartReviewModal);
@@ -94693,9 +94922,9 @@
 
 /***/ },
 /* 1138 */
-/*!**********************************!*\
-  !*** ./spas/kit/actions/cart.js ***!
-  \**********************************/
+/*!**************************************!*\
+  !*** ./spas/kit/actions/checkout.js ***!
+  \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -94703,478 +94932,93 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.updateCartItemPackage = exports.closePackagesPopup = exports.editItemPackage = exports.closeCartReview = exports.reviewCartItems = exports.removeCartItem = exports.showCartItem = exports.hideCartItem = exports.addItemToCart = undefined;
+	exports.closeClientDetailsModal = exports.requestNewCode = exports.verifyPhoneNumber = exports.checkout = exports.proceedToCheckout = undefined;
 	
 	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
 	
 	var types = _interopRequireWildcard(_constants);
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var addItemToCart = exports.addItemToCart = function addItemToCart(item) {
-	    return {
-	        type: types.ADD_ITEM_TO_CART(),
-	        data: (0, _lodash.assign)({}, item, { hidden: false })
-	    };
-	};
-	
-	var hideCartItem = exports.hideCartItem = function hideCartItem(_ref) {
-	    var id = _ref.id;
-	    var amount = _ref.amount;
-	    return {
-	        type: types.HIDE_CART_ITEM(),
-	        data: {
-	            id: id, amount: amount
-	        }
-	    };
-	};
-	
-	var showCartItem = exports.showCartItem = function showCartItem(_ref2) {
-	    var id = _ref2.id;
-	    var amount = _ref2.amount;
-	    return {
-	        type: types.SHOW_CART_ITEM(),
-	        data: {
-	            id: id, amount: amount
-	        }
-	    };
-	};
-	
-	var removeCartItem = exports.removeCartItem = function removeCartItem(_ref3) {
-	    var id = _ref3.id;
-	    var amount = _ref3.amount;
-	    var hidden = _ref3.hidden;
-	
-	    var type = hidden ? types.REMOVE_HIDDEN_CART_ITEM() : types.REMOVE_CART_ITEM();
-	    return {
-	        type: type,
-	        data: {
-	            id: id, amount: amount
-	        }
-	    };
-	};
-	
-	var reviewCartItems = exports.reviewCartItems = function reviewCartItems() {
-	    return { type: types.REVIEW_CART() };
-	};
-	
-	var closeCartReview = exports.closeCartReview = function closeCartReview() {
-	    return { type: types.CLOSE_CART_REVIEW() };
-	};
-	
-	var editItemPackage = exports.editItemPackage = function editItemPackage(cartItem) {
-	    return { type: types.EDIT_ITEM_PACKAGE(), data: cartItem };
-	};
-	
-	var closePackagesPopup = exports.closePackagesPopup = function closePackagesPopup() {
-	    return { type: types.CLOSE_PACKAGES_POPUP() };
-	};
-	
-	var updateCartItemPackage = exports.updateCartItemPackage = function updateCartItemPackage(cartItem) {
-	    return { type: types.UPDATE_CART_ITEM_PACKAGE(), data: cartItem };
-	};
-
-/***/ },
-/* 1139 */
-/*!**************************************************************!*\
-  !*** ./spas/kit/components/categories/category-item-list.js ***!
-  \**************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.CategoryItemList = undefined;
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _radium = __webpack_require__(/*! radium */ 579);
-	
-	var _radium2 = _interopRequireDefault(_radium);
-	
-	var _react = __webpack_require__(/*! react */ 301);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 471);
-	
-	var _redux = __webpack_require__(/*! redux */ 478);
-	
-	var _categoryItem = __webpack_require__(/*! ./category-item */ 1140);
-	
-	var _categoryItem2 = _interopRequireDefault(_categoryItem);
-	
-	var _categories = __webpack_require__(/*! ../../actions/categories */ 1142);
-	
-	var _services = __webpack_require__(/*! ../../actions/services */ 1148);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var styles = {
-	    default: {
-	        margin: 0,
-	        border: 0,
-	        borderRadius: 0,
-	        boxShadow: 'rgba(34, 36, 38, 0.14902) 0px 1px 10px 0px',
-	        height: '11vh',
-	        padding: '.6em'
-	    }
-	};
-	
-	var CategoryItemList = exports.CategoryItemList = function (_React$Component) {
-	    _inherits(CategoryItemList, _React$Component);
-	
-	    function CategoryItemList(props) {
-	        _classCallCheck(this, CategoryItemList);
-	
-	        var _this = _possibleConstructorReturn(this, (CategoryItemList.__proto__ || Object.getPrototypeOf(CategoryItemList)).call(this, props));
-	
-	        _this.handleClick = _this.handleClick.bind(_this);
-	        _this.handleMouseOver = _this.handleMouseOver.bind(_this);
-	        _this.handleMouseOut = _this.handleMouseOut.bind(_this);
-	        return _this;
-	    }
-	
-	    _createClass(CategoryItemList, [{
-	        key: 'handleClick',
-	        value: function handleClick(_ref) {
-	            var id = _ref.id;
-	            var _props = this.props;
-	            var selectedCategory = _props.selectedCategory;
-	            var selectCategory = _props.selectCategory;
-	
-	            if (_lodash2.default.eq(id, selectedCategory)) return;
-	            selectCategory(id);
-	        }
-	    }, {
-	        key: 'handleMouseOut',
-	        value: function handleMouseOut(e) {}
-	    }, {
-	        key: 'handleMouseOver',
-	        value: function handleMouseOver(e) {}
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
-	
-	            var _props2 = this.props;
-	            var categories = _props2.categories;
-	            var loadingCategories = _props2.loadingCategories;
-	
-	
-	            var rendered = categories.map(function (category) {
-	                return _react2.default.createElement(_categoryItem2.default, {
-	                    key: category.id,
-	                    item: category,
-	                    onHoverIn: _this2.handleMouseOver,
-	                    onHoverOut: _this2.handleMouseOut,
-	                    onSelect: _this2.handleClick });
-	            });
-	
-	            return _react2.default.createElement(
-	                'div',
-	                {
-	                    style: styles.default,
-	                    className: 'ui segment Category__Item__List category-list link cards ' + (loadingCategories ? 'loading' : '') },
-	                rendered
-	            );
-	        }
-	    }]);
-	
-	    return CategoryItemList;
-	}(_react2.default.Component);
-	
-	CategoryItemList.PropTypes = {
-	    selectCategory: _react2.default.PropTypes.func.isRequired,
-	    selectedCategory: _react2.default.PropTypes.string,
-	    loadingCategories: _react2.default.PropTypes.boolean,
-	    categories: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.object)
-	};
-	
-	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
-	    return (0, _redux.bindActionCreators)({
-	        selectCategory: _categories.selectCategory
-	    }, dispatch);
-	};
-	
-	var mapStateToProps = function mapStateToProps(_ref2, ownProps) {
-	    var categories = _ref2.categories;
-	    var loadingCategories = _ref2.loadingCategories;
-	    var filterPriceRange = _ref2.filterPriceRange;
-	    var selectedCategory = _ref2.selectedCategory;
-	
-	    return {
-	        categories: categories,
-	        loadingCategories: loadingCategories,
-	        selectedCategory: selectedCategory
-	    };
-	};
-	
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)((0, _radium2.default)(CategoryItemList));
-
-/***/ },
-/* 1140 */
-/*!*********************************************************!*\
-  !*** ./spas/kit/components/categories/category-item.js ***!
-  \*********************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _radium = __webpack_require__(/*! radium */ 579);
-	
-	var _radium2 = _interopRequireDefault(_radium);
-	
-	var _react = __webpack_require__(/*! react */ 301);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
-	
-	var _categoryNamePopup = __webpack_require__(/*! ../popups/category-name-popup */ 1141);
-	
-	var _categoryNamePopup2 = _interopRequireDefault(_categoryNamePopup);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var styles = {
-	    category: {
-	        margin: '0 1em',
-	        width: '90px',
-	        borderRadius: 0,
-	        boxShadow: '0px 0px 3px 0px rgba(175, 175, 175, 0.50)',
-	        // border: '1px solid rgba(34, 36, 38, 0.15)',
-	        ':hover': {},
-	        image: {
-	            height: '90px'
-	        }
-	    },
-	    popup: {
-	        // background: 
-	    }
-	};
-	
-	var CategoryItem = function (_React$Component) {
-	    _inherits(CategoryItem, _React$Component);
-	
-	    function CategoryItem(props) {
-	        _classCallCheck(this, CategoryItem);
-	
-	        var _this = _possibleConstructorReturn(this, (CategoryItem.__proto__ || Object.getPrototypeOf(CategoryItem)).call(this, props));
-	
-	        _this.handleClick = _this.handleClick.bind(_this);
-	        _this.handleHoverIn = _this.handleHoverIn.bind(_this);
-	        _this.handleHoverOut = _this.handleHoverOut.bind(_this);
-	        return _this;
-	    }
-	
-	    _createClass(CategoryItem, [{
-	        key: 'handleClick',
-	        value: function handleClick(e) {
-	            var _props = this.props;
-	            var item = _props.item;
-	            var onSelect = _props.onSelect;
-	
-	            onSelect(item);
-	        }
-	    }, {
-	        key: 'handleHoverOut',
-	        value: function handleHoverOut(e) {
-	            var onHoverOut = this.props.onHoverOut;
-	
-	            onHoverOut();
-	        }
-	    }, {
-	        key: 'handleHoverIn',
-	        value: function handleHoverIn(e) {
-	            var onHoverIn = this.props.onHoverIn;
-	
-	            onHoverIn();
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _props$item = this.props.item;
-	            var name = _props$item.name;
-	            var img = _props$item.img;
-	
-	
-	            var card = _react2.default.createElement(
-	                _semanticUiReact.Card,
-	                { style: styles.category,
-	                    className: 'service-category Category__Item',
-	                    onClick: this.handleClick,
-	                    onMouseOut: this.handleHoverOut,
-	                    onMouseOver: this.handleHoverIn },
-	                _react2.default.createElement(_semanticUiReact.Image, { style: styles.category.image, className: 'Category__Icon', src: img })
-	            );
-	
-	            return _react2.default.createElement(_categoryNamePopup2.default, {
-	                style: styles.popup,
-	                trigger: card,
-	                name: name
-	            });
-	        }
-	    }]);
-	
-	    return CategoryItem;
-	}(_react2.default.Component);
-	
-	CategoryItem.PropTypes = {
-	    item: _react2.default.PropTypes.object.isRequired,
-	    onSelect: _react2.default.PropTypes.func.isRequired,
-	    onHoverIn: _react2.default.PropTypes.func.isRequired,
-	    onHoverOut: _react2.default.PropTypes.func.isRequired
-	};
-	
-	exports.default = (0, _radium2.default)(CategoryItem);
-
-/***/ },
-/* 1141 */
-/*!***********************************************************!*\
-  !*** ./spas/kit/components/popups/category-name-popup.js ***!
-  \***********************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _react = __webpack_require__(/*! react */ 301);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	exports.default = function (_ref) {
-	    var trigger = _ref.trigger;
-	    var name = _ref.name;
-	
-	    return _react2.default.createElement(_semanticUiReact.Popup, {
-	        className: 'Category__Name',
-	        trigger: trigger,
-	        content: name,
-	        size: 'mini',
-	        positioning: 'top center'
-	    });
-	};
-
-/***/ },
-/* 1142 */
-/*!****************************************!*\
-  !*** ./spas/kit/actions/categories.js ***!
-  \****************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.fetchCategories = exports.selectCategory = exports.doSelectCategory = exports.loadingCategoriesFailed = exports.finishLoadingCategories = exports.startLoadingCategories = exports.receiveCategories = undefined;
-	
-	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
-	
-	var types = _interopRequireWildcard(_constants);
-	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-	
-	var _superagent = __webpack_require__(/*! superagent */ 1143);
+	var _superagent = __webpack_require__(/*! superagent */ 1139);
 	
 	var _superagent2 = _interopRequireDefault(_superagent);
 	
-	var _services = __webpack_require__(/*! ../actions/services */ 1148);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 	
-	var receiveCategories = exports.receiveCategories = function receiveCategories(categories) {
-	    return {
-	        type: types.RECEIVE_CATEGORIES(),
-	        data: categories
-	    };
+	// import http from 'axios';
+	
+	var proceedToCheckout = exports.proceedToCheckout = function proceedToCheckout() {
+	    return { type: types.PROCEED_TO_CHECKOUT() };
 	};
 	
-	var startLoadingCategories = exports.startLoadingCategories = function startLoadingCategories() {
-	    return { type: types.START_LOADING_CATEGORIES() };
-	};
-	
-	var finishLoadingCategories = exports.finishLoadingCategories = function finishLoadingCategories() {
-	    return { type: types.FINISH_LOADING_CATEGORIES() };
-	};
-	
-	var loadingCategoriesFailed = exports.loadingCategoriesFailed = function loadingCategoriesFailed(error) {
-	    return { type: types.LOADING_CATEGORIES_FAILED(), data: error };
-	};
-	
-	var doSelectCategory = exports.doSelectCategory = function doSelectCategory(categoryId) {
-	    return { type: types.SELECT_CATEGORY(), data: categoryId };
-	};
-	
-	var selectCategory = exports.selectCategory = function selectCategory(categoryId) {
-	    return function (dispatch) {
-	        dispatch(doSelectCategory(categoryId));
-	        return dispatch((0, _services.fetchServices)(categoryId, { from: null, to: null }));
-	    };
-	};
-	
-	var fetchCategories = exports.fetchCategories = function fetchCategories(stepId) {
+	var checkout = exports.checkout = function checkout(data) {
 	    var testUri = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 	    return function (dispatch) {
-	        var uri = testUri ? testUri : '/api/steps/' + stepId + '/categories';
+	
+	        var uri = testUri ? testUri : '/api/orders';
 	
 	        var url = '' + types.URL() + uri;
 	
-	        dispatch(startLoadingCategories());
+	        dispatch({ type: types.START_CHECKING_OUT() });
 	
-	        return _superagent2.default.get(url).then(function (_ref) {
-	            var body = _ref.body;
-	
-	            dispatch(receiveCategories(body));
-	            dispatch(finishLoadingCategories());
-	            return dispatch(selectCategory(_lodash2.default.first(body).id));
+	        return _superagent2.default.post(url, data).then(function (resp) {
+	            console.log(resp.status);
+	            dispatch({ type: types.FINISH_CHECKING_OUT() });
 	        }).catch(function (error) {
-	            dispatch(loadingCategoriesFailed(error));
-	            dispatch(finishLoadingCategories());
+	            dispatch({ type: types.CHECKING_OUT_FAILED(), data: error });
 	        });
 	    };
 	};
+	
+	var verifyPhoneNumber = exports.verifyPhoneNumber = function verifyPhoneNumber(code) {
+	    var testUri = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+	    return function (dispatch) {
+	
+	        var uri = testUri ? testUri : '/api/orders/validate';
+	
+	        var url = '' + types.URL() + uri;
+	
+	        dispatch({ type: types.START_VERIFYING_NUMBER() });
+	
+	        return _superagent2.default.post(url, code).then(function (resp) {
+	            dispatch({ type: types.FINISH_VERIFYING_NUMBER() });
+	        }).catch(function (error) {
+	            dispatch({ type: types.VERIFYING_NUMBER_FAILED(), data: error });
+	        });
+	    };
+	};
+	
+	var requestNewCode = exports.requestNewCode = function requestNewCode(phone) {
+	    var testUri = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+	    return function (dispatch) {
+	
+	        var uri = testUri ? testUri : '/api/orders/retry';
+	
+	        var url = '' + types.URL() + uri;
+	
+	        dispatch({ type: types.START_REQUESTING_CODE() });
+	
+	        return _superagent2.default.post(url, phone).then(function (resp) {
+	            dispatch({ type: types.FINISH_REQUESTING_CODE() });
+	        }).catch(function (error) {
+	            dispatch({ type: types.REQUESTING_CODE_FAILED(), data: error });
+	        });
+	    };
+	};
+	
+	var closeClientDetailsModal = exports.closeClientDetailsModal = function closeClientDetailsModal() {
+	    return { type: types.CLOSE_CLIENT_DETAILS_MODAL() };
+	};
+	
+	// export const checkoutFailed = error => ({type: types.CHECKOUT_FAILED(), data: error});
 
 /***/ },
-/* 1143 */
+/* 1139 */
 /*!************************************!*\
   !*** ./~/superagent/lib/client.js ***!
   \************************************/
@@ -95194,9 +95038,9 @@
 	  root = this;
 	}
 	
-	var Emitter = __webpack_require__(/*! emitter */ 1144);
-	var requestBase = __webpack_require__(/*! ./request-base */ 1145);
-	var isObject = __webpack_require__(/*! ./is-object */ 1146);
+	var Emitter = __webpack_require__(/*! emitter */ 1140);
+	var requestBase = __webpack_require__(/*! ./request-base */ 1141);
+	var isObject = __webpack_require__(/*! ./is-object */ 1142);
 	
 	/**
 	 * Noop.
@@ -95208,7 +95052,7 @@
 	 * Expose `request`.
 	 */
 	
-	var request = module.exports = __webpack_require__(/*! ./request */ 1147).bind(null, Request);
+	var request = module.exports = __webpack_require__(/*! ./request */ 1143).bind(null, Request);
 	
 	/**
 	 * Determine XHR.
@@ -96159,7 +96003,7 @@
 
 
 /***/ },
-/* 1144 */
+/* 1140 */
 /*!**************************************!*\
   !*** ./~/component-emitter/index.js ***!
   \**************************************/
@@ -96331,7 +96175,7 @@
 
 
 /***/ },
-/* 1145 */
+/* 1141 */
 /*!******************************************!*\
   !*** ./~/superagent/lib/request-base.js ***!
   \******************************************/
@@ -96340,7 +96184,7 @@
 	/**
 	 * Module of mixed-in functions shared between node and client code
 	 */
-	var isObject = __webpack_require__(/*! ./is-object */ 1146);
+	var isObject = __webpack_require__(/*! ./is-object */ 1142);
 	
 	/**
 	 * Clear previous timeout.
@@ -96712,7 +96556,7 @@
 
 
 /***/ },
-/* 1146 */
+/* 1142 */
 /*!***************************************!*\
   !*** ./~/superagent/lib/is-object.js ***!
   \***************************************/
@@ -96734,7 +96578,7 @@
 
 
 /***/ },
-/* 1147 */
+/* 1143 */
 /*!*************************************!*\
   !*** ./~/superagent/lib/request.js ***!
   \*************************************/
@@ -96775,7 +96619,701 @@
 
 
 /***/ },
+/* 1144 */
+/*!*************************************!*\
+  !*** ./spas/kit/selectors/index.js ***!
+  \*************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.getOrderSelector = exports.getServiceInZoomImagesSelector = exports.getServiceInZoomSelector = exports.getBalanceSelector = exports.getCartTotalSelector = exports.getVisibleItemsSelector = exports.askForInitialBudget = undefined;
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _reselect = __webpack_require__(/*! reselect */ 1145);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var getBudget = function getBudget(_ref) {
+	    var budget = _ref.budget;
+	    return budget;
+	};
+	
+	var askForInitialBudget = exports.askForInitialBudget = (0, _reselect.createSelector)([getBudget], function (budget) {
+	    return _lodash2.default.isNull(budget);
+	});
+	
+	var getCartItems = function getCartItems(_ref2) {
+	    var cartItems = _ref2.cartItems;
+	    return cartItems;
+	};
+	
+	var getVisibleItemsSelector = exports.getVisibleItemsSelector = (0, _reselect.createSelector)([getCartItems], function (items) {
+	    return _lodash2.default.filter(items, { hidden: false });
+	});
+	
+	var getCartItemsAmount = function getCartItemsAmount(_ref3) {
+	    var cartItems = _ref3.cartItems;
+	    return _lodash2.default.map(cartItems, function (item) {
+	        return item.hidden ? 0 : item.amount;
+	    });
+	};
+	
+	var getServices = function getServices(_ref4) {
+	    var services = _ref4.services;
+	    return services;
+	};
+	
+	var getCartTotalSelector = exports.getCartTotalSelector = (0, _reselect.createSelector)([getCartItemsAmount], function (cartItemsAmount) {
+	    return _lodash2.default.sum(cartItemsAmount);
+	});
+	
+	var getBalanceSelector = exports.getBalanceSelector = (0, _reselect.createSelector)([getBudget, getCartTotalSelector], function (budget, cartTotal) {
+	    // console.log(`budget => ${budget} and total => ${cartTotal}`);
+	    return _lodash2.default.subtract(Number.parseInt(budget, 10), Number.parseInt(cartTotal, 10));
+	});
+	
+	var getServiceInZoomId = function getServiceInZoomId(_ref5) {
+	    var serviceInZoom = _ref5.serviceInZoom;
+	    return serviceInZoom;
+	};
+	
+	var getServicesImages = function getServicesImages(_ref6) {
+	    var servicesImages = _ref6.servicesImages;
+	    return servicesImages;
+	};
+	
+	var getServiceInZoomSelector = exports.getServiceInZoomSelector = (0, _reselect.createSelector)([getServiceInZoomId, getServices], function (id, services) {
+	    return _lodash2.default.find(services, { id: id }) || {};
+	});
+	
+	var getServiceInZoomImagesSelector = exports.getServiceInZoomImagesSelector = (0, _reselect.createSelector)([getServiceInZoomId, getServicesImages], function (serviceInZoomId, servicesImages) {
+	    return _lodash2.default.find(servicesImages, { id: serviceInZoomId });
+	});
+	
+	var getOrderSelector = exports.getOrderSelector = (0, _reselect.createSelector)([getVisibleItemsSelector], function (items) {
+	    items.map(function (_ref7) {
+	        var id = _ref7.id;
+	        var amount = _ref7.amount;
+	        return { id: id, amount: amount };
+	    });
+	});
+
+/***/ },
+/* 1145 */
+/*!*********************************!*\
+  !*** ./~/reselect/lib/index.js ***!
+  \*********************************/
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	exports.defaultMemoize = defaultMemoize;
+	exports.createSelectorCreator = createSelectorCreator;
+	exports.createStructuredSelector = createStructuredSelector;
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	function defaultEqualityCheck(a, b) {
+	  return a === b;
+	}
+	
+	function defaultMemoize(func) {
+	  var equalityCheck = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCheck : arguments[1];
+	
+	  var lastArgs = null;
+	  var lastResult = null;
+	  return function () {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+	
+	    if (lastArgs === null || lastArgs.length !== args.length || !args.every(function (value, index) {
+	      return equalityCheck(value, lastArgs[index]);
+	    })) {
+	      lastResult = func.apply(undefined, args);
+	    }
+	    lastArgs = args;
+	    return lastResult;
+	  };
+	}
+	
+	function getDependencies(funcs) {
+	  var dependencies = Array.isArray(funcs[0]) ? funcs[0] : funcs;
+	
+	  if (!dependencies.every(function (dep) {
+	    return typeof dep === 'function';
+	  })) {
+	    var dependencyTypes = dependencies.map(function (dep) {
+	      return typeof dep;
+	    }).join(', ');
+	    throw new Error('Selector creators expect all input-selectors to be functions, ' + ('instead received the following types: [' + dependencyTypes + ']'));
+	  }
+	
+	  return dependencies;
+	}
+	
+	function createSelectorCreator(memoize) {
+	  for (var _len2 = arguments.length, memoizeOptions = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+	    memoizeOptions[_key2 - 1] = arguments[_key2];
+	  }
+	
+	  return function () {
+	    for (var _len3 = arguments.length, funcs = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	      funcs[_key3] = arguments[_key3];
+	    }
+	
+	    var recomputations = 0;
+	    var resultFunc = funcs.pop();
+	    var dependencies = getDependencies(funcs);
+	
+	    var memoizedResultFunc = memoize.apply(undefined, [function () {
+	      recomputations++;
+	      return resultFunc.apply(undefined, arguments);
+	    }].concat(memoizeOptions));
+	
+	    var selector = function selector(state, props) {
+	      for (var _len4 = arguments.length, args = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
+	        args[_key4 - 2] = arguments[_key4];
+	      }
+	
+	      var params = dependencies.map(function (dependency) {
+	        return dependency.apply(undefined, [state, props].concat(args));
+	      });
+	      return memoizedResultFunc.apply(undefined, _toConsumableArray(params));
+	    };
+	
+	    selector.resultFunc = resultFunc;
+	    selector.recomputations = function () {
+	      return recomputations;
+	    };
+	    selector.resetRecomputations = function () {
+	      return recomputations = 0;
+	    };
+	    return selector;
+	  };
+	}
+	
+	var createSelector = exports.createSelector = createSelectorCreator(defaultMemoize);
+	
+	function createStructuredSelector(selectors) {
+	  var selectorCreator = arguments.length <= 1 || arguments[1] === undefined ? createSelector : arguments[1];
+	
+	  if (typeof selectors !== 'object') {
+	    throw new Error('createStructuredSelector expects first argument to be an object ' + ('where each property is a selector, instead received a ' + typeof selectors));
+	  }
+	  var objectKeys = Object.keys(selectors);
+	  return selectorCreator(objectKeys.map(function (key) {
+	    return selectors[key];
+	  }), function () {
+	    for (var _len5 = arguments.length, values = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+	      values[_key5] = arguments[_key5];
+	    }
+	
+	    return values.reduce(function (composition, value, index) {
+	      composition[objectKeys[index]] = value;
+	      return composition;
+	    }, {});
+	  });
+	}
+
+/***/ },
+/* 1146 */
+/*!**********************************!*\
+  !*** ./spas/kit/actions/cart.js ***!
+  \**********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.doneChoosingPackage = exports.chooseItemPackage = exports.updateCartItemPackage = exports.closePackagesPopup = exports.editItemPackage = exports.closeCartReview = exports.reviewCartItems = exports.removeCartItem = exports.showCartItem = exports.hideCartItem = exports.addItemToCart = undefined;
+	
+	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
+	
+	var types = _interopRequireWildcard(_constants);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var addItemToCart = exports.addItemToCart = function addItemToCart(item) {
+	    return {
+	        type: types.ADD_ITEM_TO_CART(),
+	        data: (0, _lodash.assign)({}, item, { hidden: false })
+	    };
+	};
+	
+	var hideCartItem = exports.hideCartItem = function hideCartItem(_ref) {
+	    var id = _ref.id;
+	    var amount = _ref.amount;
+	    return {
+	        type: types.HIDE_CART_ITEM(),
+	        data: {
+	            id: id, amount: amount
+	        }
+	    };
+	};
+	
+	var showCartItem = exports.showCartItem = function showCartItem(_ref2) {
+	    var id = _ref2.id;
+	    var amount = _ref2.amount;
+	    return {
+	        type: types.SHOW_CART_ITEM(),
+	        data: {
+	            id: id, amount: amount
+	        }
+	    };
+	};
+	
+	var removeCartItem = exports.removeCartItem = function removeCartItem(_ref3) {
+	    var id = _ref3.id;
+	    var amount = _ref3.amount;
+	    var hidden = _ref3.hidden;
+	
+	    var type = hidden ? types.REMOVE_HIDDEN_CART_ITEM() : types.REMOVE_CART_ITEM();
+	    return {
+	        type: type,
+	        data: {
+	            id: id, amount: amount
+	        }
+	    };
+	};
+	
+	var reviewCartItems = exports.reviewCartItems = function reviewCartItems() {
+	    return { type: types.REVIEW_CART() };
+	};
+	
+	var closeCartReview = exports.closeCartReview = function closeCartReview() {
+	    return { type: types.CLOSE_CART_REVIEW() };
+	};
+	
+	var editItemPackage = exports.editItemPackage = function editItemPackage(cartItem) {
+	    return { type: types.EDIT_ITEM_PACKAGE(), data: cartItem };
+	};
+	
+	var closePackagesPopup = exports.closePackagesPopup = function closePackagesPopup() {
+	    return { type: types.CLOSE_PACKAGES_POPUP() };
+	};
+	
+	var updateCartItemPackage = exports.updateCartItemPackage = function updateCartItemPackage(cartItem) {
+	    return { type: types.UPDATE_CART_ITEM_PACKAGE(), data: cartItem };
+	};
+	
+	var chooseItemPackage = exports.chooseItemPackage = function chooseItemPackage(itemId) {
+	    return { type: types.CHOOSE_ITEM_PACKAGE(), data: itemId };
+	};
+	
+	var doneChoosingPackage = exports.doneChoosingPackage = function doneChoosingPackage() {
+	    return { type: types.DONE_CHOOSING_PACKAGE() };
+	};
+
+/***/ },
+/* 1147 */
+/*!**************************************************************!*\
+  !*** ./spas/kit/components/categories/category-item-list.js ***!
+  \**************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.CategoryItemList = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _radium = __webpack_require__(/*! radium */ 579);
+	
+	var _radium2 = _interopRequireDefault(_radium);
+	
+	var _react = __webpack_require__(/*! react */ 301);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 471);
+	
+	var _redux = __webpack_require__(/*! redux */ 478);
+	
+	var _categoryItem = __webpack_require__(/*! ./category-item */ 1148);
+	
+	var _categoryItem2 = _interopRequireDefault(_categoryItem);
+	
+	var _categories = __webpack_require__(/*! ../../actions/categories */ 1150);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var styles = {
+	    default: {
+	        margin: 0,
+	        border: 0,
+	        borderRadius: 0,
+	        boxShadow: 'rgba(34, 36, 38, 0.14902) 0px 1px 10px 0px',
+	        height: '11vh',
+	        padding: '.6em'
+	    }
+	};
+	
+	var CategoryItemList = exports.CategoryItemList = function (_React$Component) {
+	    _inherits(CategoryItemList, _React$Component);
+	
+	    function CategoryItemList(props) {
+	        _classCallCheck(this, CategoryItemList);
+	
+	        var _this = _possibleConstructorReturn(this, (CategoryItemList.__proto__ || Object.getPrototypeOf(CategoryItemList)).call(this, props));
+	
+	        _this.handleClick = _this.handleClick.bind(_this);
+	        _this.handleMouseOver = _this.handleMouseOver.bind(_this);
+	        _this.handleMouseOut = _this.handleMouseOut.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(CategoryItemList, [{
+	        key: 'handleClick',
+	        value: function handleClick(_ref) {
+	            var id = _ref.id;
+	            var _props = this.props;
+	            var selectedCategory = _props.selectedCategory;
+	            var selectCategory = _props.selectCategory;
+	
+	            if (_lodash2.default.eq(id, selectedCategory)) return;
+	            selectCategory(id);
+	        }
+	    }, {
+	        key: 'handleMouseOut',
+	        value: function handleMouseOut(e) {}
+	    }, {
+	        key: 'handleMouseOver',
+	        value: function handleMouseOver(e) {}
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+	
+	            var _props2 = this.props;
+	            var categories = _props2.categories;
+	            var loadingCategories = _props2.loadingCategories;
+	
+	
+	            var rendered = categories.map(function (category) {
+	                return _react2.default.createElement(_categoryItem2.default, {
+	                    key: category.id,
+	                    item: category,
+	                    onHoverIn: _this2.handleMouseOver,
+	                    onHoverOut: _this2.handleMouseOut,
+	                    onSelect: _this2.handleClick });
+	            });
+	
+	            return _react2.default.createElement(
+	                'div',
+	                {
+	                    style: styles.default,
+	                    className: 'ui segment Category__Item__List category-list link cards ' + (loadingCategories ? 'loading' : '') },
+	                rendered
+	            );
+	        }
+	    }]);
+	
+	    return CategoryItemList;
+	}(_react2.default.Component);
+	
+	CategoryItemList.PropTypes = {
+	    selectCategory: _react2.default.PropTypes.func.isRequired,
+	    selectedCategory: _react2.default.PropTypes.string,
+	    loadingCategories: _react2.default.PropTypes.boolean,
+	    categories: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.object)
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
+	    return (0, _redux.bindActionCreators)({
+	        selectCategory: _categories.selectCategory
+	    }, dispatch);
+	};
+	
+	var mapStateToProps = function mapStateToProps(_ref2, ownProps) {
+	    var categories = _ref2.categories;
+	    var loadingCategories = _ref2.loadingCategories;
+	    var filterPriceRange = _ref2.filterPriceRange;
+	    var selectedCategory = _ref2.selectedCategory;
+	
+	    return {
+	        categories: categories,
+	        loadingCategories: loadingCategories,
+	        selectedCategory: selectedCategory
+	    };
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)((0, _radium2.default)(CategoryItemList));
+
+/***/ },
 /* 1148 */
+/*!*********************************************************!*\
+  !*** ./spas/kit/components/categories/category-item.js ***!
+  \*********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _radium = __webpack_require__(/*! radium */ 579);
+	
+	var _radium2 = _interopRequireDefault(_radium);
+	
+	var _react = __webpack_require__(/*! react */ 301);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
+	
+	var _categoryNamePopup = __webpack_require__(/*! ../popups/category-name-popup */ 1149);
+	
+	var _categoryNamePopup2 = _interopRequireDefault(_categoryNamePopup);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var styles = {
+	    category: {
+	        margin: '0 1em',
+	        width: '90px',
+	        borderRadius: 0,
+	        boxShadow: '0px 0px 3px 0px rgba(175, 175, 175, 0.50)',
+	        // border: '1px solid rgba(34, 36, 38, 0.15)',
+	        ':hover': {},
+	        image: {
+	            height: '90px'
+	        }
+	    },
+	    popup: {
+	        // background: 
+	    }
+	};
+	
+	var CategoryItem = function (_React$Component) {
+	    _inherits(CategoryItem, _React$Component);
+	
+	    function CategoryItem(props) {
+	        _classCallCheck(this, CategoryItem);
+	
+	        var _this = _possibleConstructorReturn(this, (CategoryItem.__proto__ || Object.getPrototypeOf(CategoryItem)).call(this, props));
+	
+	        _this.handleClick = _this.handleClick.bind(_this);
+	        _this.handleHoverIn = _this.handleHoverIn.bind(_this);
+	        _this.handleHoverOut = _this.handleHoverOut.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(CategoryItem, [{
+	        key: 'handleClick',
+	        value: function handleClick(e) {
+	            var _props = this.props;
+	            var item = _props.item;
+	            var onSelect = _props.onSelect;
+	
+	            onSelect(item);
+	        }
+	    }, {
+	        key: 'handleHoverOut',
+	        value: function handleHoverOut(e) {
+	            var onHoverOut = this.props.onHoverOut;
+	
+	            onHoverOut();
+	        }
+	    }, {
+	        key: 'handleHoverIn',
+	        value: function handleHoverIn(e) {
+	            var onHoverIn = this.props.onHoverIn;
+	
+	            onHoverIn();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _props$item = this.props.item;
+	            var name = _props$item.name;
+	            var img = _props$item.img;
+	
+	
+	            var card = _react2.default.createElement(
+	                _semanticUiReact.Card,
+	                { style: styles.category,
+	                    className: 'service-category Category__Item',
+	                    onClick: this.handleClick,
+	                    onMouseOut: this.handleHoverOut,
+	                    onMouseOver: this.handleHoverIn },
+	                _react2.default.createElement(_semanticUiReact.Image, { style: styles.category.image, className: 'Category__Icon', src: img })
+	            );
+	
+	            return _react2.default.createElement(_categoryNamePopup2.default, {
+	                style: styles.popup,
+	                trigger: card,
+	                name: name
+	            });
+	        }
+	    }]);
+	
+	    return CategoryItem;
+	}(_react2.default.Component);
+	
+	CategoryItem.PropTypes = {
+	    item: _react2.default.PropTypes.object.isRequired,
+	    onSelect: _react2.default.PropTypes.func.isRequired,
+	    onHoverIn: _react2.default.PropTypes.func.isRequired,
+	    onHoverOut: _react2.default.PropTypes.func.isRequired
+	};
+	
+	exports.default = (0, _radium2.default)(CategoryItem);
+
+/***/ },
+/* 1149 */
+/*!***********************************************************!*\
+  !*** ./spas/kit/components/popups/category-name-popup.js ***!
+  \***********************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _react = __webpack_require__(/*! react */ 301);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = function (_ref) {
+	    var trigger = _ref.trigger;
+	    var name = _ref.name;
+	
+	    return _react2.default.createElement(_semanticUiReact.Popup, {
+	        className: 'Category__Name',
+	        trigger: trigger,
+	        content: name,
+	        size: 'mini',
+	        positioning: 'top center'
+	    });
+	};
+
+/***/ },
+/* 1150 */
+/*!****************************************!*\
+  !*** ./spas/kit/actions/categories.js ***!
+  \****************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.fetchCategories = exports.selectCategory = exports.doSelectCategory = exports.loadingCategoriesFailed = exports.finishLoadingCategories = exports.startLoadingCategories = exports.receiveCategories = undefined;
+	
+	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
+	
+	var types = _interopRequireWildcard(_constants);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _superagent = __webpack_require__(/*! superagent */ 1139);
+	
+	var _superagent2 = _interopRequireDefault(_superagent);
+	
+	var _services = __webpack_require__(/*! ../actions/services */ 1151);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var receiveCategories = exports.receiveCategories = function receiveCategories(categories) {
+	    return {
+	        type: types.RECEIVE_CATEGORIES(),
+	        data: categories
+	    };
+	};
+	
+	var startLoadingCategories = exports.startLoadingCategories = function startLoadingCategories() {
+	    return { type: types.START_LOADING_CATEGORIES() };
+	};
+	
+	var finishLoadingCategories = exports.finishLoadingCategories = function finishLoadingCategories() {
+	    return { type: types.FINISH_LOADING_CATEGORIES() };
+	};
+	
+	var loadingCategoriesFailed = exports.loadingCategoriesFailed = function loadingCategoriesFailed(error) {
+	    return { type: types.LOADING_CATEGORIES_FAILED(), data: error };
+	};
+	
+	var doSelectCategory = exports.doSelectCategory = function doSelectCategory(categoryId) {
+	    return { type: types.SELECT_CATEGORY(), data: categoryId };
+	};
+	
+	var selectCategory = exports.selectCategory = function selectCategory(categoryId) {
+	    return function (dispatch) {
+	        dispatch(doSelectCategory(categoryId));
+	        return dispatch((0, _services.fetchServices)(categoryId, { from: null, to: null }));
+	    };
+	};
+	
+	var fetchCategories = exports.fetchCategories = function fetchCategories(stepId) {
+	    var testUri = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+	    return function (dispatch) {
+	        var uri = testUri ? testUri : '/api/steps/' + stepId + '/categories';
+	
+	        var url = '' + types.URL() + uri;
+	
+	        dispatch(startLoadingCategories());
+	
+	        return _superagent2.default.get(url).then(function (_ref) {
+	            var body = _ref.body;
+	
+	            dispatch(receiveCategories(body));
+	            dispatch(finishLoadingCategories());
+	            return dispatch(selectCategory(_lodash2.default.first(body).id));
+	        }).catch(function (error) {
+	            dispatch(loadingCategoriesFailed(error));
+	            dispatch(finishLoadingCategories());
+	        });
+	    };
+	};
+
+/***/ },
+/* 1151 */
 /*!**************************************!*\
   !*** ./spas/kit/actions/services.js ***!
   \**************************************/
@@ -96792,15 +97330,15 @@
 	
 	var types = _interopRequireWildcard(_constants);
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _superagent = __webpack_require__(/*! superagent */ 1143);
+	var _superagent = __webpack_require__(/*! superagent */ 1139);
 	
 	var _superagent2 = _interopRequireDefault(_superagent);
 	
-	var _selectors = __webpack_require__(/*! ../selectors */ 1149);
+	var _selectors = __webpack_require__(/*! ../selectors */ 1144);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -96941,189 +97479,7 @@
 	};
 
 /***/ },
-/* 1149 */
-/*!*************************************!*\
-  !*** ./spas/kit/selectors/index.js ***!
-  \*************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.getServiceInZoomImagesSelector = exports.getServiceInZoomSelector = exports.getBalanceSelector = exports.askForInitialBudget = undefined;
-	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-	
-	var _reselect = __webpack_require__(/*! reselect */ 1150);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	var getBudget = function getBudget(_ref) {
-	    var budget = _ref.budget;
-	    return budget;
-	};
-	
-	var askForInitialBudget = exports.askForInitialBudget = (0, _reselect.createSelector)([getBudget], function (budget) {
-	    return _lodash2.default.isNull(budget);
-	});
-	
-	var getServices = function getServices(_ref2) {
-	    var services = _ref2.services;
-	    return services;
-	};
-	
-	var getCartTotal = function getCartTotal(_ref3) {
-	    var cartTotal = _ref3.cartTotal;
-	    return cartTotal;
-	};
-	
-	var getBalanceSelector = exports.getBalanceSelector = (0, _reselect.createSelector)([getBudget, getCartTotal], function (budget, cartTotal) {
-	    return _lodash2.default.subtract(budget, cartTotal);
-	});
-	
-	var getServiceInZoomId = function getServiceInZoomId(_ref4) {
-	    var serviceInZoom = _ref4.serviceInZoom;
-	    return serviceInZoom;
-	};
-	
-	var getServicesImages = function getServicesImages(_ref5) {
-	    var servicesImages = _ref5.servicesImages;
-	    return servicesImages;
-	};
-	
-	var getServiceInZoomSelector = exports.getServiceInZoomSelector = (0, _reselect.createSelector)([getServiceInZoomId, getServices], function (id, services) {
-	    return _lodash2.default.find(services, { id: id }) || {};
-	});
-	
-	var getServiceInZoomImagesSelector = exports.getServiceInZoomImagesSelector = (0, _reselect.createSelector)([getServiceInZoomId, getServicesImages], function (serviceInZoomId, servicesImages) {
-	    return _lodash2.default.find(servicesImages, { id: serviceInZoomId });
-	});
-
-/***/ },
-/* 1150 */
-/*!*********************************!*\
-  !*** ./~/reselect/lib/index.js ***!
-  \*********************************/
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	exports.defaultMemoize = defaultMemoize;
-	exports.createSelectorCreator = createSelectorCreator;
-	exports.createStructuredSelector = createStructuredSelector;
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	function defaultEqualityCheck(a, b) {
-	  return a === b;
-	}
-	
-	function defaultMemoize(func) {
-	  var equalityCheck = arguments.length <= 1 || arguments[1] === undefined ? defaultEqualityCheck : arguments[1];
-	
-	  var lastArgs = null;
-	  var lastResult = null;
-	  return function () {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-	
-	    if (lastArgs === null || lastArgs.length !== args.length || !args.every(function (value, index) {
-	      return equalityCheck(value, lastArgs[index]);
-	    })) {
-	      lastResult = func.apply(undefined, args);
-	    }
-	    lastArgs = args;
-	    return lastResult;
-	  };
-	}
-	
-	function getDependencies(funcs) {
-	  var dependencies = Array.isArray(funcs[0]) ? funcs[0] : funcs;
-	
-	  if (!dependencies.every(function (dep) {
-	    return typeof dep === 'function';
-	  })) {
-	    var dependencyTypes = dependencies.map(function (dep) {
-	      return typeof dep;
-	    }).join(', ');
-	    throw new Error('Selector creators expect all input-selectors to be functions, ' + ('instead received the following types: [' + dependencyTypes + ']'));
-	  }
-	
-	  return dependencies;
-	}
-	
-	function createSelectorCreator(memoize) {
-	  for (var _len2 = arguments.length, memoizeOptions = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-	    memoizeOptions[_key2 - 1] = arguments[_key2];
-	  }
-	
-	  return function () {
-	    for (var _len3 = arguments.length, funcs = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-	      funcs[_key3] = arguments[_key3];
-	    }
-	
-	    var recomputations = 0;
-	    var resultFunc = funcs.pop();
-	    var dependencies = getDependencies(funcs);
-	
-	    var memoizedResultFunc = memoize.apply(undefined, [function () {
-	      recomputations++;
-	      return resultFunc.apply(undefined, arguments);
-	    }].concat(memoizeOptions));
-	
-	    var selector = function selector(state, props) {
-	      for (var _len4 = arguments.length, args = Array(_len4 > 2 ? _len4 - 2 : 0), _key4 = 2; _key4 < _len4; _key4++) {
-	        args[_key4 - 2] = arguments[_key4];
-	      }
-	
-	      var params = dependencies.map(function (dependency) {
-	        return dependency.apply(undefined, [state, props].concat(args));
-	      });
-	      return memoizedResultFunc.apply(undefined, _toConsumableArray(params));
-	    };
-	
-	    selector.resultFunc = resultFunc;
-	    selector.recomputations = function () {
-	      return recomputations;
-	    };
-	    selector.resetRecomputations = function () {
-	      return recomputations = 0;
-	    };
-	    return selector;
-	  };
-	}
-	
-	var createSelector = exports.createSelector = createSelectorCreator(defaultMemoize);
-	
-	function createStructuredSelector(selectors) {
-	  var selectorCreator = arguments.length <= 1 || arguments[1] === undefined ? createSelector : arguments[1];
-	
-	  if (typeof selectors !== 'object') {
-	    throw new Error('createStructuredSelector expects first argument to be an object ' + ('where each property is a selector, instead received a ' + typeof selectors));
-	  }
-	  var objectKeys = Object.keys(selectors);
-	  return selectorCreator(objectKeys.map(function (key) {
-	    return selectors[key];
-	  }), function () {
-	    for (var _len5 = arguments.length, values = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
-	      values[_key5] = arguments[_key5];
-	    }
-	
-	    return values.reduce(function (composition, value, index) {
-	      composition[objectKeys[index]] = value;
-	      return composition;
-	    }, {});
-	  });
-	}
-
-/***/ },
-/* 1151 */
+/* 1152 */
 /*!************************************************************!*\
   !*** ./spas/kit/components/modals/initial-budget-modal.js ***!
   \************************************************************/
@@ -97138,7 +97494,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -97152,9 +97508,9 @@
 	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
-	var _budget = __webpack_require__(/*! ../../actions/budget */ 1152);
+	var _budget = __webpack_require__(/*! ../../actions/budget */ 1153);
 	
-	var _selectors = __webpack_require__(/*! ../../selectors */ 1149);
+	var _selectors = __webpack_require__(/*! ../../selectors */ 1144);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -97280,7 +97636,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(InitialBudgetModal);
 
 /***/ },
-/* 1152 */
+/* 1153 */
 /*!************************************!*\
   !*** ./spas/kit/actions/budget.js ***!
   \************************************/
@@ -97317,7 +97673,7 @@
 	};
 
 /***/ },
-/* 1153 */
+/* 1154 */
 /*!********************************************!*\
   !*** ./spas/kit/components/main-header.js ***!
   \********************************************/
@@ -97332,7 +97688,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -97358,27 +97714,27 @@
 	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
-	var _changeBudgetButton = __webpack_require__(/*! ./buttons/change-budget-button */ 1170);
+	var _changeBudgetButton = __webpack_require__(/*! ./buttons/change-budget-button */ 1155);
 	
 	var _changeBudgetButton2 = _interopRequireDefault(_changeBudgetButton);
 	
-	var _changeBudgetPopup = __webpack_require__(/*! ./popups/change-budget-popup */ 1154);
+	var _changeBudgetPopup = __webpack_require__(/*! ./popups/change-budget-popup */ 1156);
 	
 	var _changeBudgetPopup2 = _interopRequireDefault(_changeBudgetPopup);
 	
-	var _initialBudgetModal = __webpack_require__(/*! ./modals/initial-budget-modal */ 1151);
+	var _initialBudgetModal = __webpack_require__(/*! ./modals/initial-budget-modal */ 1152);
 	
 	var _initialBudgetModal2 = _interopRequireDefault(_initialBudgetModal);
 	
-	var _balance = __webpack_require__(/*! ../actions/balance */ 1155);
+	var _balance = __webpack_require__(/*! ../actions/balance */ 1157);
 	
-	var _budget = __webpack_require__(/*! ../actions/budget */ 1152);
+	var _budget = __webpack_require__(/*! ../actions/budget */ 1153);
 	
-	var _cart = __webpack_require__(/*! ../actions/cart */ 1138);
+	var _cart = __webpack_require__(/*! ../actions/cart */ 1146);
 	
-	var _stepsMenu = __webpack_require__(/*! ../actions/steps-menu */ 1156);
+	var _stepsMenu = __webpack_require__(/*! ../actions/steps-menu */ 1158);
 	
-	var _selectors = __webpack_require__(/*! ../selectors */ 1149);
+	var _selectors = __webpack_require__(/*! ../selectors */ 1144);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -97393,7 +97749,8 @@
 	        borderWidth: '0',
 	        height: '4vh',
 	        marginBottom: '0',
-	        boxShadow: 'rgba(34, 36, 38, 0.14902) 0px 1px 10px 0px'
+	        boxShadow: 'rgba(34, 36, 38, 0.14902) 0px 1px 10px 0px',
+	        zIndex: '30000'
 	    },
 	    reviewButton: {
 	        borderRadius: '5px 0 0 0',
@@ -97526,9 +97883,9 @@
 	            var budgetChangingMode = _props2.budgetChangingMode;
 	            // const actualBalance = _.subtract(_.toNumber(balance.amount), _.toNumber(cartTotal));
 	
-	            if (balance.amount) {
-	                balanceBoxStyle = _lodash2.default.lt(balance.amount, _lodash2.default.toNumber(cartTotal)) ? styles.balanceOutStyle : styles.balanceInStyle;
-	            }
+	            // if(balance.amount){
+	            //     balanceBoxStyle = _.lt(balance.amount, _.toNumber(cartTotal)) ? styles.balanceOutStyle : styles.balanceInStyle;
+	            // } 
 	
 	            var changeBudgetItem = _react2.default.createElement(
 	                'div',
@@ -97583,16 +97940,16 @@
 	                        saveBudget: this.handleSave }),
 	                    _react2.default.createElement(
 	                        'div',
-	                        { className: 'item Balance__Box',
-	                            style: balanceBoxStyle
+	                        { className: 'item Balance__Box'
 	                        },
-	                        _react2.default.createElement(
+	                        balance < 0 ? _react2.default.createElement(
 	                            _semanticUiReact.Label,
 	                            { basic: true, floating: true,
+	                                className: 'animated fadeIn',
 	                                style: styles.warningLabel,
 	                                pointing: 'below' },
 	                            'Please enter a value'
-	                        ),
+	                        ) : null,
 	                        'Balance: ',
 	                        _react2.default.createElement(
 	                            'span',
@@ -97601,7 +97958,7 @@
 	                            _react2.default.createElement(
 	                                'b',
 	                                null,
-	                                (0, _numeral2.default)(balance.amount).format('0,0.00')
+	                                (0, _numeral2.default)(Math.abs(balance)).format('0,0.00')
 	                            )
 	                        )
 	                    )
@@ -97640,7 +97997,114 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProp, mapDispatchToProp)((0, _radium2.default)(MainHeader));
 
 /***/ },
-/* 1154 */
+/* 1155 */
+/*!*************************************************************!*\
+  !*** ./spas/kit/components/buttons/change-budget-button.js ***!
+  \*************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _numeral = __webpack_require__(/*! numeral */ 1137);
+	
+	var _numeral2 = _interopRequireDefault(_numeral);
+	
+	var _radium = __webpack_require__(/*! radium */ 579);
+	
+	var _radium2 = _interopRequireDefault(_radium);
+	
+	var _react = __webpack_require__(/*! react */ 301);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var styles = {
+	    default: {
+	        ':hover': {}
+	    },
+	    label: {
+	        backgroundColor: 'rgb(85, 26, 139)',
+	        borderColor: 'rgb(85, 26, 139)',
+	        color: '#ffffff',
+	        top: '-70%',
+	        left: '-30%',
+	        width: '200px'
+	    }
+	};
+	
+	var ChangeBudgetButton = function (_React$Component) {
+	    _inherits(ChangeBudgetButton, _React$Component);
+	
+	    function ChangeBudgetButton(props) {
+	        _classCallCheck(this, ChangeBudgetButton);
+	
+	        return _possibleConstructorReturn(this, (ChangeBudgetButton.__proto__ || Object.getPrototypeOf(ChangeBudgetButton)).call(this, props));
+	    }
+	
+	    _createClass(ChangeBudgetButton, [{
+	        key: 'render',
+	        value: function render() {
+	            var _props = this.props;
+	            var budget = _props.budget;
+	            var budgetChangingMode = _props.budgetChangingMode;
+	            var openPopup = _props.openPopup;
+	
+	
+	            return _react2.default.createElement(
+	                'div',
+	                {
+	                    onClick: function onClick(e) {
+	                        return openPopup();
+	                    },
+	                    key: 'keyForChangeBudget',
+	                    className: 'item link ' + (budgetChangingMode ? 'disabled' : '') + ' __change_budget Open__Change__Budget__Popup',
+	                    style: styles.default },
+	                'Budget: ',
+	                _react2.default.createElement(
+	                    'span',
+	                    null,
+	                    '\u20B5 ',
+	                    _react2.default.createElement(
+	                        'b',
+	                        null,
+	                        (0, _numeral2.default)(budget).format('0,0.00')
+	                    )
+	                ),
+	                _radium2.default.getState(this.state, 'keyForChangeBudget', ':hover') ? _react2.default.createElement(
+	                    _semanticUiReact.Label,
+	                    { basic: true, floating: true,
+	                        style: styles.label,
+	                        pointing: 'below' },
+	                    'Click to change budget'
+	                ) : null
+	            );
+	        }
+	    }]);
+	
+	    return ChangeBudgetButton;
+	}(_react2.default.Component);
+	
+	;
+	
+	exports.default = (0, _radium2.default)(ChangeBudgetButton);
+
+/***/ },
+/* 1156 */
 /*!***********************************************************!*\
   !*** ./spas/kit/components/popups/change-budget-popup.js ***!
   \***********************************************************/
@@ -97654,7 +98118,7 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
@@ -97720,7 +98184,7 @@
 	
 	            saveBudget(amount);
 	            this.setState({ amount: '' });
-	            closeForm();
+	            this.props.closePopup();
 	        }
 	    }, {
 	        key: 'cancel',
@@ -97787,7 +98251,7 @@
 	exports.default = ChangeBudgetPopup;
 
 /***/ },
-/* 1155 */
+/* 1157 */
 /*!*************************************!*\
   !*** ./spas/kit/actions/balance.js ***!
   \*************************************/
@@ -97815,7 +98279,7 @@
 	};
 
 /***/ },
-/* 1156 */
+/* 1158 */
 /*!****************************************!*\
   !*** ./spas/kit/actions/steps-menu.js ***!
   \****************************************/
@@ -97832,15 +98296,15 @@
 	
 	var types = _interopRequireWildcard(_constants);
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _superagent = __webpack_require__(/*! superagent */ 1143);
+	var _superagent = __webpack_require__(/*! superagent */ 1139);
 	
 	var _superagent2 = _interopRequireDefault(_superagent);
 	
-	var _categories = __webpack_require__(/*! ./categories */ 1142);
+	var _categories = __webpack_require__(/*! ./categories */ 1150);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -97907,7 +98371,7 @@
 	};
 
 /***/ },
-/* 1157 */
+/* 1159 */
 /*!**************************************************!*\
   !*** ./spas/kit/components/services-and-cart.js ***!
   \**************************************************/
@@ -97923,11 +98387,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _cart = __webpack_require__(/*! ./cart/cart */ 1158);
+	var _cart = __webpack_require__(/*! ./cart/cart */ 1160);
 	
 	var _cart2 = _interopRequireDefault(_cart);
 	
-	var _servicesContainer = __webpack_require__(/*! ./services/services-container */ 1162);
+	var _servicesContainer = __webpack_require__(/*! ./services/services-container */ 1165);
 	
 	var _servicesContainer2 = _interopRequireDefault(_servicesContainer);
 	
@@ -97978,7 +98442,7 @@
 	exports.default = ServicesAndCart;
 
 /***/ },
-/* 1158 */
+/* 1160 */
 /*!******************************************!*\
   !*** ./spas/kit/components/cart/cart.js ***!
   \******************************************/
@@ -97994,11 +98458,11 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _cartItemList = __webpack_require__(/*! ./cart-item-list */ 1159);
+	var _cartItemList = __webpack_require__(/*! ./cart-item-list */ 1161);
 	
 	var _cartItemList2 = _interopRequireDefault(_cartItemList);
 	
-	var _cartTotal = __webpack_require__(/*! ./cart-total */ 1161);
+	var _cartTotal = __webpack_require__(/*! ./cart-total */ 1164);
 	
 	var _cartTotal2 = _interopRequireDefault(_cartTotal);
 	
@@ -98029,7 +98493,7 @@
 	exports.default = Cart;
 
 /***/ },
-/* 1159 */
+/* 1161 */
 /*!****************************************************!*\
   !*** ./spas/kit/components/cart/cart-item-list.js ***!
   \****************************************************/
@@ -98052,15 +98516,15 @@
 	
 	var _redux = __webpack_require__(/*! redux */ 478);
 	
-	var _cartItem = __webpack_require__(/*! ./cart-item */ 1160);
+	var _cartItem = __webpack_require__(/*! ./cart-item */ 1162);
 	
 	var _cartItem2 = _interopRequireDefault(_cartItem);
 	
-	var _packagesPopup = __webpack_require__(/*! ../popups/packages-popup */ 1172);
+	var _packagesPopup = __webpack_require__(/*! ../popups/packages-popup */ 1163);
 	
 	var _packagesPopup2 = _interopRequireDefault(_packagesPopup);
 	
-	var _cart = __webpack_require__(/*! ../../actions/cart */ 1138);
+	var _cart = __webpack_require__(/*! ../../actions/cart */ 1146);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -98072,7 +98536,9 @@
 	
 	var styles = {
 	    default: {
-	        height: '93%'
+	        height: '93%',
+	        paddingTop: '.2em',
+	        position: 'relative'
 	    }
 	};
 	
@@ -98131,15 +98597,14 @@
 	            var cartItemEditMode = _props2.cartItemEditMode;
 	            var selectedCartItem = _props2.selectedCartItem;
 	
-	
-	            console.log('cartItemEditMode from list -> ', cartItemEditMode);
+	            // console.log('cartItemEditMode from list -> ', cartItemEditMode);
 	
 	            var items = cartItems.map(function (item) {
 	                return _react2.default.createElement(_cartItem2.default, {
 	                    item: item,
 	                    key: item.id,
 	                    toggleVisibility: _this2.handleToggle,
-	                    editCartItemMode: cartItemEditMode,
+	                    editCartItemMode: cartItemEditMode && selectedCartItem.id === item.id,
 	                    edit: _this2.handleEdit,
 	                    update: _this2.handleUpdate,
 	                    closePopup: _this2.handleClosePopup,
@@ -98155,21 +98620,13 @@
 	                    'div',
 	                    { className: 'ui divided list' },
 	                    items
-	                ),
-	                _react2.default.createElement(_packagesPopup2.default, {
-	                    open: cartItemEditMode,
-	                    service: selectedCartItem,
-	                    update: this.handleUpdate,
-	                    cancel: this.handleClosePopup
-	                })
+	                )
 	            );
 	        }
 	    }]);
 	
 	    return CartItemList;
 	}(_react2.default.Component);
-	
-	;
 	
 	CartItemList.PropTypes = {
 	    hideCartItem: _react2.default.PropTypes.func.isRequired,
@@ -98201,7 +98658,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(CartItemList);
 
 /***/ },
-/* 1160 */
+/* 1162 */
 /*!***********************************************!*\
   !*** ./spas/kit/components/cart/cart-item.js ***!
   \***********************************************/
@@ -98228,7 +98685,7 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _packagesPopup = __webpack_require__(/*! ../popups/packages-popup */ 1172);
+	var _packagesPopup = __webpack_require__(/*! ../popups/packages-popup */ 1163);
 	
 	var _packagesPopup2 = _interopRequireDefault(_packagesPopup);
 	
@@ -98352,7 +98809,17 @@
 	            var closePopup = _props4.closePopup;
 	
 	
-	            console.log('editCartItemMode => ', editCartItemMode);
+	            var editTrigger = _react2.default.createElement(
+	                'div',
+	                { className: 'column Edit__Button Item__Action ' + (editCartItemMode ? 'disabled' : ''),
+	                    ref: 'editButton',
+	                    style: [styles.editButton], onClick: this.edit },
+	                _react2.default.createElement(
+	                    'span',
+	                    { className: 'ui icon' },
+	                    _react2.default.createElement('i', { className: 'pencil icon' })
+	                )
+	            );
 	
 	            return _react2.default.createElement(
 	                'div',
@@ -98370,23 +98837,21 @@
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'four wide column Action__Buttons' },
-	                        _radium2.default.getState(this.state, 'keyForCartItem', ':hover') ? _react2.default.createElement(
+	                        _radium2.default.getState(this.state, 'keyForCartItem', ':hover') || editCartItemMode ? _react2.default.createElement(
 	                            'div',
 	                            { className: 'ui three column grid',
 	                                style: [styles.actionButtons]
 	                            },
-	                            fixed ? null : _react2.default.createElement(
-	                                'div',
-	                                { className: 'column Edit__Button Item__Action',
-	                                    ref: 'editButton',
-	                                    style: [styles.editButton], onClick: this.edit },
-	                                _react2.default.createElement(
-	                                    'span',
-	                                    { className: 'ui icon' },
-	                                    _react2.default.createElement('i', { className: 'pencil icon' })
-	                                )
-	                            ),
-	                            _react2.default.createElement(
+	                            fixed || hidden ? null : _react2.default.createElement(_packagesPopup2.default, {
+	                                trigger: editTrigger,
+	                                open: editCartItemMode,
+	                                service: this.props.item,
+	                                update: update,
+	                                cancel: closePopup,
+	                                positioning: 'left center',
+	                                positiveButton: 'update'
+	                            }),
+	                            editCartItemMode ? null : _react2.default.createElement(
 	                                'div',
 	                                { className: 'column Visibility__Button Item__Action',
 	                                    ref: 'toggleButton',
@@ -98397,7 +98862,7 @@
 	                                    _react2.default.createElement('i', { className: 'icon ' + (hidden ? "unhide" : "hide") })
 	                                )
 	                            ),
-	                            _react2.default.createElement(
+	                            editCartItemMode ? null : _react2.default.createElement(
 	                                'div',
 	                                { className: 'column Remove__Button Item__Action',
 	                                    ref: 'removeButton',
@@ -98436,13 +98901,206 @@
 	    toggle: _react2.default.PropTypes.func.isRequired,
 	    remove: _react2.default.PropTypes.func.isRequired,
 	    edit: _react2.default.PropTypes.func.isRequired,
-	    item: _react2.default.PropTypes.object.isRequired
+	    item: _react2.default.PropTypes.object.isRequired,
+	    editCartItemMode: _react2.default.PropTypes.bool.isRequired
 	};
 	
 	exports.default = (0, _radium2.default)(CartItem);
 
 /***/ },
-/* 1161 */
+/* 1163 */
+/*!******************************************************!*\
+  !*** ./spas/kit/components/popups/packages-popup.js ***!
+  \******************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _numeral = __webpack_require__(/*! numeral */ 1137);
+	
+	var _numeral2 = _interopRequireDefault(_numeral);
+	
+	var _react = __webpack_require__(/*! react */ 301);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 471);
+	
+	var _redux = __webpack_require__(/*! redux */ 478);
+	
+	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var styles = {
+	    default: {
+	        // positioning: 'absolute',
+	        // top: '21.5%',
+	        // right: '15%',
+	        // transform: 'translate(50%)',
+	        width: '300px'
+	    }
+	};
+	
+	var PackagesPopup = function (_React$Component) {
+	    _inherits(PackagesPopup, _React$Component);
+	
+	    function PackagesPopup(props) {
+	        _classCallCheck(this, PackagesPopup);
+	
+	        var _this = _possibleConstructorReturn(this, (PackagesPopup.__proto__ || Object.getPrototypeOf(PackagesPopup)).call(this, props));
+	
+	        _this.state = {
+	            selectedPackage: {
+	                range: [],
+	                amount: null
+	            }
+	        };
+	
+	        _this.handleCancel = _this.handleCancel.bind(_this);
+	        _this.handleUpdate = _this.handleUpdate.bind(_this);
+	        _this.handleChange = _this.handleChange.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(PackagesPopup, [{
+	        key: 'handleChange',
+	        value: function handleChange(pack) {
+	            this.setState({ selectedPackage: pack });
+	        }
+	    }, {
+	        key: 'handleUpdate',
+	        value: function handleUpdate() {
+	            var _props = this.props;
+	            var service = _props.service;
+	            var update = _props.update;
+	            var cancel = _props.cancel;
+	
+	            var updatedService = _lodash2.default.assign({}, service, { amount: this.state.selectedPackage.amount });
+	            update(updatedService);
+	            cancel();
+	        }
+	    }, {
+	        key: 'handleCancel',
+	        value: function handleCancel() {
+	            this.props.cancel();
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+	
+	            var _props2 = this.props;
+	            var service = _props2.service;
+	            var open = _props2.open;
+	            var trigger = _props2.trigger;
+	            var positioning = _props2.positioning;
+	            var positiveButton = _props2.positiveButton;
+	
+	
+	            var renderedList = service.packages.map(function (pack) {
+	                return _react2.default.createElement(
+	                    _semanticUiReact.List.Item,
+	                    { key: Math.random() },
+	                    _react2.default.createElement(
+	                        _semanticUiReact.List.Content,
+	                        { floated: 'right' },
+	                        _react2.default.createElement(_semanticUiReact.Radio, {
+	                            key: Math.random(),
+	                            label: '\u20B5 ' + (0, _numeral2.default)(pack.amount).format('0,0.00'),
+	                            value: '' + pack.amount,
+	                            checked: _this2.state.selectedPackage.amount === pack.amount,
+	                            onChange: function onChange(e) {
+	                                return _this2.handleChange(pack);
+	                            }
+	                        })
+	                    ),
+	                    _react2.default.createElement(
+	                        _semanticUiReact.List.Content,
+	                        null,
+	                        pack.range[0] + ' to ' + pack.range[1]
+	                    )
+	                );
+	            });
+	
+	            return _react2.default.createElement(
+	                _semanticUiReact.Popup,
+	                {
+	                    flowing: true,
+	                    trigger: trigger,
+	                    className: 'Choose__Package__Popup',
+	                    positioning: positioning,
+	                    on: 'click',
+	                    style: styles.default,
+	                    open: open },
+	                _react2.default.createElement(
+	                    _semanticUiReact.Popup.Header,
+	                    null,
+	                    service.name
+	                ),
+	                _react2.default.createElement(
+	                    _semanticUiReact.Popup.Content,
+	                    null,
+	                    _react2.default.createElement(
+	                        _semanticUiReact.List,
+	                        {
+	                            divided: true,
+	                            verticalAlign: 'middle' },
+	                        service.packages && renderedList
+	                    ),
+	                    _react2.default.createElement(
+	                        _semanticUiReact.Button,
+	                        {
+	                            onClick: this.handleUpdate,
+	                            className: 'Update__Package ' + (this.state.selectedPackage.amount ? '' : 'disabled'), size: 'mini' },
+	                        positiveButton
+	                    ),
+	                    _react2.default.createElement(
+	                        _semanticUiReact.Button,
+	                        {
+	                            onClick: this.handleCancel,
+	                            className: 'Cancel', size: 'mini' },
+	                        'cancel'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return PackagesPopup;
+	}(_react2.default.Component);
+	
+	exports.default = PackagesPopup;
+	
+	
+	PackagesPopup.PropTypes = {
+	    open: _react2.default.PropTypes.bool.isRequired,
+	    service: _react2.default.PropTypes.object,
+	    cancel: _react2.default.PropTypes.func.isRequired,
+	    update: _react2.default.PropTypes.func.isRequired,
+	    trigger: _react2.default.PropTypes.node,
+	    positioning: _react2.default.PropTypes.string.isRequired,
+	    positiveButton: _react2.default.PropTypes.string.isRequired
+	};
+
+/***/ },
+/* 1164 */
 /*!************************************************!*\
   !*** ./spas/kit/components/cart/cart-total.js ***!
   \************************************************/
@@ -98470,6 +99128,8 @@
 	var _react2 = _interopRequireDefault(_react);
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 471);
+	
+	var _selectors = __webpack_require__(/*! ../../selectors */ 1144);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -98536,15 +99196,16 @@
 	    return CartTotal;
 	}(_react2.default.Component);
 	
-	var mapStateToProps = function mapStateToProps(_ref) {
-	    var cartTotal = _ref.cartTotal;
-	    return { cartTotal: cartTotal };
+	var mapStateToProps = function mapStateToProps(state) {
+	    return {
+	        cartTotal: (0, _selectors.getCartTotalSelector)(state)
+	    };
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)((0, _radium2.default)(CartTotal));
 
 /***/ },
-/* 1162 */
+/* 1165 */
 /*!************************************************************!*\
   !*** ./spas/kit/components/services/services-container.js ***!
   \************************************************************/
@@ -98565,11 +99226,11 @@
 	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
-	var _serviceItemList = __webpack_require__(/*! ./service-item-list */ 1163);
+	var _serviceItemList = __webpack_require__(/*! ./service-item-list */ 1166);
 	
 	var _serviceItemList2 = _interopRequireDefault(_serviceItemList);
 	
-	var _serviceItemListHeader = __webpack_require__(/*! ./service-item-list-header */ 1165);
+	var _serviceItemListHeader = __webpack_require__(/*! ./service-item-list-header */ 1168);
 	
 	var _serviceItemListHeader2 = _interopRequireDefault(_serviceItemListHeader);
 	
@@ -98610,7 +99271,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps)(ServicesContainer);
 
 /***/ },
-/* 1163 */
+/* 1166 */
 /*!***********************************************************!*\
   !*** ./spas/kit/components/services/service-item-list.js ***!
   \***********************************************************/
@@ -98629,21 +99290,17 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(/*! react-dom */ 333);
-	
-	var _reactDom2 = _interopRequireDefault(_reactDom);
-	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 471);
 	
 	var _redux = __webpack_require__(/*! redux */ 478);
 	
-	var _serviceItem = __webpack_require__(/*! ./service-item */ 1164);
+	var _serviceItem = __webpack_require__(/*! ./service-item */ 1167);
 	
 	var _serviceItem2 = _interopRequireDefault(_serviceItem);
 	
-	var _cart = __webpack_require__(/*! ../../actions/cart */ 1138);
+	var _cart = __webpack_require__(/*! ../../actions/cart */ 1146);
 	
-	var _services = __webpack_require__(/*! ../../actions/services */ 1148);
+	var _services = __webpack_require__(/*! ../../actions/services */ 1151);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -98663,24 +99320,29 @@
 	
 	        _this.handleAddToCart = _this.handleAddToCart.bind(_this);
 	        _this.handleZoom = _this.handleZoom.bind(_this);
+	        _this.handleClosePackagesPopup = _this.handleClosePackagesPopup.bind(_this);
+	        _this.handleOpenPackagesPopup = _this.handleOpenPackagesPopup.bind(_this);
 	        return _this;
 	    }
 	
 	    _createClass(ServiceItemList, [{
 	        key: 'handleAddToCart',
-	        value: function handleAddToCart(item, fromModal) {
+	        value: function handleAddToCart(item) {
 	            var _props = this.props;
 	            var cartItems = _props.cartItems;
 	            var addItemToCart = _props.addItemToCart;
+	            var updateCartItemPackage = _props.updateCartItemPackage;
 	
-	            if (_.find(cartItems, { id: item.id })) {
-	                // dispatch a notification
-	                return;
+	            var already = _.find(cartItems, { id: item.id });
+	            if (already) {
+	                if (!item.fixed && already.amount === item.amount) {
+	                    // dispatch a notification
+	                    return;
+	                } else {
+	                    return updateCartItemPackage(item);
+	                }
 	            }
-	            // if(!item.fixed){
-	
-	            // }
-	            this.props.addItemToCart(item);
+	            addItemToCart(item);
 	        }
 	    }, {
 	        key: 'handleZoom',
@@ -98688,14 +99350,36 @@
 	            this.props.zoomOnService(id);
 	        }
 	    }, {
+	        key: 'handleOpenPackagesPopup',
+	        value: function handleOpenPackagesPopup(itemId) {
+	            this.props.chooseItemPackage(itemId);
+	        }
+	    }, {
+	        key: 'handleClosePackagesPopup',
+	        value: function handleClosePackagesPopup() {
+	            this.props.doneChoosingPackage();
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
 	            var _this2 = this;
 	
+	            var _props2 = this.props;
+	            var packageChoosingMode = _props2.packageChoosingMode;
+	            var serviceToBePicked = _props2.serviceToBePicked;
+	
+	
 	            var rendered = this.props.services.map(function (service) {
-	                return _react2.default.createElement(_serviceItem2.default, { key: service.id, item: service,
+	                return _react2.default.createElement(_serviceItem2.default, {
+	                    key: service.id, item: service,
+	                    openPackagesPopup: function openPackagesPopup(e) {
+	                        return _this2.handleOpenPackagesPopup(service.id);
+	                    },
+	                    closePackagesPopup: _this2.handleClosePackagesPopup,
+	                    packageChoosingMode: packageChoosingMode && serviceToBePicked === service.id,
 	                    onZoomService: _this2.handleZoom,
-	                    onAddToCart: _this2.handleAddToCart });
+	                    onAddToCart: _this2.handleAddToCart
+	                });
 	            });
 	
 	            return _react2.default.createElement(
@@ -98714,6 +99398,7 @@
 	ServiceItemList.PropTypes = {
 	    services: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.object),
 	    addItemToCart: _react2.default.PropTypes.func.isRequired,
+	    updateCartItemPackage: _react2.default.PropTypes.func.isRequired,
 	    zoomOnService: _react2.default.PropTypes.func.isRequired,
 	    cartItems: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.object)
 	};
@@ -98721,24 +99406,31 @@
 	var mapStateToProps = function mapStateToProps(_ref, ownProps) {
 	    var services = _ref.services;
 	    var cartItems = _ref.cartItems;
+	    var serviceToBePicked = _ref.serviceToBePicked;
+	    var packageChoosingMode = _ref.packageChoosingMode;
 	
 	    return {
 	        services: services,
-	        cartItems: cartItems
+	        cartItems: cartItems,
+	        serviceToBePicked: serviceToBePicked,
+	        packageChoosingMode: packageChoosingMode
 	    };
 	};
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch, ownProps) {
 	    return (0, _redux.bindActionCreators)({
 	        addItemToCart: _cart.addItemToCart,
-	        zoomOnService: _services.zoomOnService
+	        zoomOnService: _services.zoomOnService,
+	        updateCartItemPackage: _cart.updateCartItemPackage,
+	        doneChoosingPackage: _cart.doneChoosingPackage,
+	        chooseItemPackage: _cart.chooseItemPackage
 	    }, dispatch);
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ServiceItemList);
 
 /***/ },
-/* 1164 */
+/* 1167 */
 /*!******************************************************!*\
   !*** ./spas/kit/components/services/service-item.js ***!
   \******************************************************/
@@ -98764,9 +99456,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(/*! react-dom */ 333);
+	var _packagesPopup = __webpack_require__(/*! ../popups/packages-popup */ 1163);
 	
-	var _reactDom2 = _interopRequireDefault(_reactDom);
+	var _packagesPopup2 = _interopRequireDefault(_packagesPopup);
 	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
@@ -98816,6 +99508,9 @@
 	
 	        _this.handleAdd = _this.handleAdd.bind(_this);
 	        _this.handleZoom = _this.handleZoom.bind(_this);
+	        _this.handleOpen = _this.handleOpen.bind(_this);
+	        _this.handleClose = _this.handleClose.bind(_this);
+	        _this.handleAddFromPopup = _this.handleAddFromPopup.bind(_this);
 	        return _this;
 	    }
 	
@@ -98825,6 +99520,14 @@
 	            var _props = this.props;
 	            var onAddToCart = _props.onAddToCart;
 	            var item = _props.item;
+	
+	            if (!item.fixed) {}
+	            onAddToCart(item);
+	        }
+	    }, {
+	        key: 'handleAddFromPopup',
+	        value: function handleAddFromPopup(item) {
+	            var onAddToCart = this.props.onAddToCart;
 	
 	            onAddToCart(item);
 	        }
@@ -98838,21 +99541,24 @@
 	            onZoomService(id);
 	        }
 	    }, {
+	        key: 'handleOpen',
+	        value: function handleOpen(e) {
+	            this.props.openPackagesPopup();
+	        }
+	    }, {
+	        key: 'handleClose',
+	        value: function handleClose(e) {
+	            this.props.closePackagesPopup();
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var item = this.props.item;
+	            var _props3 = this.props;
+	            var item = _props3.item;
+	            var packageChoosingMode = _props3.packageChoosingMode;
 	
 	
-	            var formatted = _react2.default.createElement(
-	                'span',
-	                null,
-	                '\u20B5 ',
-	                _react2.default.createElement(
-	                    'b',
-	                    null,
-	                    (0, _numeral2.default)(item.amount).format('0,0.00')
-	                )
-	            );
+	            var addTrigger = _react2.default.createElement(_semanticUiReact.Button, { className: 'Add__Button', icon: 'add to cart', onClick: this.handleOpen });
 	
 	            return _react2.default.createElement(
 	                'div',
@@ -98866,10 +99572,18 @@
 	                            style: styles.actionButtons,
 	                            size: 'tiny',
 	                            className: 'Action__Buttons' },
-	                        _radium2.default.getState(this.state, 'keyForServiceCard', ':hover') ? _react2.default.createElement(
+	                        _radium2.default.getState(this.state, 'keyForServiceCard', ':hover') || packageChoosingMode ? _react2.default.createElement(
 	                            _semanticUiReact.Button.Group,
 	                            { icon: true, size: 'mini' },
-	                            _react2.default.createElement(_semanticUiReact.Button, { className: 'Add__Button', icon: 'add to cart', onClick: this.handleAdd }),
+	                            item.fixed ? _react2.default.createElement(_semanticUiReact.Button, { className: 'Add__Button', icon: 'add to cart', onClick: this.handleAdd }) : _react2.default.createElement(_packagesPopup2.default, {
+	                                trigger: addTrigger,
+	                                open: packageChoosingMode,
+	                                service: this.props.item,
+	                                update: this.handleAddFromPopup,
+	                                cancel: this.handleClose,
+	                                positioning: 'top center',
+	                                positiveButton: 'add'
+	                            }),
 	                            _react2.default.createElement(_semanticUiReact.Button, { className: 'Zoom__Button', icon: 'zoom', onClick: this.handleZoom })
 	                        ) : null
 	                    ),
@@ -98894,13 +99608,16 @@
 	ServiceItem.PropTypes = {
 	    item: _react2.default.PropTypes.object.isRequired,
 	    onAddToCart: _react2.default.PropTypes.func.isRequired,
-	    onZoomService: _react2.default.PropTypes.func.isRequired
+	    onZoomService: _react2.default.PropTypes.func.isRequired,
+	    openPackagesPopup: _react2.default.PropTypes.func.isRequired,
+	    closePackagesPopup: _react2.default.PropTypes.func.isRequired,
+	    packageChoosingMode: _react2.default.PropTypes.bool.isRequired
 	};
 	
 	exports.default = (0, _radium2.default)(ServiceItem);
 
 /***/ },
-/* 1165 */
+/* 1168 */
 /*!******************************************************************!*\
   !*** ./spas/kit/components/services/service-item-list-header.js ***!
   \******************************************************************/
@@ -98937,11 +99654,11 @@
 	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
-	var _serviceFilterPopup = __webpack_require__(/*! ../popups/service-filter-popup */ 1166);
+	var _serviceFilterPopup = __webpack_require__(/*! ../popups/service-filter-popup */ 1169);
 	
 	var _serviceFilterPopup2 = _interopRequireDefault(_serviceFilterPopup);
 	
-	var _services = __webpack_require__(/*! ../../actions/services */ 1148);
+	var _services = __webpack_require__(/*! ../../actions/services */ 1151);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -99097,7 +99814,7 @@
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ServiceItemListHeader);
 
 /***/ },
-/* 1166 */
+/* 1169 */
 /*!************************************************************!*\
   !*** ./spas/kit/components/popups/service-filter-popup.js ***!
   \************************************************************/
@@ -99111,11 +99828,11 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _lodash = __webpack_require__(/*! lodash */ 568);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
 	var _lodash2 = _interopRequireDefault(_lodash);
 	
-	var _validation = __webpack_require__(/*! validation */ 1171);
+	var _validation = __webpack_require__(/*! validation */ 1170);
 	
 	var _validation2 = _interopRequireDefault(_validation);
 	
@@ -99125,7 +99842,7 @@
 	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
-	var _inputErrorPopup = __webpack_require__(/*! ./input-error-popup */ 1167);
+	var _inputErrorPopup = __webpack_require__(/*! ./input-error-popup */ 1171);
 	
 	var _inputErrorPopup2 = _interopRequireDefault(_inputErrorPopup);
 	
@@ -99228,14 +99945,14 @@
 	            var error = _state2.error;
 	
 	
-	            var enabled = Number.parseInt(toAmount, 10) > Number.parseInt(fromAmount, 10) ? true : false;
+	            var enabled = Number.parseInt(toAmount, 10) > Number.parseInt(fromAmount, 10);
 	
 	            return _react2.default.createElement(
 	                _semanticUiReact.Popup,
 	                { flowing: true,
 	                    open: this.props.open,
 	                    on: 'click',
-	                    positioning: 'top center',
+	                    positioning: 'bottom right',
 	                    trigger: this.props.trigger,
 	                    className: '__filter_form Service__Filter__Popup',
 	                    style: styles.default },
@@ -99286,7 +100003,72 @@
 	exports.default = ServiceFilterPopup;
 
 /***/ },
-/* 1167 */
+/* 1170 */
+/*!*******************************!*\
+  !*** ./~/validation/index.js ***!
+  \*******************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Validates the given value against the specified type.
+	 * 
+	 * Examples:
+	 * 
+	 *     validation.isType('foobar', 'string')
+	 *     validation.isType(7, 'number')
+	 *     validation.isType(true, 'boolean')
+	 *     validation.isType(new Date().getTime(), 'date')
+	 *     validation.isType({}, 'object')
+	 *     validation.isType([], 'array')
+	 * 
+	 */
+	 
+	exports.isType = function (value, type) {
+	  if(typeof type != 'string') throw Error('bad arguments when calling validation.isValid');
+	  
+	  switch(type) {
+	    case 'date':
+	      if(!value) return false;
+	      try {
+	        value = new Date(value);
+	      } catch(e) {
+	        return false;
+	      }
+	    
+	      return value instanceof Date && isFinite(value);
+	    break;
+	    case 'object':
+	      return !!(value && toString.call(value) === '[object Object]' && 'isPrototypeOf' in value);
+	    break;
+	    case 'array':
+	      return Array.isArray(value);
+	    break;
+	    case 'number':
+	      if(value === Infinity || isNaN(value)) return false;
+	    default:
+	      return typeof value == type;
+	    break;
+	  }
+	}
+	
+	/**
+	 * Validates the value exists.
+	 * 
+	 * Examples:
+	 * 
+	 *     validation.exists('foobar')  // true
+	 *     validation.exists(0)         // true
+	 *     validation.exists(null)      // false
+	 *     validation.exists(undefined) // false
+	 * 
+	 */
+	
+	exports.exists = function (value) {
+	  return !!(value || value === 0);
+	}
+
+/***/ },
+/* 1171 */
 /*!*********************************************************!*\
   !*** ./spas/kit/components/popups/input-error-popup.js ***!
   \*********************************************************/
@@ -99322,7 +100104,7 @@
 	exports.default = InputErrorPopup;
 
 /***/ },
-/* 1168 */
+/* 1172 */
 /*!**********************************************************!*\
   !*** ./spas/kit/components/modals/service-zoom-modal.js ***!
   \**********************************************************/
@@ -99345,9 +100127,9 @@
 	
 	var _react2 = _interopRequireDefault(_react);
 	
-	var _reactDom = __webpack_require__(/*! react-dom */ 333);
+	var _lodash = __webpack_require__(/*! lodash */ 569);
 	
-	var _reactDom2 = _interopRequireDefault(_reactDom);
+	var _lodash2 = _interopRequireDefault(_lodash);
 	
 	var _reactRedux = __webpack_require__(/*! react-redux */ 471);
 	
@@ -99355,11 +100137,15 @@
 	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
-	var _cart = __webpack_require__(/*! ../../actions/cart */ 1138);
+	var _cart = __webpack_require__(/*! ../../actions/cart */ 1146);
 	
-	var _services = __webpack_require__(/*! ../../actions/services */ 1148);
+	var _services = __webpack_require__(/*! ../../actions/services */ 1151);
 	
-	var _selectors = __webpack_require__(/*! ../../selectors */ 1149);
+	var _packagesPopup = __webpack_require__(/*! ../popups/packages-popup */ 1163);
+	
+	var _packagesPopup2 = _interopRequireDefault(_packagesPopup);
+	
+	var _selectors = __webpack_require__(/*! ../../selectors */ 1144);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -99377,8 +100163,14 @@
 	
 	        var _this = _possibleConstructorReturn(this, (ServiceZoomModal.__proto__ || Object.getPrototypeOf(ServiceZoomModal)).call(this, props));
 	
+	        _this.state = {
+	            addingMode: false
+	        };
 	        _this.handleAdd = _this.handleAdd.bind(_this);
 	        _this.handleClose = _this.handleClose.bind(_this);
+	        _this.handleAddFromPopup = _this.handleAddFromPopup.bind(_this);
+	        _this.handleClosePopup = _this.handleClosePopup.bind(_this);
+	        _this.handleOpenPopup = _this.handleOpenPopup.bind(_this);
 	        return _this;
 	    }
 	
@@ -99388,8 +100180,16 @@
 	            var _props = this.props;
 	            var service = _props.service;
 	            var addItemToCart = _props.addItemToCart;
+	            var closeServiceZoomModal = _props.closeServiceZoomModal;
+	            var cartItems = _props.cartItems;
 	
+	            var already = _lodash2.default.find(cartItems, { id: service.id });
+	            if (already) {
+	                // dispatch notification
+	                return closeServiceZoomModal();
+	            }
 	            addItemToCart(service);
+	            closeServiceZoomModal();
 	        }
 	    }, {
 	        key: 'handleClose',
@@ -99399,16 +100199,57 @@
 	            closeServiceZoomModal();
 	        }
 	    }, {
+	        key: 'handleOpenPopup',
+	        value: function handleOpenPopup() {
+	            this.setState({ addingMode: true });
+	        }
+	    }, {
+	        key: 'handleClosePopup',
+	        value: function handleClosePopup() {
+	            this.setState({ addingMode: false });
+	        }
+	    }, {
+	        key: 'handleAddFromPopup',
+	        value: function handleAddFromPopup(item) {
+	            var _props2 = this.props;
+	            var cartItems = _props2.cartItems;
+	            var addItemToCart = _props2.addItemToCart;
+	            var updateCartItemPackage = _props2.updateCartItemPackage;
+	            var closeServiceZoomModal = _props2.closeServiceZoomModal;
+	
+	            var already = _lodash2.default.find(cartItems, { id: item.id });
+	            if (already) {
+	                if (!item.fixed && already.amount === item.amount) {
+	                    // dispatch a notification
+	                    return;
+	                } else {
+	                    updateCartItemPackage(item);
+	                    this.handleClosePopup();
+	                    return closeServiceZoomModal();
+	                }
+	            }
+	            addItemToCart(item);
+	            this.handleClosePopup();
+	            closeServiceZoomModal();
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
-	            var _props2 = this.props;
-	            var _props2$service = _props2.service;
-	            var name = _props2$service.name;
-	            var amount = _props2$service.amount;
-	            var images = _props2.images;
-	            var loadingService = _props2.loadingService;
-	            var serviceZoomMode = _props2.serviceZoomMode;
+	            var _props3 = this.props;
+	            var _props3$service = _props3.service;
+	            var name = _props3$service.name;
+	            var amount = _props3$service.amount;
+	            var fixed = _props3$service.fixed;
+	            var images = _props3.images;
+	            var loadingService = _props3.loadingService;
+	            var serviceZoomMode = _props3.serviceZoomMode;
 	
+	
+	            var addTrigger = _react2.default.createElement(
+	                'div',
+	                { className: 'ui mini right button', onClick: this.handleOpenPopup },
+	                'add'
+	            );
 	
 	            return _react2.default.createElement(
 	                _semanticUiReact.Modal,
@@ -99457,11 +100298,19 @@
 	                        { className: 'ui mini button', onClick: this.handleClose },
 	                        'close'
 	                    ),
-	                    _react2.default.createElement(
+	                    fixed ? _react2.default.createElement(
 	                        'div',
 	                        { className: 'ui mini right button', onClick: this.handleAdd },
 	                        'add'
-	                    )
+	                    ) : _react2.default.createElement(_packagesPopup2.default, {
+	                        trigger: addTrigger,
+	                        open: this.state.addingMode,
+	                        service: this.props.service,
+	                        update: this.handleAddFromPopup,
+	                        cancel: this.handleClosePopup,
+	                        positioning: 'top right',
+	                        positiveButton: 'add'
+	                    })
 	                )
 	            );
 	        }
@@ -99476,13 +100325,14 @@
 	    loadingService: _react2.default.PropTypes.bool.isRequired,
 	    serviceZoomMode: _react2.default.PropTypes.bool.isRequired,
 	    addItemToCart: _react2.default.PropTypes.func.isRequired,
+	    updateCartItemPackage: _react2.default.PropTypes.func.isRequired,
 	    closeServiceZoomModal: _react2.default.PropTypes.func.isRequired
 	};
 	
 	var mapStateToProps = function mapStateToProps(state) {
 	    return {
 	        service: (0, _selectors.getServiceInZoomSelector)(state),
-	        // service: state.serviceInZoom,
+	        cartItems: state.cartItems,
 	        images: (0, _selectors.getServiceInZoomImagesSelector)(state),
 	        loadingService: state.loadingService,
 	        serviceZoomMode: state.serviceZoomMode
@@ -99491,14 +100341,1189 @@
 	
 	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
 	    return (0, _redux.bindActionCreators)({
-	        addItemToCart: _cart.addItemToCart, closeServiceZoomModal: _services.closeServiceZoomModal
+	        addItemToCart: _cart.addItemToCart, closeServiceZoomModal: _services.closeServiceZoomModal, updateCartItemPackage: _cart.updateCartItemPackage
 	    }, dispatch);
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ServiceZoomModal);
 
 /***/ },
-/* 1169 */
+/* 1173 */
+/*!************************************************************!*\
+  !*** ./spas/kit/components/modals/client-details-modal.js ***!
+  \************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.ClientDetailsModal = undefined;
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	var _reactInputMask = __webpack_require__(/*! react-input-mask */ 1174);
+	
+	var _reactInputMask2 = _interopRequireDefault(_reactInputMask);
+	
+	var _react = __webpack_require__(/*! react */ 301);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _reactRedux = __webpack_require__(/*! react-redux */ 471);
+	
+	var _redux = __webpack_require__(/*! redux */ 478);
+	
+	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
+	
+	var _checkout = __webpack_require__(/*! ../../actions/checkout */ 1138);
+	
+	var _selectors = __webpack_require__(/*! ../../selectors */ 1144);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var styles = {
+	    main: {
+	        width: '500px',
+	        borderRadius: 0
+	    },
+	    header: {},
+	    content: {},
+	    actions: {
+	        borderRadius: 0,
+	        display: 'flex',
+	        flexDirection: 'row',
+	        justifyContent: 'space-between'
+	    },
+	    form: {
+	        width: '100%'
+	    }
+	};
+	
+	var options = [{ text: 'Male', value: 'male' }, { text: 'Female', value: 'female' }];
+	
+	var ClientDetailsModal = exports.ClientDetailsModal = function (_React$Component) {
+	    _inherits(ClientDetailsModal, _React$Component);
+	
+	    function ClientDetailsModal(props) {
+	        _classCallCheck(this, ClientDetailsModal);
+	
+	        var _this = _possibleConstructorReturn(this, (ClientDetailsModal.__proto__ || Object.getPrototypeOf(ClientDetailsModal)).call(this, props));
+	
+	        _this.state = {
+	            fullName: '',
+	            gender: '',
+	            phoneNumber: '',
+	            agreed: false,
+	            code: ''
+	        };
+	
+	        _this.handleSubmit = _this.handleSubmit.bind(_this);
+	        _this.handleVerify = _this.handleVerify.bind(_this);
+	        _this.handleNewCode = _this.handleNewCode.bind(_this);
+	        return _this;
+	    }
+	
+	    _createClass(ClientDetailsModal, [{
+	        key: 'handleSubmit',
+	        value: function handleSubmit(e) {
+	            var _state = this.state;
+	            var fullName = _state.fullName;
+	            var gender = _state.gender;
+	            var agreed = _state.agreed;
+	            var phoneNumber = _state.phoneNumber;
+	
+	            var fullNameReg = new RegExp(/^[a-z]([-']?[a-z]+)*( [a-z]([-']?[a-z]+)*)+$/);
+	
+	            if (fullNameReg.test(fullName) && gender && agreed && _lodash2.default.trim(phoneNumber, '_').length == 16) {
+	                var client = {
+	                    name: fullName,
+	                    gender: gender,
+	                    phone: phoneNumber
+	                };
+	                return this.props.checkout({ client: client, order: [{ id: 1, amount: 200 }] });
+	            }
+	
+	            // dispatch error notification
+	            console.log(this.state);
+	        }
+	    }, {
+	        key: 'handleVerify',
+	        value: function handleVerify() {
+	            var code = this.state.code;
+	
+	            if (_lodash2.default.trim(code, '_').length == 4) {
+	                return this.props.verifyPhoneNumber({ code: code });
+	            }
+	            console.log(code);
+	        }
+	    }, {
+	        key: 'handleNewCode',
+	        value: function handleNewCode() {
+	            var phone = { phone: this.state.phoneNumber };
+	            this.props.requestNewCode(phone);
+	        }
+	    }, {
+	        key: 'render',
+	        value: function render() {
+	            var _this2 = this;
+	
+	            var _props = this.props;
+	            var clientDetailsMode = _props.clientDetailsMode;
+	            var phoneVerificationMode = _props.phoneVerificationMode;
+	            var checkingOut = _props.checkingOut;
+	            var verifyingNumber = _props.verifyingNumber;
+	            var closeClientDetailsModal = _props.closeClientDetailsModal;
+	            var requestingCode = _props.requestingCode;
+	            var _state2 = this.state;
+	            var fullName = _state2.fullName;
+	            var phoneNumber = _state2.phoneNumber;
+	            var code = _state2.code;
+	
+	
+	            return _react2.default.createElement(
+	                _semanticUiReact.Modal,
+	                {
+	                    size: 'small',
+	                    style: styles.main,
+	                    open: clientDetailsMode
+	                },
+	                checkingOut || verifyingNumber || requestingCode ? _react2.default.createElement(
+	                    'div',
+	                    { className: 'ui active inverted dimmer' },
+	                    _react2.default.createElement(
+	                        _semanticUiReact.Loader,
+	                        { size: 'small' },
+	                        checkingOut || requestingCode ? 'Requesting...' : 'Verifying...'
+	                    )
+	                ) : null,
+	                _react2.default.createElement(_semanticUiReact.Modal.Header, {
+	                    style: styles.header
+	                }),
+	                _react2.default.createElement(
+	                    _semanticUiReact.Modal.Content,
+	                    {
+	                        style: styles.content
+	                    },
+	                    _react2.default.createElement(
+	                        _semanticUiReact.Form,
+	                        {
+	                            style: styles.form,
+	                            size: 'tiny'
+	                        },
+	                        _react2.default.createElement(
+	                            _semanticUiReact.Form.Field,
+	                            {
+	                                disabled: phoneVerificationMode ? true : false
+	                            },
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Full Name'
+	                            ),
+	                            _react2.default.createElement(_semanticUiReact.Input, {
+	                                value: fullName,
+	                                onChange: function onChange(e) {
+	                                    return _this2.setState({ fullName: e.target.value });
+	                                },
+	                                placeholder: 'Full Name' })
+	                        ),
+	                        _react2.default.createElement(_semanticUiReact.Form.Select, {
+	                            disabled: phoneVerificationMode ? true : false,
+	                            onChange: function onChange(e, select) {
+	                                return _this2.setState({ gender: select.value });
+	                            },
+	                            label: 'Gender',
+	                            options: options,
+	                            placeholder: 'Gender' }),
+	                        _react2.default.createElement(
+	                            _semanticUiReact.Form.Field,
+	                            {
+	                                disabled: phoneVerificationMode ? true : false },
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Phone Number'
+	                            ),
+	                            _react2.default.createElement(_reactInputMask2.default, {
+	                                value: phoneNumber,
+	                                mask: '+233 99 999 9999',
+	                                onChange: function onChange(e) {
+	                                    return _this2.setState({ phoneNumber: e.target.value });
+	                                },
+	                                placeholder: '+233 54 ... 02' })
+	                        ),
+	                        _react2.default.createElement(
+	                            _semanticUiReact.Form.Field,
+	                            {
+	                                disabled: phoneVerificationMode ? true : false },
+	                            _react2.default.createElement(_semanticUiReact.Checkbox, {
+	                                onChange: function onChange(e, checkbox) {
+	                                    return _this2.setState({ agreed: checkbox.checked });
+	                                },
+	                                label: 'I agree to the Terms and Conditions' })
+	                        ),
+	                        phoneVerificationMode ? _react2.default.createElement(
+	                            _semanticUiReact.Form.Field,
+	                            null,
+	                            _react2.default.createElement(
+	                                'label',
+	                                null,
+	                                'Code'
+	                            ),
+	                            _react2.default.createElement(_reactInputMask2.default, {
+	                                className: 'Code__Input',
+	                                mask: '9999',
+	                                onChange: function onChange(e) {
+	                                    return _this2.setState({ code: e.target.value });
+	                                },
+	                                value: code,
+	                                placeholder: 'Enter code here...' })
+	                        ) : null
+	                    )
+	                ),
+	                phoneVerificationMode ? _react2.default.createElement(
+	                    _semanticUiReact.Modal.Actions,
+	                    {
+	                        style: styles.actions
+	                    },
+	                    _react2.default.createElement(
+	                        _semanticUiReact.Button,
+	                        {
+	                            className: 'Verify__Button',
+	                            onClick: this.handleVerify,
+	                            size: 'tiny' },
+	                        'verify'
+	                    ),
+	                    _react2.default.createElement(
+	                        _semanticUiReact.Button,
+	                        {
+	                            className: 'RequestCode__Button',
+	                            onClick: this.handleNewCode,
+	                            size: 'tiny' },
+	                        'did not receive code.'
+	                    )
+	                ) : _react2.default.createElement(
+	                    _semanticUiReact.Modal.Actions,
+	                    {
+	                        style: styles.actions
+	                    },
+	                    _react2.default.createElement(
+	                        _semanticUiReact.Button,
+	                        {
+	                            className: 'Cancel__Button',
+	                            onClick: function onClick(e) {
+	                                return closeClientDetailsModal();
+	                            },
+	                            size: 'tiny' },
+	                        'cancel'
+	                    ),
+	                    _react2.default.createElement(
+	                        _semanticUiReact.Button,
+	                        {
+	                            className: 'Submit__Button',
+	                            onClick: this.handleSubmit,
+	                            size: 'tiny' },
+	                        'submit'
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+	
+	    return ClientDetailsModal;
+	}(_react2.default.Component);
+	
+	ClientDetailsModal.PropTypes = {
+	    clientDetailsMode: _react2.default.PropTypes.bool.isRequired,
+	    phoneVerificationMode: _react2.default.PropTypes.bool.isRequired,
+	    verifyingNumber: _react2.default.PropTypes.bool.isRequired,
+	    checkingOut: _react2.default.PropTypes.bool.isRequired,
+	    requestingCode: _react2.default.PropTypes.bool.isRequired,
+	    order: _react2.default.PropTypes.arrayOf(_react2.default.PropTypes.object),
+	    checkout: _react2.default.PropTypes.func.isRequired,
+	    verifyPhoneNumber: _react2.default.PropTypes.func.isRequired,
+	    closeClientDetailsModal: _react2.default.PropTypes.func.isRequired,
+	    requestNewCode: _react2.default.PropTypes.func.isRequired
+	};
+	
+	var mapStateToProps = function mapStateToProps(state) {
+	    return {
+	        clientDetailsMode: state.clientDetailsMode,
+	        phoneVerificationMode: state.phoneVerificationMode,
+	        verifyingNumber: state.verifyingNumber,
+	        checkingOut: state.checkingOut,
+	        order: (0, _selectors.getOrderSelector)(state),
+	        requestingCode: state.requestingCode
+	    };
+	};
+	
+	var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+	    return (0, _redux.bindActionCreators)({
+	        checkout: _checkout.checkout,
+	        verifyPhoneNumber: _checkout.verifyPhoneNumber,
+	        closeClientDetailsModal: _checkout.closeClientDetailsModal,
+	        requestNewCode: _checkout.requestNewCode
+	    }, dispatch);
+	};
+	
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(ClientDetailsModal);
+
+/***/ },
+/* 1174 */
+/*!**************************************************!*\
+  !*** ./~/react-input-mask/build/InputElement.js ***!
+  \**************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	// https://github.com/sanniassin/react-input-mask
+	
+	"use strict";
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+	
+	var React = __webpack_require__(/*! react */ 301);
+	
+	var InputElement = React.createClass({
+	    displayName: "InputElement",
+	
+	    defaultCharsRules: {
+	        "9": "[0-9]",
+	        "a": "[A-Za-z]",
+	        "*": "[A-Za-z0-9]"
+	    },
+	    defaultMaskChar: "_",
+	    lastCaretPos: null,
+	    isAndroidBrowser: function () {
+	        var windows = new RegExp("windows", "i");
+	        var firefox = new RegExp("firefox", "i");
+	        var android = new RegExp("android", "i");
+	        var ua = navigator.userAgent;
+	        return !windows.test(ua) && !firefox.test(ua) && android.test(ua);
+	    },
+	    isWindowsPhoneBrowser: function () {
+	        var windows = new RegExp("windows", "i");
+	        var phone = new RegExp("phone", "i");
+	        var ua = navigator.userAgent;
+	        return windows.test(ua) && phone.test(ua);
+	    },
+	    isAndroidFirefox: function () {
+	        var windows = new RegExp("windows", "i");
+	        var firefox = new RegExp("firefox", "i");
+	        var android = new RegExp("android", "i");
+	        var ua = navigator.userAgent;
+	        return !windows.test(ua) && firefox.test(ua) && android.test(ua);
+	    },
+	    isDOMElement: function (element) {
+	        return typeof HTMLElement === "object" ? element instanceof HTMLElement // DOM2
+	        : element.nodeType === 1 && typeof element.nodeName === "string";
+	    },
+	    // getDOMNode is deprecated but we need it to stay compatible with React 0.12
+	    getInputDOMNode: function () {
+	        var input = this.refs.input;
+	
+	        if (!input) {
+	            return null;
+	        }
+	
+	        // React 0.14
+	        if (this.isDOMElement(input)) {
+	            return input;
+	        }
+	
+	        return input.getDOMNode();
+	    },
+	    enableValueAccessors: function () {
+	        var _this = this;
+	
+	        if (this.canUseAccessors) {
+	            var input = this.getInputDOMNode();
+	            this.valueDescriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value');
+	            Object.defineProperty(input, 'value', {
+	                configurable: true,
+	                enumerable: true,
+	                get: function () {
+	                    return _this.value;
+	                },
+	                set: function (val) {
+	                    _this.value = val;
+	                    _this.valueDescriptor.set.call(input, val);
+	                }
+	            });
+	        }
+	    },
+	    disableValueAccessors: function () {
+	        var valueDescriptor = this.valueDescriptor;
+	
+	        if (!valueDescriptor) {
+	            return;
+	        }
+	        this.valueDescriptor = null;
+	        var input = this.getInputDOMNode();
+	        Object.defineProperty(input, 'value', valueDescriptor);
+	    },
+	    getInputValue: function () {
+	        var input = this.getInputDOMNode();
+	        var valueDescriptor = this.valueDescriptor;
+	
+	        var value;
+	        if (valueDescriptor) {
+	            value = valueDescriptor.get.call(input);
+	        } else {
+	            value = input.value;
+	        }
+	
+	        return value;
+	    },
+	    setInputValue: function (val) {
+	        var input = this.getInputDOMNode();
+	        this.value = val;
+	        input.value = val;
+	    },
+	    getPrefix: function () {
+	        var prefix = "";
+	        var mask = this.mask;
+	
+	        for (var i = 0; i < mask.length && this.isPermanentChar(i); ++i) {
+	            prefix += mask[i];
+	        }
+	        return prefix;
+	    },
+	    getFilledLength: function () {
+	        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
+	
+	        var i;
+	        var maskChar = this.maskChar;
+	
+	        if (!maskChar) {
+	            return value.length;
+	        }
+	
+	        for (i = value.length - 1; i >= 0; --i) {
+	            var character = value[i];
+	            if (!this.isPermanentChar(i) && this.isAllowedChar(character, i)) {
+	                break;
+	            }
+	        }
+	
+	        return ++i || this.getPrefix().length;
+	    },
+	    getLeftEditablePos: function (pos) {
+	        for (var i = pos; i >= 0; --i) {
+	            if (!this.isPermanentChar(i)) {
+	                return i;
+	            }
+	        }
+	        return null;
+	    },
+	    getRightEditablePos: function (pos) {
+	        var mask = this.mask;
+	
+	        for (var i = pos; i < mask.length; ++i) {
+	            if (!this.isPermanentChar(i)) {
+	                return i;
+	            }
+	        }
+	        return null;
+	    },
+	    isEmpty: function () {
+	        var _this2 = this;
+	
+	        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
+	
+	        return !value.split("").some(function (character, i) {
+	            return !_this2.isPermanentChar(i) && _this2.isAllowedChar(character, i);
+	        });
+	    },
+	    isFilled: function () {
+	        var value = arguments.length <= 0 || arguments[0] === undefined ? this.state.value : arguments[0];
+	
+	        return this.getFilledLength(value) === this.mask.length;
+	    },
+	    createFilledArray: function (length, val) {
+	        var array = [];
+	        for (var i = 0; i < length; i++) {
+	            array[i] = val;
+	        }
+	        return array;
+	    },
+	    formatValue: function (value) {
+	        var _this3 = this;
+	
+	        var maskChar = this.maskChar;
+	        var mask = this.mask;
+	
+	        if (!maskChar) {
+	            var prefix = this.getPrefix();
+	            var prefixLen = prefix.length;
+	            value = this.insertRawSubstr("", value, 0);
+	            while (value.length > prefixLen && this.isPermanentChar(value.length - 1)) {
+	                value = value.slice(0, value.length - 1);
+	            }
+	
+	            if (value.length < prefixLen) {
+	                value = prefix;
+	            }
+	
+	            return value;
+	        }
+	        if (value) {
+	            var emptyValue = this.formatValue("");
+	            return this.insertRawSubstr(emptyValue, value, 0);
+	        }
+	        return value.split("").concat(this.createFilledArray(mask.length - value.length, null)).map(function (character, pos) {
+	            if (_this3.isAllowedChar(character, pos)) {
+	                return character;
+	            } else if (_this3.isPermanentChar(pos)) {
+	                return mask[pos];
+	            }
+	            return maskChar;
+	        }).join("");
+	    },
+	    clearRange: function (value, start, len) {
+	        var _this4 = this;
+	
+	        var end = start + len;
+	        var maskChar = this.maskChar;
+	        var mask = this.mask;
+	
+	        if (!maskChar) {
+	            var prefixLen = this.getPrefix().length;
+	            value = value.split("").filter(function (character, i) {
+	                return i < prefixLen || i < start || i >= end;
+	            }).join("");
+	            return this.formatValue(value);
+	        }
+	        return value.split("").map(function (character, i) {
+	            if (i < start || i >= end) {
+	                return character;
+	            }
+	            if (_this4.isPermanentChar(i)) {
+	                return mask[i];
+	            }
+	            return maskChar;
+	        }).join("");
+	    },
+	    replaceSubstr: function (value, newSubstr, pos) {
+	        return value.slice(0, pos) + newSubstr + value.slice(pos + newSubstr.length);
+	    },
+	    insertRawSubstr: function (value, substr, pos) {
+	        var mask = this.mask;
+	        var maskChar = this.maskChar;
+	
+	        var isFilled = this.isFilled(value);
+	        var prefixLen = this.getPrefix().length;
+	        substr = substr.split("");
+	
+	        if (!maskChar && pos > value.length) {
+	            value += mask.slice(value.length, pos);
+	        }
+	
+	        for (var i = pos; i < mask.length && substr.length;) {
+	            var isPermanent = this.isPermanentChar(i);
+	            if (!isPermanent || mask[i] === substr[0]) {
+	                var character = substr.shift();
+	                if (this.isAllowedChar(character, i, true)) {
+	                    if (i < value.length) {
+	                        if (maskChar || isFilled || i < prefixLen) {
+	                            value = this.replaceSubstr(value, character, i);
+	                        } else {
+	                            value = this.formatValue(value.substr(0, i) + character + value.substr(i));
+	                        }
+	                    } else if (!maskChar) {
+	                        value += character;
+	                    }
+	                    ++i;
+	                }
+	            } else {
+	                if (!maskChar && i >= value.length) {
+	                    value += mask[i];
+	                } else if (maskChar && isPermanent && substr[0] === maskChar) {
+	                    substr.shift();
+	                }
+	                ++i;
+	            }
+	        }
+	        return value;
+	    },
+	    getRawSubstrLength: function (value, substr, pos) {
+	        var mask = this.mask;
+	        var maskChar = this.maskChar;
+	
+	        substr = substr.split("");
+	        for (var i = pos; i < mask.length && substr.length;) {
+	            if (!this.isPermanentChar(i) || mask[i] === substr[0]) {
+	                var character = substr.shift();
+	                if (this.isAllowedChar(character, i, true)) {
+	                    ++i;
+	                }
+	            } else {
+	                ++i;
+	            }
+	        }
+	        return i - pos;
+	    },
+	    isAllowedChar: function (character, pos) {
+	        var allowMaskChar = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+	        var mask = this.mask;
+	        var maskChar = this.maskChar;
+	
+	        if (this.isPermanentChar(pos)) {
+	            return mask[pos] === character;
+	        }
+	        var ruleChar = mask[pos];
+	        var charRule = this.charsRules[ruleChar];
+	        return new RegExp(charRule).test(character || "") || allowMaskChar && character === maskChar;
+	    },
+	    isPermanentChar: function (pos) {
+	        return this.permanents.indexOf(pos) !== -1;
+	    },
+	    setCaretToEnd: function () {
+	        var filledLen = this.getFilledLength();
+	        var pos = this.getRightEditablePos(filledLen);
+	        if (pos !== null) {
+	            this.setCaretPos(pos);
+	        }
+	    },
+	    setSelection: function (start) {
+	        var len = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+	
+	        var input = this.getInputDOMNode();
+	        if (!input) {
+	            return;
+	        }
+	
+	        var end = start + len;
+	        if ("selectionStart" in input && "selectionEnd" in input) {
+	            input.selectionStart = start;
+	            input.selectionEnd = end;
+	        } else {
+	            var range = input.createTextRange();
+	            range.collapse(true);
+	            range.moveStart("character", start);
+	            range.moveEnd("character", end - start);
+	            range.select();
+	        }
+	    },
+	    getSelection: function () {
+	        var input = this.getInputDOMNode();
+	        var start = 0;
+	        var end = 0;
+	
+	        if ("selectionStart" in input && "selectionEnd" in input) {
+	            start = input.selectionStart;
+	            end = input.selectionEnd;
+	        } else {
+	            var range = document.selection.createRange();
+	            if (range.parentElement() === input) {
+	                start = -range.moveStart("character", -input.value.length);
+	                end = -range.moveEnd("character", -input.value.length);
+	            }
+	        }
+	
+	        return {
+	            start: start,
+	            end: end,
+	            length: end - start
+	        };
+	    },
+	    getCaretPos: function () {
+	        return this.getSelection().start;
+	    },
+	    setCaretPos: function (pos) {
+	        var raf = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function (fn) {
+	            return setTimeout(fn, 0);
+	        };
+	
+	        var setPos = this.setSelection.bind(this, pos, 0);
+	
+	        setPos();
+	        raf(setPos);
+	
+	        this.lastCaretPos = pos;
+	    },
+	    isFocused: function () {
+	        return document.activeElement === this.getInputDOMNode();
+	    },
+	    parseMask: function (mask) {
+	        var _this5 = this;
+	
+	        if (!mask || typeof mask !== "string") {
+	            return {
+	                mask: null,
+	                lastEditablePos: null,
+	                permanents: []
+	            };
+	        }
+	        var str = "";
+	        var permanents = [];
+	        var isPermanent = false;
+	        var lastEditablePos = null;
+	
+	        mask.split("").forEach(function (character) {
+	            if (!isPermanent && character === "\\") {
+	                isPermanent = true;
+	            } else {
+	                if (isPermanent || !_this5.charsRules[character]) {
+	                    permanents.push(str.length);
+	                } else {
+	                    lastEditablePos = str.length + 1;
+	                }
+	                str += character;
+	                isPermanent = false;
+	            }
+	        });
+	
+	        return {
+	            mask: str,
+	            lastEditablePos: lastEditablePos,
+	            permanents: permanents
+	        };
+	    },
+	    getStringValue: function (value) {
+	        return !value && value !== 0 ? "" : value + "";
+	    },
+	    getInitialState: function () {
+	        this.hasValue = this.props.value != null;
+	        this.charsRules = "formatChars" in this.props ? this.props.formatChars : this.defaultCharsRules;
+	
+	        var mask = this.parseMask(this.props.mask);
+	        var defaultValue = this.props.defaultValue != null ? this.props.defaultValue : '';
+	        var value = this.props.value != null ? this.props.value : defaultValue;
+	
+	        value = this.getStringValue(value);
+	
+	        this.mask = mask.mask;
+	        this.permanents = mask.permanents;
+	        this.lastEditablePos = mask.lastEditablePos;
+	        this.maskChar = "maskChar" in this.props ? this.props.maskChar : this.defaultMaskChar;
+	
+	        if (this.mask && (this.props.alwaysShowMask || value)) {
+	            value = this.formatValue(value);
+	        }
+	
+	        return { value: value };
+	    },
+	    componentWillMount: function () {
+	        var mask = this.mask;
+	        var value = this.state.value;
+	
+	        if (mask && value) {
+	            this.setState({ value: value });
+	        }
+	    },
+	    componentWillReceiveProps: function (nextProps) {
+	        this.hasValue = this.props.value != null;
+	        this.charsRules = "formatChars" in nextProps ? nextProps.formatChars : this.defaultCharsRules;
+	
+	        var oldMask = this.mask;
+	        var mask = this.parseMask(nextProps.mask);
+	        var isMaskChanged = mask.mask && mask.mask !== this.mask;
+	
+	        this.mask = mask.mask;
+	        this.permanents = mask.permanents;
+	        this.lastEditablePos = mask.lastEditablePos;
+	        this.maskChar = "maskChar" in nextProps ? nextProps.maskChar : this.defaultMaskChar;
+	
+	        if (!this.mask) {
+	            return;
+	        }
+	
+	        var newValue = nextProps.value != null ? this.getStringValue(nextProps.value) : this.state.value;
+	
+	        if (!oldMask && nextProps.value == null) {
+	            newValue = this.getInputDOMNode().value;
+	        }
+	
+	        var showEmpty = nextProps.alwaysShowMask || this.isFocused();
+	        if (isMaskChanged || mask.mask && (newValue || showEmpty && !this.hasValue)) {
+	            newValue = this.formatValue(newValue);
+	
+	            if (isMaskChanged) {
+	                var pos = this.lastCaretPos;
+	                var filledLen = this.getFilledLength(newValue);
+	                if (filledLen < pos) {
+	                    this.setCaretPos(this.getRightEditablePos(filledLen));
+	                }
+	            }
+	        }
+	        if (mask.mask && this.isEmpty(newValue) && !showEmpty && !this.hasValue) {
+	            newValue = "";
+	        }
+	        this.value = newValue;
+	        if (this.state.value !== newValue) {
+	            this.setState({ value: newValue });
+	        }
+	    },
+	    componentDidUpdate: function (prevProps, prevState) {
+	        if ((this.mask || prevProps.mask) && this.props.value == null) {
+	            this.updateUncontrolledInput();
+	        }
+	        if (this.valueDescriptor && this.getInputValue() !== this.state.value) {
+	            this.setInputValue(this.state.value);
+	        }
+	    },
+	    updateUncontrolledInput: function () {
+	        if (this.getInputValue() !== this.state.value) {
+	            this.setInputValue(this.state.value);
+	        }
+	    },
+	    onKeyDown: function (event) {
+	        var hasHandler = typeof this.props.onKeyDown === "function";
+	        if (event.ctrlKey || event.metaKey) {
+	            if (hasHandler) {
+	                this.props.onKeyDown(event);
+	            }
+	            return;
+	        }
+	
+	        var caretPos = this.getCaretPos();
+	        var value = this.state.value;
+	        var key = event.key;
+	        var preventDefault = false;
+	        switch (key) {
+	            case "Backspace":
+	            case "Delete":
+	                var prefixLen = this.getPrefix().length;
+	                var deleteFromRight = key === "Delete";
+	                var selectionRange = this.getSelection();
+	                if (selectionRange.length) {
+	                    value = this.clearRange(value, selectionRange.start, selectionRange.length);
+	                } else if (caretPos < prefixLen || !deleteFromRight && caretPos === prefixLen) {
+	                    caretPos = prefixLen;
+	                } else {
+	                    var editablePos = deleteFromRight ? this.getRightEditablePos(caretPos) : this.getLeftEditablePos(caretPos - 1);
+	                    if (editablePos !== null) {
+	                        value = this.clearRange(value, editablePos, 1);
+	                        caretPos = editablePos;
+	                    }
+	                }
+	                preventDefault = true;
+	                break;
+	            default:
+	                break;
+	        }
+	
+	        if (hasHandler) {
+	            this.props.onKeyDown(event);
+	        }
+	
+	        if (value !== this.state.value) {
+	            this.setInputValue(value);
+	            this.setState({
+	                value: this.hasValue ? this.state.value : value
+	            });
+	            preventDefault = true;
+	            if (typeof this.props.onChange === "function") {
+	                this.props.onChange(event);
+	            }
+	        }
+	        if (preventDefault) {
+	            event.preventDefault();
+	            this.setCaretPos(caretPos);
+	        }
+	    },
+	    onKeyPress: function (event) {
+	        var key = event.key;
+	        var hasHandler = typeof this.props.onKeyPress === "function";
+	        if (key === "Enter" || event.ctrlKey || event.metaKey) {
+	            if (hasHandler) {
+	                this.props.onKeyPress(event);
+	            }
+	            return;
+	        }
+	
+	        if (this.isWindowsPhoneBrowser) {
+	            return;
+	        }
+	
+	        var caretPos = this.getCaretPos();
+	        var selection = this.getSelection();
+	        var value = this.state.value;
+	        var mask = this.mask;
+	        var maskChar = this.maskChar;
+	        var lastEditablePos = this.lastEditablePos;
+	
+	        var maskLen = mask.length;
+	        var prefixLen = this.getPrefix().length;
+	
+	        if (this.isPermanentChar(caretPos) && mask[caretPos] === key) {
+	            value = this.insertRawSubstr(value, key, caretPos);
+	            ++caretPos;
+	        } else {
+	            var editablePos = this.getRightEditablePos(caretPos);
+	            if (editablePos !== null && this.isAllowedChar(key, editablePos)) {
+	                value = this.clearRange(value, selection.start, selection.length);
+	                value = this.insertRawSubstr(value, key, editablePos);
+	                caretPos = editablePos + 1;
+	            }
+	        }
+	
+	        if (value !== this.state.value) {
+	            this.setInputValue(value);
+	            this.setState({
+	                value: this.hasValue ? this.state.value : value
+	            });
+	            if (typeof this.props.onChange === "function") {
+	                this.props.onChange(event);
+	            }
+	        }
+	        event.preventDefault();
+	        if (caretPos < lastEditablePos && caretPos > prefixLen) {
+	            caretPos = this.getRightEditablePos(caretPos);
+	        }
+	        this.setCaretPos(caretPos);
+	    },
+	    onChange: function (event) {
+	        var _this6 = this;
+	
+	        var pasteSelection = this.pasteSelection;
+	        var mask = this.mask;
+	        var maskChar = this.maskChar;
+	        var lastEditablePos = this.lastEditablePos;
+	        var preventEmptyChange = this.preventEmptyChange;
+	
+	        var target = event.target;
+	        var value = this.getInputValue();
+	        if (!value && this.preventEmptyChange) {
+	            this.disableValueAccessors();
+	            this.preventEmptyChange = false;
+	            this.setInputValue(this.state.value);
+	            return;
+	        }
+	        var oldValue = this.state.value;
+	        if (pasteSelection) {
+	            this.pasteSelection = null;
+	            this.pasteText(oldValue, value, pasteSelection, event);
+	            return;
+	        }
+	        var selection = this.getSelection();
+	        var caretPos = selection.end;
+	        var maskLen = mask.length;
+	        var valueLen = value.length;
+	        var oldValueLen = oldValue.length;
+	        var prefixLen = this.getPrefix().length;
+	        var clearedValue;
+	
+	        if (valueLen > oldValueLen) {
+	            var substrLen = valueLen - oldValueLen;
+	            var startPos = selection.end - substrLen;
+	            var enteredSubstr = value.substr(startPos, substrLen);
+	
+	            if (startPos < lastEditablePos && (substrLen !== 1 || enteredSubstr !== mask[startPos])) {
+	                caretPos = this.getRightEditablePos(startPos);
+	            } else {
+	                caretPos = startPos;
+	            }
+	
+	            value = value.substr(0, startPos) + value.substr(startPos + substrLen);
+	
+	            clearedValue = this.clearRange(value, startPos, maskLen - startPos);
+	            clearedValue = this.insertRawSubstr(clearedValue, enteredSubstr, caretPos);
+	
+	            value = this.insertRawSubstr(oldValue, enteredSubstr, caretPos);
+	
+	            if (substrLen !== 1 || caretPos >= prefixLen && caretPos < lastEditablePos) {
+	                caretPos = this.getFilledLength(clearedValue);
+	            } else if (caretPos < lastEditablePos) {
+	                caretPos++;
+	            }
+	        } else if (valueLen < oldValueLen) {
+	            var removedLen = maskLen - valueLen;
+	            clearedValue = this.clearRange(oldValue, selection.end, removedLen);
+	            var substr = value.substr(0, selection.end);
+	            var clearOnly = substr === oldValue.substr(0, selection.end);
+	
+	            if (maskChar) {
+	                value = this.insertRawSubstr(clearedValue, substr, 0);
+	            }
+	
+	            clearedValue = this.clearRange(clearedValue, selection.end, maskLen - selection.end);
+	            clearedValue = this.insertRawSubstr(clearedValue, substr, 0);
+	
+	            if (!clearOnly) {
+	                caretPos = this.getFilledLength(clearedValue);
+	            } else if (caretPos < prefixLen) {
+	                caretPos = prefixLen;
+	            }
+	        }
+	        value = this.formatValue(value);
+	
+	        // prevent android autocomplete insertion on backspace
+	        // prevent hanging after first entered character on Windows 10 Mobile
+	        if (!this.canUseAccessors || !this.isAndroidBrowser && !this.isWindowsPhoneBrowser) {
+	            this.setInputValue(value);
+	        }
+	
+	        if (this.canUseAccessors && (this.isAndroidFirefox && value && !this.getInputValue() || this.isAndroidBrowser || this.isWindowsPhoneBrowser)) {
+	            this.value = value;
+	            this.enableValueAccessors();
+	            if (this.isAndroidFirefox) {
+	                this.preventEmptyChange = true;
+	            }
+	            setTimeout(function () {
+	                _this6.preventEmptyChange = false;
+	                _this6.disableValueAccessors();
+	            }, 0);
+	        }
+	
+	        this.setState({
+	            value: this.hasValue ? this.state.value : value
+	        });
+	
+	        if (typeof this.props.onChange === "function") {
+	            this.props.onChange(event);
+	        }
+	
+	        this.setCaretPos(caretPos);
+	    },
+	    onFocus: function (event) {
+	        if (!this.state.value) {
+	            var prefix = this.getPrefix();
+	            var value = this.formatValue(prefix);
+	            var inputValue = this.formatValue(value);
+	
+	            // do not use this.getInputValue and this.setInputValue as this.refs.input
+	            // can be undefined at this moment if autoFocus attribute is set
+	            var isInputValueChanged = inputValue !== event.target.value;
+	
+	            if (isInputValueChanged) {
+	                event.target.value = inputValue;
+	            }
+	
+	            this.setState({
+	                value: this.hasValue ? this.state.value : inputValue
+	            }, this.setCaretToEnd);
+	
+	            if (isInputValueChanged && typeof this.props.onChange === "function") {
+	                this.props.onChange(event);
+	            }
+	        } else if (this.getFilledLength() < this.mask.length) {
+	            this.setCaretToEnd();
+	        }
+	
+	        if (typeof this.props.onFocus === "function") {
+	            this.props.onFocus(event);
+	        }
+	    },
+	    onBlur: function (event) {
+	        if (!this.props.alwaysShowMask && this.isEmpty(this.state.value)) {
+	            var inputValue = "";
+	            var isInputValueChanged = inputValue !== this.getInputValue();
+	            if (isInputValueChanged) {
+	                this.setInputValue(inputValue);
+	            }
+	            this.setState({
+	                value: this.hasValue ? this.state.value : ""
+	            });
+	            if (isInputValueChanged && typeof this.props.onChange === "function") {
+	                this.props.onChange(event);
+	            }
+	        }
+	
+	        if (typeof this.props.onBlur === "function") {
+	            this.props.onBlur(event);
+	        }
+	    },
+	    onPaste: function (event) {
+	        if (this.isAndroidBrowser) {
+	            this.pasteSelection = this.getSelection();
+	            this.setInputValue("");
+	            return;
+	        }
+	        var text;
+	        if (window.clipboardData && window.clipboardData.getData) {
+	            // IE
+	            text = window.clipboardData.getData("Text");
+	        } else if (event.clipboardData && event.clipboardData.getData) {
+	            text = event.clipboardData.getData("text/plain");
+	        }
+	        if (text) {
+	            var value = this.state.value;
+	            var selection = this.getSelection();
+	            this.pasteText(value, text, selection, event);
+	        }
+	        event.preventDefault();
+	    },
+	    pasteText: function (value, text, selection, event) {
+	        var caretPos = selection.start;
+	        if (selection.length) {
+	            value = this.clearRange(value, caretPos, selection.length);
+	        }
+	        var textLen = this.getRawSubstrLength(value, text, caretPos);
+	        value = this.insertRawSubstr(value, text, caretPos);
+	        caretPos += textLen;
+	        caretPos = this.getRightEditablePos(caretPos) || caretPos;
+	        if (value !== this.getInputValue()) {
+	            if (event) {
+	                this.setInputValue(value);
+	            }
+	            this.setState({
+	                value: this.hasValue ? this.state.value : value
+	            });
+	            if (event && typeof this.props.onChange === "function") {
+	                this.props.onChange(event);
+	            }
+	        }
+	        this.setCaretPos(caretPos);
+	    },
+	    componentDidMount: function () {
+	        this.isAndroidBrowser = this.isAndroidBrowser();
+	        this.isWindowsPhoneBrowser = this.isWindowsPhoneBrowser();
+	        this.isAndroidFirefox = this.isAndroidFirefox();
+	
+	        if (Object.getOwnPropertyDescriptor && Object.getPrototypeOf && Object.defineProperty) {
+	            var input = this.getInputDOMNode();
+	            var valueDescriptor = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value');
+	            this.canUseAccessors = !!(valueDescriptor && valueDescriptor.get && valueDescriptor.set);
+	        }
+	
+	        if (this.mask && this.props.value == null) {
+	            this.updateUncontrolledInput();
+	        }
+	    },
+	    render: function () {
+	        var _this7 = this;
+	
+	        var _props = this.props;
+	        var mask = _props.mask;
+	        var alwaysShowMask = _props.alwaysShowMask;
+	        var maskChar = _props.maskChar;
+	        var formatChars = _props.formatChars;
+	
+	        var props = _objectWithoutProperties(_props, ["mask", "alwaysShowMask", "maskChar", "formatChars"]);
+	
+	        if (this.mask) {
+	            var handlersKeys = ["onFocus", "onBlur", "onChange", "onKeyDown", "onKeyPress", "onPaste"];
+	            handlersKeys.forEach(function (key) {
+	                props[key] = _this7[key];
+	            });
+	
+	            if (props.value != null) {
+	                props.value = this.state.value;
+	            }
+	        }
+	        return React.createElement("input", _extends({ ref: "input" }, props));
+	    }
+	});
+	
+	module.exports = InputElement;
+
+/***/ },
+/* 1175 */
 /*!*******************************************************!*\
   !*** ./spas/kit/components/popups/step-menu-popup.js ***!
   \*******************************************************/
@@ -99529,7 +101554,7 @@
 	
 	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
 	
-	var _stepsMenu = __webpack_require__(/*! ../../actions/steps-menu */ 1156);
+	var _stepsMenu = __webpack_require__(/*! ../../actions/steps-menu */ 1158);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -99633,341 +101658,6 @@
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)((0, _radium2.default)(StepMenuPopup));
-
-/***/ },
-/* 1170 */
-/*!*************************************************************!*\
-  !*** ./spas/kit/components/buttons/change-budget-button.js ***!
-  \*************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _numeral = __webpack_require__(/*! numeral */ 1137);
-	
-	var _numeral2 = _interopRequireDefault(_numeral);
-	
-	var _radium = __webpack_require__(/*! radium */ 579);
-	
-	var _radium2 = _interopRequireDefault(_radium);
-	
-	var _react = __webpack_require__(/*! react */ 301);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var styles = {
-	    default: {
-	        ':hover': {}
-	    },
-	    label: {
-	        backgroundColor: 'rgb(85, 26, 139)',
-	        borderColor: 'rgb(85, 26, 139)',
-	        color: '#ffffff',
-	        top: '-70%',
-	        left: '-30%',
-	        width: '200px'
-	    }
-	};
-	
-	var ChangeBudgetButton = function (_React$Component) {
-	    _inherits(ChangeBudgetButton, _React$Component);
-	
-	    function ChangeBudgetButton(props) {
-	        _classCallCheck(this, ChangeBudgetButton);
-	
-	        return _possibleConstructorReturn(this, (ChangeBudgetButton.__proto__ || Object.getPrototypeOf(ChangeBudgetButton)).call(this, props));
-	    }
-	
-	    _createClass(ChangeBudgetButton, [{
-	        key: 'render',
-	        value: function render() {
-	            var _props = this.props;
-	            var budget = _props.budget;
-	            var budgetChangingMode = _props.budgetChangingMode;
-	            var openPopup = _props.openPopup;
-	
-	
-	            return _react2.default.createElement(
-	                'div',
-	                {
-	                    onClick: function onClick(e) {
-	                        return openPopup();
-	                    },
-	                    key: 'keyForChangeBudget',
-	                    className: 'item link ' + (budgetChangingMode ? 'disabled' : '') + ' __change_budget Open__Change__Budget__Popup',
-	                    style: styles.default },
-	                'Budget: ',
-	                _react2.default.createElement(
-	                    'span',
-	                    null,
-	                    '\u20B5 ',
-	                    _react2.default.createElement(
-	                        'b',
-	                        null,
-	                        (0, _numeral2.default)(budget).format('0,0.00')
-	                    )
-	                ),
-	                _radium2.default.getState(this.state, 'keyForChangeBudget', ':hover') ? _react2.default.createElement(
-	                    _semanticUiReact.Label,
-	                    { basic: true, floating: true,
-	                        style: styles.label,
-	                        pointing: 'below' },
-	                    'Click to change budget'
-	                ) : null
-	            );
-	        }
-	    }]);
-	
-	    return ChangeBudgetButton;
-	}(_react2.default.Component);
-	
-	;
-	
-	exports.default = (0, _radium2.default)(ChangeBudgetButton);
-
-/***/ },
-/* 1171 */
-/*!*******************************!*\
-  !*** ./~/validation/index.js ***!
-  \*******************************/
-/***/ function(module, exports) {
-
-	/**
-	 * Validates the given value against the specified type.
-	 * 
-	 * Examples:
-	 * 
-	 *     validation.isType('foobar', 'string')
-	 *     validation.isType(7, 'number')
-	 *     validation.isType(true, 'boolean')
-	 *     validation.isType(new Date().getTime(), 'date')
-	 *     validation.isType({}, 'object')
-	 *     validation.isType([], 'array')
-	 * 
-	 */
-	 
-	exports.isType = function (value, type) {
-	  if(typeof type != 'string') throw Error('bad arguments when calling validation.isValid');
-	  
-	  switch(type) {
-	    case 'date':
-	      if(!value) return false;
-	      try {
-	        value = new Date(value);
-	      } catch(e) {
-	        return false;
-	      }
-	    
-	      return value instanceof Date && isFinite(value);
-	    break;
-	    case 'object':
-	      return !!(value && toString.call(value) === '[object Object]' && 'isPrototypeOf' in value);
-	    break;
-	    case 'array':
-	      return Array.isArray(value);
-	    break;
-	    case 'number':
-	      if(value === Infinity || isNaN(value)) return false;
-	    default:
-	      return typeof value == type;
-	    break;
-	  }
-	}
-	
-	/**
-	 * Validates the value exists.
-	 * 
-	 * Examples:
-	 * 
-	 *     validation.exists('foobar')  // true
-	 *     validation.exists(0)         // true
-	 *     validation.exists(null)      // false
-	 *     validation.exists(undefined) // false
-	 * 
-	 */
-	
-	exports.exists = function (value) {
-	  return !!(value || value === 0);
-	}
-
-/***/ },
-/* 1172 */
-/*!******************************************************!*\
-  !*** ./spas/kit/components/popups/packages-popup.js ***!
-  \******************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _react = __webpack_require__(/*! react */ 301);
-	
-	var _react2 = _interopRequireDefault(_react);
-	
-	var _reactRedux = __webpack_require__(/*! react-redux */ 471);
-	
-	var _redux = __webpack_require__(/*! redux */ 478);
-	
-	var _semanticUiReact = __webpack_require__(/*! semantic-ui-react */ 641);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-	
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-	
-	var styles = {
-	    default: {
-	        positioning: 'absolute',
-	        top: '24%',
-	        right: '25%',
-	        transform: 'translate(50%)',
-	        width: '300px'
-	    }
-	};
-	
-	var PackagesPopup = function (_React$Component) {
-	    _inherits(PackagesPopup, _React$Component);
-	
-	    function PackagesPopup(props) {
-	        _classCallCheck(this, PackagesPopup);
-	
-	        var _this = _possibleConstructorReturn(this, (PackagesPopup.__proto__ || Object.getPrototypeOf(PackagesPopup)).call(this, props));
-	
-	        _this.state = {
-	            selectedPackage: {
-	                range: [],
-	                amount: null
-	            }
-	        };
-	
-	        _this.handCancel = _this.handleCancel.bind(_this);
-	        return _this;
-	    }
-	
-	    _createClass(PackagesPopup, [{
-	        key: 'handleChange',
-	        value: function handleChange(pack) {
-	            this.setState({ selectedPackage: pack });
-	        }
-	    }, {
-	        key: 'handleUpdate',
-	        value: function handleUpdate() {}
-	    }, {
-	        key: 'handleCancel',
-	        value: function handleCancel() {
-	            console.log(this);
-	        }
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            var _this2 = this;
-	
-	            var _props = this.props;
-	            var service = _props.service;
-	            var open = _props.open;
-	
-	
-	            console.log('open -> ', open);
-	
-	            var renderedList = service.packages.map(function (pack) {
-	                return _react2.default.createElement(
-	                    _semanticUiReact.List.Item,
-	                    { key: Math.random() },
-	                    _react2.default.createElement(
-	                        _semanticUiReact.List.Content,
-	                        { floated: 'right' },
-	                        _react2.default.createElement(_semanticUiReact.Radio, {
-	                            key: Math.random(),
-	                            label: '' + pack.amount,
-	                            value: '' + pack.amount,
-	                            checked: _this2.state.selectedPackage.amount === pack.amount,
-	                            onChange: function onChange(e) {
-	                                return _this2.handleChange(pack);
-	                            }
-	                        })
-	                    ),
-	                    _react2.default.createElement(
-	                        _semanticUiReact.List.Content,
-	                        null,
-	                        pack.range[0] + ' to ' + pack.range[1]
-	                    )
-	                );
-	            });
-	
-	            return _react2.default.createElement(
-	                _semanticUiReact.Popup,
-	                _defineProperty({
-	                    flowing: true,
-	                    basic: true,
-	                    className: 'animated ' + (open ? 'slideInUp' : 'slideOutUp'),
-	                    positioning: 'left center',
-	                    on: 'click',
-	                    style: styles.default,
-	                    open: open
-	                }, 'className', 'Choose__Package__Popup'),
-	                _react2.default.createElement(
-	                    _semanticUiReact.Popup.Header,
-	                    null,
-	                    service.name
-	                ),
-	                _react2.default.createElement(
-	                    _semanticUiReact.Popup.Content,
-	                    null,
-	                    _react2.default.createElement(
-	                        _semanticUiReact.List,
-	                        { divided: true,
-	                            verticalAlign: 'middle' },
-	                        service.packages && renderedList
-	                    ),
-	                    _react2.default.createElement(
-	                        _semanticUiReact.Button,
-	                        {
-	                            onClick: this.handleUpdate,
-	                            className: 'Update__Package', size: 'mini' },
-	                        'udpate'
-	                    ),
-	                    _react2.default.createElement(
-	                        _semanticUiReact.Button,
-	                        {
-	                            onClick: this.handleCancel,
-	                            className: 'Cancel', size: 'mini' },
-	                        'cancel'
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-	
-	    return PackagesPopup;
-	}(_react2.default.Component);
-	
-	exports.default = PackagesPopup;
 
 /***/ }
 /******/ ]);

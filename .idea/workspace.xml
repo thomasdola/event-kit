@@ -2,33 +2,40 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7abedf16-cf2a-4f25-8102-5ca1df60bbe1" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/actions/budget.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/calculator/calculator-total.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/calculator/calculator.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/calculator/picked-service-item.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/calculator/picked-services-list.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/categories/category-list-item.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/categories/category-list.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/services-and-calculator.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/services/service-list-container.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/services/service-list-header.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/services/service-list-item.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/components/services/service-list.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/reducers/price-filter-mode-reducer.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/kit/routes.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/spas/manage/app.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/nodemon.json" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/kit/app.js" afterPath="$PROJECT_DIR$/spas/kit/app.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/watcherTasks.xml" afterPath="$PROJECT_DIR$/.idea/watcherTasks.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/axios/package.json" afterPath="$PROJECT_DIR$/node_modules/axios/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/es6-promise/package.json" afterPath="$PROJECT_DIR$/node_modules/es6-promise/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/isomorphic-fetch/package.json" afterPath="$PROJECT_DIR$/node_modules/isomorphic-fetch/package.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/kit/index.js" afterPath="$PROJECT_DIR$/public/javascripts/kit/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/kit.js" afterPath="$PROJECT_DIR$/routes/kit.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/admin/manage.ejs" afterPath="$PROJECT_DIR$/views/admin/manage.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/auth/login.ejs" afterPath="$PROJECT_DIR$/views/auth/login.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.ejs" afterPath="$PROJECT_DIR$/views/index.ejs" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/kit/wedding.ejs" afterPath="$PROJECT_DIR$/views/kit/wedding.ejs" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/spas/kit.app.js" afterPath="$PROJECT_DIR$/public/javascripts/spas/kit.app.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/spas/kit.app.js.map" afterPath="$PROJECT_DIR$/public/javascripts/spas/kit.app.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/javascripts/spas/manage.app.js.map" afterPath="$PROJECT_DIR$/public/javascripts/spas/manage.app.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/kit/index.css" afterPath="$PROJECT_DIR$/public/stylesheets/kit/index.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/api/index.js" afterPath="$PROJECT_DIR$/routes/api/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/actions/cart.js" afterPath="$PROJECT_DIR$/spas/kit/actions/cart.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/actions/cart.spec.js" afterPath="$PROJECT_DIR$/spas/kit/actions/cart.spec.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/actions/categories.spec.js" afterPath="$PROJECT_DIR$/spas/kit/actions/categories.spec.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/actions/services.spec.js" afterPath="$PROJECT_DIR$/spas/kit/actions/services.spec.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/actions/steps-menu.spec.js" afterPath="$PROJECT_DIR$/spas/kit/actions/steps-menu.spec.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/cart/cart-item-list.js" afterPath="$PROJECT_DIR$/spas/kit/components/cart/cart-item-list.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/cart/cart-item.js" afterPath="$PROJECT_DIR$/spas/kit/components/cart/cart-item.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/cart/cart-total.js" afterPath="$PROJECT_DIR$/spas/kit/components/cart/cart-total.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/categories/category-item-list.js" afterPath="$PROJECT_DIR$/spas/kit/components/categories/category-item-list.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/main-header.js" afterPath="$PROJECT_DIR$/spas/kit/components/main-header.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/main.js" afterPath="$PROJECT_DIR$/spas/kit/components/main.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/modals/cart-review-modal.js" afterPath="$PROJECT_DIR$/spas/kit/components/modals/cart-review-modal.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/modals/service-zoom-modal.js" afterPath="$PROJECT_DIR$/spas/kit/components/modals/service-zoom-modal.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/popups/change-budget-popup.js" afterPath="$PROJECT_DIR$/spas/kit/components/popups/change-budget-popup.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/popups/packages-popup.js" afterPath="$PROJECT_DIR$/spas/kit/components/popups/packages-popup.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/popups/service-filter-popup.js" afterPath="$PROJECT_DIR$/spas/kit/components/popups/service-filter-popup.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/services/service-item-list.js" afterPath="$PROJECT_DIR$/spas/kit/components/services/service-item-list.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/components/services/service-item.js" afterPath="$PROJECT_DIR$/spas/kit/components/services/service-item.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/helpers/constants.js" afterPath="$PROJECT_DIR$/spas/kit/helpers/constants.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/reducers/budget-reducer.js" afterPath="$PROJECT_DIR$/spas/kit/reducers/budget-reducer.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/reducers/cart-reducers.js" afterPath="$PROJECT_DIR$/spas/kit/reducers/cart-reducers.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/reducers/cart-reducers.spec.js" afterPath="$PROJECT_DIR$/spas/kit/reducers/cart-reducers.spec.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/reducers/index.js" afterPath="$PROJECT_DIR$/spas/kit/reducers/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/spas/kit/selectors/index.js" afterPath="$PROJECT_DIR$/spas/kit/selectors/index.js" />
     </list>
     <ignored path="event_kit.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -54,9 +61,8 @@
       <file leaf-file-name="constants.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spas/kit/helpers/constants.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-              <caret line="5" column="32" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
+            <state relative-caret-position="957">
+              <caret line="70" column="77" selection-start-line="70" selection-start-column="77" selection-end-line="70" selection-end-column="77" />
               <folding />
             </state>
           </provider>
@@ -65,50 +71,20 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/spas/kit/reducers/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="370">
-              <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
+            <state relative-caret-position="513">
+              <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
               <folding>
-                <element signature="e#0#40#0" expanded="true" />
+                <element signature="e#0#51#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="price-filter-mode-reducer.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spas/kit/reducers/price-filter-mode-reducer.js">
+      <file leaf-file-name="client-details-modal.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/client-details-modal.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="budget.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spas/kit/actions/budget.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="259">
-              <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="change-budget-popup.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/spas/kit/components/popups/change-budget-popup.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="8" column="45" selection-start-line="8" selection-start-column="45" selection-end-line="8" selection-end-column="45" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spas/kit/app.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="16" column="58" selection-start-line="16" selection-start-column="58" selection-end-line="16" selection-end-column="58" />
+            <state relative-caret-position="254">
+              <caret line="182" column="0" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
               <folding>
                 <element signature="e#0#26#0" expanded="true" />
               </folding>
@@ -116,43 +92,77 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="local-storage.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spas/kit/helpers/local-storage.js">
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spas/kit/selectors/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="254">
-              <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
+            <state relative-caret-position="587">
+              <caret line="46" column="41" selection-start-line="46" selection-start-column="41" selection-end-line="46" selection-end-column="41" />
               <folding>
-                <element signature="e#0#36#0" expanded="true" />
+                <marker date="1477854515225" expanded="true" signature="1577:1638" ph="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="state-schema.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spas/kit/helpers/state-schema.js">
+      <file leaf-file-name="checkout.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spas/kit/actions/checkout.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="5" column="23" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="23" />
+            <state relative-caret-position="476">
+              <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
+              <folding>
+                <element signature="e#0#46#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/api/index.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="550">
+              <caret line="142" column="38" selection-start-line="142" selection-start-column="38" selection-end-line="142" selection-end-column="38" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="service-zoom-mode-reducer.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spas/kit/reducers/service-zoom-mode-reducer.js">
+      <file leaf-file-name="checkout.spec.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spas/kit/actions/checkout.spec.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="74">
-              <caret line="2" column="29" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
+            <state relative-caret-position="-1411">
+              <caret line="61" column="51" selection-start-line="61" selection-start-column="51" selection-end-line="61" selection-end-column="51" />
+              <folding>
+                <element signature="e#0#28#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="296">
+              <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cart-review-mode-reducer.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/spas/kit/reducers/cart-review-mode-reducer.js">
+      <file leaf-file-name="client-details-modal.spec.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/client-details-modal.spec.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="74">
-              <caret line="2" column="29" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
+            <state relative-caret-position="296">
+              <caret line="35" column="63" selection-start-line="35" selection-start-column="63" selection-end-line="35" selection-end-column="63" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="checkout-reducers.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/spas/kit/reducers/checkout-reducers.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="444">
+              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -174,36 +184,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/public/javascripts/kit/app/main.js" />
-        <option value="$PROJECT_DIR$/.babelrc" />
-        <option value="$PROJECT_DIR$/kit/app.js" />
-        <option value="$PROJECT_DIR$/manage/app.js" />
-        <option value="$PROJECT_DIR$/routes/kit.js" />
-        <option value="$PROJECT_DIR$/views/index.ejs" />
-        <option value="$PROJECT_DIR$/spas/kit/components/category-list-item.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/category-list.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/services-and-container.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/service-list-header.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/service-list.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/caculator-item.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/picked-service-item.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/caculator-list-item.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/picked-services-list.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/calculator-total.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/calculator.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/service-list-container.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/services-and-calculator.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/service-list-item.js" />
-        <option value="$PROJECT_DIR$/views/kit/wedding.ejs" />
-        <option value="$PROJECT_DIR$/spas/kit/components/popups/price-filter-form-popup.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/services/service-list-header.js" />
-        <option value="$PROJECT_DIR$/public/javascripts/kit/index.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/modals/cart-review-modal.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/modals/service-zoom-view.js" />
-        <option value="$PROJECT_DIR$/views/kit/party.ejs" />
-        <option value="$PROJECT_DIR$/spas/kit/components/main-header.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/services/service-list-item.js" />
-        <option value="$PROJECT_DIR$/spas/kit/components/main.js" />
         <option value="$PROJECT_DIR$/spas/kit/components/calculator/picked-service-item.js" />
         <option value="$PROJECT_DIR$/spas/kit/components/categories/category-list-item.js" />
         <option value="$PROJECT_DIR$/spas/kit/route.js" />
@@ -219,12 +199,42 @@
         <option value="$PROJECT_DIR$/spas/kit/helpers/state-schema.js" />
         <option value="$PROJECT_DIR$/spas/kit/reducers/service-zoom-mode-reducer.js" />
         <option value="$PROJECT_DIR$/spas/kit/reducers/cart-review-mode-reducer.js" />
-        <option value="$PROJECT_DIR$/spas/kit/reducers/index.js" />
         <option value="$PROJECT_DIR$/spas/kit/reducers/price-filter-mode-reducer.js" />
         <option value="$PROJECT_DIR$/spas/kit/actions/change-budget.js" />
-        <option value="$PROJECT_DIR$/spas/kit/helpers/constants.js" />
         <option value="$PROJECT_DIR$/spas/kit/actions/budget.js" />
         <option value="$PROJECT_DIR$/spas/kit/components/popups/change-budget-popup.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/main-header.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/popups/service-filter-popup.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/categories/category-item-list.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/cart/cart-item.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/popups/packages-popup.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/cart/cart-item-list.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/modals/service-zoom-modal.js" />
+        <option value="$PROJECT_DIR$/spas/kit/actions/cart.spec.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/services/service-item-list.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/services/service-item.js" />
+        <option value="$PROJECT_DIR$/spas/kit/actions/cart.js" />
+        <option value="$PROJECT_DIR$/spas/kit/reducers/cart-reducers.spec.js" />
+        <option value="$PROJECT_DIR$/spas/kit/reducers/cart-reducers.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/modals/congratulations-modal.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/modals/congratulations-modal.spec.js" />
+        <option value="$PROJECT_DIR$/spas/kit/reducers/checkout-reducers.spec.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/main.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/modals/client-details-modal.spec.js" />
+        <option value="$PROJECT_DIR$/public/stylesheets/kit/index.css" />
+        <option value="$PROJECT_DIR$/spas/kit/components/modals/cart-review-modal.js" />
+        <option value="$PROJECT_DIR$/spas/kit/actions/categories.spec.js" />
+        <option value="$PROJECT_DIR$/spas/kit/actions/steps-menu.spec.js" />
+        <option value="$PROJECT_DIR$/spas/kit/actions/services.spec.js" />
+        <option value="$PROJECT_DIR$/app.js" />
+        <option value="$PROJECT_DIR$/routes/api/index.js" />
+        <option value="$PROJECT_DIR$/spas/kit/reducers/index.js" />
+        <option value="$PROJECT_DIR$/spas/kit/selectors/index.js" />
+        <option value="$PROJECT_DIR$/spas/kit/actions/checkout.spec.js" />
+        <option value="$PROJECT_DIR$/spas/kit/helpers/constants.js" />
+        <option value="$PROJECT_DIR$/spas/kit/reducers/checkout-reducers.js" />
+        <option value="$PROJECT_DIR$/spas/kit/actions/checkout.js" />
+        <option value="$PROJECT_DIR$/spas/kit/components/modals/client-details-modal.js" />
       </list>
     </option>
   </component>
@@ -267,7 +277,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -384,7 +393,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="popups" />
+              <option name="myItemId" value="modals" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -410,8 +419,41 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="event_kit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="event_kit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="event_kit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="event_kit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="routes" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="api" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -516,24 +558,26 @@
       <workItem from="1476517167169" duration="47185000" />
       <workItem from="1476602895697" duration="31849000" />
       <workItem from="1476639295183" duration="5553000" />
+      <workItem from="1477645227385" duration="31116000" />
+      <workItem from="1477837438782" duration="24908000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="127576000" />
+    <option name="totallyTimeSpent" value="183600000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="27" width="1920" height="1053" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18479408" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.22492081" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32532752" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32532752" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -561,362 +605,30 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/javascripts/auth/login.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="962">
-          <caret line="26" column="50" selection-start-line="26" selection-start-column="50" selection-end-line="26" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/auth/login.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="12" column="50" selection-start-line="12" selection-start-column="50" selection-end-line="12" selection-end-column="50" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/authentication/init.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="592">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db/init.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="4" column="35" selection-start-line="4" selection-start-column="35" selection-end-line="4" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db/models/user.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="518">
-          <caret line="38" column="27" selection-start-line="38" selection-start-column="27" selection-end-line="38" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/auth.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="11" column="62" selection-start-line="11" selection-start-column="62" selection-end-line="11" selection-end-column="62" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/admin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="148">
-          <caret line="4" column="37" selection-start-line="4" selection-start-column="37" selection-end-line="4" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="9" column="22" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/stylesheets/admin/manage.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="14" column="0" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/admin/manage.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-259">
-          <caret line="20" column="71" selection-start-line="20" selection-start-column="24" selection-end-line="20" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/stylesheets/kit/index.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="232" column="24" selection-start-line="232" selection-start-column="24" selection-end-line="232" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.babelrc">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="37">
-          <caret line="1" column="23" selection-start-line="1" selection-start-column="23" selection-end-line="1" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/kit/app/main.js" />
-    <entry file="file://$PROJECT_DIR$/spas/manage/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="115" column="45" selection-start-line="115" selection-start-column="45" selection-end-line="115" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/kit.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="5" column="30" selection-start-line="5" selection-start-column="30" selection-end-line="5" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/calculator/picked-services-list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="8" column="36" selection-start-line="8" selection-start-column="36" selection-end-line="8" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/calculator/calculator-total.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="8" column="15" selection-start-line="8" selection-start-column="15" selection-end-line="8" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/calculator/calculator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="7" column="32" selection-start-line="7" selection-start-column="32" selection-end-line="7" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/services-and-calculator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="5" column="12" selection-start-line="5" selection-start-column="12" selection-end-line="5" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/services/service-list-container.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="8" column="26" selection-start-line="8" selection-start-column="26" selection-end-line="8" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/services/service-list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="37">
-          <caret line="1" column="50" selection-start-line="1" selection-start-column="50" selection-end-line="1" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/services/service-list-header.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="740">
-          <caret line="20" column="54" selection-start-line="20" selection-start-column="54" selection-end-line="20" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/popups/price-filter-form-popup.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="9" column="67" selection-start-line="9" selection-start-column="67" selection-end-line="9" selection-end-column="67" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="10" column="30" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/javascripts/kit/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1105">
-          <caret line="47" column="7" selection-start-line="47" selection-start-column="7" selection-end-line="47" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/kit/wedding.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/cart-review-modal.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="8" column="24" selection-start-line="8" selection-start-column="24" selection-end-line="8" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/service-zoom-view.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="15" column="44" selection-start-line="15" selection-start-column="44" selection-end-line="15" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/services/service-list-item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="20" column="40" selection-start-line="20" selection-start-column="40" selection-end-line="20" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/kit/party.ejs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="439">
-          <caret line="12" column="54" selection-start-line="12" selection-start-column="54" selection-end-line="12" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/main-header.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-227">
-          <caret line="17" column="25" selection-start-line="17" selection-start-column="25" selection-end-line="17" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#26#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/categories/category-list.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="407">
-          <caret line="11" column="35" selection-start-line="11" selection-start-column="35" selection-end-line="11" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/calculator/picked-service-item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="555">
-          <caret line="30" column="39" selection-start-line="30" selection-start-column="39" selection-end-line="30" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nodemon.json" />
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/categories/category-list-item.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="518">
-          <caret line="14" column="79" selection-start-line="14" selection-start-column="79" selection-end-line="14" selection-end-column="79" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="5" column="27" selection-start-line="5" selection-start-column="27" selection-end-line="5" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1073">
-          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/budget-changing-mode-reducer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="2" column="15" selection-start-line="2" selection-start-column="15" selection-end-line="2" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webpack.config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="481">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="16" column="58" selection-start-line="16" selection-start-column="58" selection-end-line="16" selection-end-column="58" />
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/store/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="333">
-          <caret line="9" column="26" selection-start-line="9" selection-start-column="26" selection-end-line="9" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#62#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/cart-review-mode-reducer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="2" column="29" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/service-zoom-mode-reducer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="74">
-          <caret line="2" column="29" selection-start-line="2" selection-start-column="29" selection-end-line="2" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/cart-review-mode-reducer.js" />
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/service-zoom-mode-reducer.js" />
     <entry file="file://$PROJECT_DIR$/spas/kit/helpers/local-storage.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="254">
+        <state relative-caret-position="296">
           <caret line="9" column="0" selection-start-line="9" selection-start-column="0" selection-end-line="9" selection-end-column="0" />
           <folding>
-            <element signature="e#0#36#0" expanded="true" />
+            <element signature="e#0#36#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/spas/kit/helpers/state-schema.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="5" column="23" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="23" />
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/index.js">
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/price-filter-mode-reducer.js" />
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/popups/change-budget-popup.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="370">
-          <caret line="10" column="23" selection-start-line="10" selection-start-column="23" selection-end-line="10" selection-end-column="23" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/price-filter-mode-reducer.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/helpers/constants.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-          <caret line="5" column="32" selection-start-line="5" selection-start-column="32" selection-end-line="5" selection-end-column="32" />
+        <state relative-caret-position="-1258">
+          <caret line="11" column="2" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="2" />
           <folding />
         </state>
       </provider>
@@ -929,11 +641,388 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/spas/kit/components/popups/change-budget-popup.js">
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/budget-reducer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/popups/service-filter-popup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="185">
+          <caret line="86" column="44" selection-start-line="86" selection-start-column="44" selection-end-line="86" selection-end-column="44" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/stylesheets/kit/animate.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="1370" column="30" selection-start-line="1370" selection-start-column="26" selection-end-line="1370" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/categories/category-item-list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="481">
+          <caret line="52" column="11" selection-start-line="52" selection-start-column="11" selection-end-line="52" selection-end-column="11" />
+          <folding>
+            <element signature="e#0#23#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/main-header.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="22" column="26" selection-start-line="22" selection-start-column="26" selection-end-line="22" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/popups/packages-popup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="51" column="12" selection-start-line="51" selection-start-column="8" selection-end-line="51" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#26#0" expanded="false" />
+            <marker date="1477661698286" expanded="true" signature="1904:1927" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/cart/cart-item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="6" column="4" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/cart/cart-item-list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/service-zoom-modal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="478">
+          <caret line="63" column="40" selection-start-line="63" selection-start-column="40" selection-end-line="63" selection-end-column="40" />
+          <folding>
+            <element signature="e#0#30#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/cart.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="110" column="54" selection-start-line="110" selection-start-column="54" selection-end-line="110" selection-end-column="54" />
+          <folding>
+            <element signature="e#0#46#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/services/service-item.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="84" column="52" selection-start-line="84" selection-start-column="52" selection-end-line="84" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/services/service-item-list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="74">
+          <caret line="5" column="79" selection-start-line="5" selection-start-column="79" selection-end-line="5" selection-end-column="79" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/cart-reducers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="122" column="43" selection-start-line="122" selection-start-column="43" selection-end-line="122" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#46#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/cart.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="587">
+          <caret line="46" column="0" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#46#0" expanded="false" />
+            <element signature="e#122#205#0" expanded="false" />
+            <element signature="e#259#334#0" expanded="false" />
+            <element signature="e#387#462#0" expanded="false" />
+            <element signature="e#524#696#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/congratulations-modal.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-153">
+          <caret line="3" column="59" selection-start-line="3" selection-start-column="59" selection-end-line="3" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/congratulations-modal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/cart-reducers.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3436">
+          <caret line="224" column="44" selection-start-line="224" selection-start-column="44" selection-end-line="224" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#47#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/budget-reducer.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="407">
+          <caret line="11" column="27" selection-start-line="11" selection-start-column="27" selection-end-line="11" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/checkout-reducers.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="962">
+          <caret line="30" column="55" selection-start-line="30" selection-start-column="55" selection-end-line="30" selection-end-column="55" />
+          <folding>
+            <element signature="e#1#47#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/popups/step-menu-popup.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#28#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/initial-budget-modal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="67" column="64" selection-start-line="67" selection-start-column="64" selection-end-line="67" selection-end-column="64" />
+          <folding>
+            <element signature="e#0#23#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/cart-review-modal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="157" column="35" selection-start-line="157" selection-start-column="35" selection-end-line="157" selection-end-column="35" />
+          <folding>
+            <element signature="e#0#23#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/stylesheets/kit/index.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="37">
+          <caret line="176" column="5" selection-start-line="176" selection-start-column="5" selection-end-line="176" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="29" column="30" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#28#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/superagent/lib/client.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4384">
+          <caret line="951" column="0" selection-start-line="951" selection-start-column="0" selection-end-line="951" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/superagent/lib/node/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-35298">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/javascripts/auth/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/auth/login.ejs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-555">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/categories.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="365">
+          <caret line="35" column="29" selection-start-line="35" selection-start-column="29" selection-end-line="35" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#46#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/categories.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="37">
+          <caret line="34" column="20" selection-start-line="0" selection-start-column="3" selection-end-line="72" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/filter.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#51#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/services.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="328">
+          <caret line="136" column="2" selection-start-line="136" selection-start-column="2" selection-end-line="136" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/steps-menu.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="259">
+          <caret line="7" column="2" selection-start-line="7" selection-start-column="2" selection-end-line="7" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="296">
-          <caret line="8" column="45" selection-start-line="8" selection-start-column="45" selection-end-line="8" selection-end-column="45" />
+          <caret line="23" column="24" selection-start-line="23" selection-start-column="24" selection-end-line="23" selection-end-column="24" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/api/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="142" column="38" selection-start-line="142" selection-start-column="38" selection-end-line="142" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/client-details-modal.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="296">
+          <caret line="35" column="63" selection-start-line="35" selection-start-column="63" selection-end-line="35" selection-end-column="63" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/selectors/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="587">
+          <caret line="46" column="41" selection-start-line="46" selection-start-column="41" selection-end-line="46" selection-end-column="41" />
+          <folding>
+            <marker date="1477854515225" expanded="true" signature="1577:1638" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/checkout.spec.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1411">
+          <caret line="61" column="51" selection-start-line="61" selection-start-column="51" selection-end-line="61" selection-end-column="51" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/helpers/constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="957">
+          <caret line="70" column="77" selection-start-line="70" selection-start-column="77" selection-end-line="70" selection-end-column="77" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/reducers/checkout-reducers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="444">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/actions/checkout.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="39" column="13" selection-start-line="39" selection-start-column="13" selection-end-line="39" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/spas/kit/components/modals/client-details-modal.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="182" column="0" selection-start-line="182" selection-start-column="0" selection-end-line="182" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#26#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

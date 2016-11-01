@@ -5,7 +5,7 @@ import { assign } from 'lodash';
 
 import { ServiceZoomModal } from './service-zoom-modal';
 
-const props = {
+const props = () => ({
     service: {
         id: 1,
         name: 'service',
@@ -13,16 +13,17 @@ const props = {
         images: [
             'imgone.png',
             'imgtwo.png'
-        ]
+        ],
+        fixed: true
     },
     loadingService: true,
     serviceZoomMode: true,
     addItemToCart: () => {}
-};
+});
 
 
 const setupShallow = (withItems = false) => {
-    return shallow(<ServiceZoomModal {...props}/>)
+    return shallow(<ServiceZoomModal {...props()}/>)
 };
 
 
@@ -50,8 +51,7 @@ describe('ServiceZoomModal Component', () => {
         it('renders the modal actions properly', () => {
             const wrapper = setupShallow();
             expect(wrapper.find(".Zoom__Modal .Modal__Actions").length).toEqual(1);
-            expect(wrapper.find(".Zoom__Modal .Modal__Actions > .button").at(0).text()).toBe('close');
-            expect(wrapper.find(".Zoom__Modal .Modal__Actions > .button").at(1).text()).toBe('add');
+            expect(wrapper.find(".Zoom__Modal .Modal__Actions > .button").length).toBe(2);
         });
     });
 
