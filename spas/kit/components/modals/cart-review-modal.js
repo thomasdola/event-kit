@@ -1,15 +1,16 @@
+import * as checkoutActions from '../../actions/checkout';
+
 import _ from 'lodash';
 import numeral from 'numeral';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as checkoutActions from '../../actions/checkout';
-import { Button, Icon, Modal } from 'semantic-ui-react';
-import { getVisibleItemsSelector, getCartTotalSelector } from '../../selectors';
+import { Button, Icon, Modal, Loader } from 'semantic-ui-react';
 
 import { closeCartReview } from '../../actions/cart';
-import { proceedToCheckout } from '../../actions/checkout';
+import { proceedToCheckout, exportPdf } from '../../actions/checkout';
+import { getVisibleItemsSelector, getCartTotalSelector, getOrderSelector } from '../../selectors';
 
 const styles = {
     main: {
@@ -61,6 +62,7 @@ export class CartReviewModal extends React.Component{
 
         this.handleClose = this.handleClose.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDownload = this.handleDownload.bind(this);
     }
 
     componentDidMount(){
@@ -75,9 +77,14 @@ export class CartReviewModal extends React.Component{
         this.props.proceedToCheckout();
     }
 
+    handleDownload(e){
+        const { order, exportPdf } = this.props;
+        exportPdf(order);
+    }
+
     render(){
 
-        const { budget, cartTotal, cartItems, cartReviewMode } = this.props;
+        const { budget, cartTotal, cartItems, cartReviewMode, generatingPdf } = this.props;
 
         const items = cartItems.map(({name, amount, id}) => (
             <div
@@ -102,6 +109,15 @@ export class CartReviewModal extends React.Component{
                 dimmer={this.state.dimmer}
                 className="Cart__Review__Modal"
                 open={cartReviewMode}>
+
+                {generatingPdf ? (
+                    <div className='ui active inverted dimmer'>
+                        <Loader size='small'>
+                           Loading...
+                        </Loader>
+                    </div>
+                ) : null}
+
                 <div
                     style={styles.header}
                     className="header">
@@ -138,7 +154,7 @@ export class CartReviewModal extends React.Component{
                     </div>
                     <div 
                         className={`ui mini right button Download__Review ${ready ? '' : 'disabled'}`} 
-                        onClick={this.handleSubmit}>
+                        onClick={this.handleDownload}>
                         download
                     </div>
                     <div 
@@ -156,8 +172,12 @@ export class CartReviewModal extends React.Component{
 CartReviewModal.PropTypes = {
     cartItems: React.PropTypes.arrayOf(React.PropTypes.object),
     budget: React.PropTypes.number,
+    order: React.PropTypes.object,
     cartReviewMode: React.PropTypes.bool,
     cartTotal: React.PropTypes.number,
+    exportPdf: React.PropTypes.func.isRequired,
+    closeCartReview: React.PropTypes.func.isRequired,
+    proceedToCheckout: React.PropTypes.func.isRequired
 
 };
 
@@ -167,14 +187,17 @@ const mapStateToProps = state => {
         cartItems: getVisibleItemsSelector(state),
         budget: state.budget,
         cartTotal: getCartTotalSelector(state),
-        cartReviewMode: state.cartReviewMode
+        cartReviewMode: state.cartReviewMode,
+        order: getOrderSelector(state),
+        generatingPdf: state.generatingPdf
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return bindActionCreators({
         closeCartReview,
-        proceedToCheckout
+        proceedToCheckout,
+        exportPdf
     }, dispatch);
 };
     

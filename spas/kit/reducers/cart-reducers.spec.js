@@ -1,5 +1,4 @@
 import * as cartActions from '../actions/cart';
-import { openServiceZoomModal } from '../actions/services';
 import * as types from '../helpers/constants';
 
 import _ from 'lodash';
@@ -8,8 +7,10 @@ import expect from 'expect';
 import cartReducer, { 
     cartReviewMode as cartReviewModeReducer,
     cartTotal as cartTotalReducer, packageChoosingMode,
-    cartItemEditMode, selectedCartItem, serviceToBePicked
+    cartItemEditMode, selectedCartItem, serviceToBePicked,
+    generatingPdf
 } from './cart-reducers';
+import { openServiceZoomModal } from '../actions/services';
 
 describe('cartItemsReducer', () => {
 
@@ -198,6 +199,7 @@ describe('cartItemsReducer', () => {
             expect(newState).toEqual(initialState);
         });
     });
+
 
     describe('packageChoosingModeReducer', () => {
 

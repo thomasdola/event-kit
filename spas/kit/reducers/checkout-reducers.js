@@ -81,3 +81,16 @@ export const requestingCode = (state = false, action) => {
             return state;
     }
 }
+
+
+export const generatingPdf = (state = false, action) => {
+    switch(action.type){
+        case types.START_GENERATING_PDF():
+            return true;
+        case types.FINISH_GENERATING_PDF():
+        case types.GENERATING_PDF_FAILED():
+            return false;
+        default:
+            return state;
+    }
+}

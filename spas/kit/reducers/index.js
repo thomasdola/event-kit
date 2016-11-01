@@ -6,7 +6,7 @@ import cartItems, { cartTotal, cartReviewMode, cartItemEditMode,
     selectedCartItem, serviceToBePicked, packageChoosingMode } from './cart-reducers';
 import categories, { selectedCategory } from './categories-reducer';
 import services, { serviceInZoom, serviceZoomMode, servicesImages } from './services-reducers';
-import { clientDetailsMode, verifyingNumber, phoneVerificationMode, checkingOut, requestingCode } from './checkout-reducers';
+import { clientDetailsMode, verifyingNumber, phoneVerificationMode, checkingOut, requestingCode, generatingPdf } from './checkout-reducers';
 import { filterMode, filterPriceRange } from './filter-reducers';
 import { loadingCategories, loadingService, loadingServices } from './loading-reducers';
 import { stepsMenuOpened, steps, activeStep } from './steps-menu-reducer';
@@ -40,5 +40,6 @@ export default combineReducers({
     checkingOut,
     verifyingNumber,
     phoneVerificationMode,
-    requestingCode
+    requestingCode,
+    generatingPdf
 });

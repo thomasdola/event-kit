@@ -59,5 +59,22 @@ export const requestNewCode = (phone, testUri = null) => dispatch => {
 export const closeClientDetailsModal = () => ({type: types.CLOSE_CLIENT_DETAILS_MODAL()});
 
 
-// export const checkoutFailed = error => ({type: types.CHECKOUT_FAILED(), data: error});
+export const exportPdf = (order, testUri) => dispatch => {
+
+    const uri = testUri 
+                ? testUri
+                : `/api/pdfs`;
+
+    const url = `${types.URL()}${uri}`;
+
+    dispatch({type: types.START_GENERATING_PDF()});
+
+    return http.post(url, order).then(resp => {
+        // console.log(resp.body);
+        dispatch({type: types.FINISH_GENERATING_PDF(), data: resp.body})
+    }).catch(error => {
+        dispatch({type: types.GENERATING_PDF_FAILED(), data: error});
+    })
+};
+
 

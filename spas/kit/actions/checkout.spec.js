@@ -161,4 +161,55 @@ describe('Checkout Actions Creators', () => {
 
     });
 
+
+    describe('requestNewCode Action Creator', () => {
+
+        const order = [
+            {
+                id: 'one',
+                amount: 200
+            }
+        ];
+
+        it('should create START_GENERATING_PDF, FINISH_GENERATING_PDF actions', () => {
+
+            nock(types.URL())
+                .post(`/api/pdfs`, order)
+                .reply(200, 'pdfs/order.pdf');
+
+            const expectedActions = [
+                {type: types.START_GENERATING_PDF()},
+                {type: types.FINISH_GENERATING_PDF(), data: 'pdfs/order.pdf'}
+            ];
+
+            const store = mockStore({});
+
+            return store.dispatch(actions.exportPdf(order)).then(() => {
+                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
+                expect(store.getActions()[1].type).toEqual(expectedActions[1].type);
+            });
+        });
+
+        it('should create START_GENERATING_PDF, REQUESTING_CODE_FAILED actions', () => {
+
+            const wrongUri = `/api/pdf`;
+            nock(types.URL())
+                .post(wrongUri, order)
+                .reply(404);
+
+            const expectedActions = [
+                {type: types.START_GENERATING_PDF()},
+                {type: types.GENERATING_PDF_FAILED()}
+            ];
+
+            const store = mockStore({});
+
+            return store.dispatch(actions.exportPdf(order, wrongUri)).then(() => {
+                expect(store.getActions()[0].type).toEqual(expectedActions[0].type);
+                expect(store.getActions()[1].type).toEqual(expectedActions[1].type);
+            });
+        });
+
+    });
+
 });

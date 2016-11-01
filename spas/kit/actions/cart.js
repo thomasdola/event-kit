@@ -1,5 +1,6 @@
 import * as types from '../helpers/constants';
 
+import http from 'superagent';
 import { assign } from 'lodash';
 
 export const addItemToCart = (item) => ({
@@ -44,5 +45,6 @@ export const updateCartItemPackage = cartItem => ({type: types.UPDATE_CART_ITEM_
 export const chooseItemPackage = itemId => ({type: types.CHOOSE_ITEM_PACKAGE(), data: itemId});
 
 export const doneChoosingPackage = () => ({type: types.DONE_CHOOSING_PACKAGE()});
+    
 
 

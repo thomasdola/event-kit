@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const PdfGenerator = require('../../lib/pdf/pdf');
 
 var data = {
 
@@ -118,7 +119,24 @@ var data = {
             id: 'kdjfaldklfjaslk',
             images: ['/images/logo.png', '/images/logo.png', '/images/logo.png', '/images/logo.png']
         }
-    ]
+    ],
+    order: {
+        total: 200,
+        items: [
+            {
+                name: 'service one',
+                image: 'public/images/logo.png',
+                amount: 100,
+                package: [5, 15] 
+            },
+            {
+                name: 'service two',
+                image: 'public/images/logo.png',
+                amount: 200,
+                package: null 
+            }
+        ]
+    }
 };
 
 router.get('/steps', function(req, res){
@@ -163,6 +181,7 @@ router.post('/orders/retry', (req, res) => {
 
 router.post('/pdfs', (req, res) => {
     // generate a pdf of the order data sent in
+    PdfGenerator.generate(data.order);
     res.sendStatus(200);
 });
 
