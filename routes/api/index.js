@@ -140,7 +140,29 @@ router.get('/services/:serviceId/images', (req, res) => {
     res.json(data.images.filter(service => service.id === serviceId));
 });
 
+router.get('/services/:serviceId', (req, res) => {
+    const serviceId = req.params.serviceId;
+    res.json(data.images.filter(service => service.id === serviceId));
+});
+
 router.post('/orders', (req, res) => {
+    // create `pending` order and send a verfication code to client number, in order to verify her number.
+    res.sendStatus(200);
+});
+
+router.post('/orders/validate', (req, res) => {
+    //verify the phone number by matching the code sent to the number to the received
+    // if they match change the order status to `new`
+    res.sendStatus(200);
+});
+
+router.post('/orders/retry', (req, res) => {
+    //send a new verfication code to phone number
+    res.sendStatus(200);
+});
+
+router.post('/pdfs', (req, res) => {
+    // generate a pdf of the order data sent in
     res.sendStatus(200);
 });
 

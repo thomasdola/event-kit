@@ -39064,13 +39064,13 @@
 	
 	var _servicesReducers2 = _interopRequireDefault(_servicesReducers);
 	
-	var _checkoutReducers = __webpack_require__(/*! ./checkout-reducers */ 575);
+	var _checkoutReducers = __webpack_require__(/*! ./checkout-reducers */ 572);
 	
-	var _filterReducers = __webpack_require__(/*! ./filter-reducers */ 572);
+	var _filterReducers = __webpack_require__(/*! ./filter-reducers */ 573);
 	
-	var _loadingReducers = __webpack_require__(/*! ./loading-reducers */ 573);
+	var _loadingReducers = __webpack_require__(/*! ./loading-reducers */ 574);
 	
-	var _stepsMenuReducer = __webpack_require__(/*! ./steps-menu-reducer */ 574);
+	var _stepsMenuReducer = __webpack_require__(/*! ./steps-menu-reducer */ 575);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -56445,180 +56445,6 @@
 
 /***/ },
 /* 572 */
-/*!**********************************************!*\
-  !*** ./spas/kit/reducers/filter-reducers.js ***!
-  \**********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.filterMode = exports.filterPriceRange = undefined;
-	
-	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
-	
-	var types = _interopRequireWildcard(_constants);
-	
-	var _lodash = __webpack_require__(/*! lodash */ 569);
-	
-	var _lodash2 = _interopRequireDefault(_lodash);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var filterPriceRange = exports.filterPriceRange = function filterPriceRange() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { from: '', to: '' };
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.PERFORM_FILTER():
-	            return _lodash2.default.assign({}, state, action.data);
-	        default:
-	            return state;
-	    }
-	};
-	
-	var filterMode = exports.filterMode = function filterMode() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.OPEN_FILTER_POPUP():
-	            return true;
-	        case types.CLOSE_FILTER_POPUP():
-	            return false;
-	        default:
-	            return state;
-	    }
-	};
-
-/***/ },
-/* 573 */
-/*!***********************************************!*\
-  !*** ./spas/kit/reducers/loading-reducers.js ***!
-  \***********************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.loadingService = exports.loadingServices = exports.loadingCategories = undefined;
-	
-	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
-	
-	var types = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	var loadingCategories = exports.loadingCategories = function loadingCategories() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.START_LOADING_CATEGORIES():
-	            return true;
-	        case types.FINISH_LOADING_CATEGORIES():
-	            return false;
-	        default:
-	            return state;
-	    }
-	};
-	
-	var loadingServices = exports.loadingServices = function loadingServices() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.START_LOADING_SERVICES():
-	            return true;
-	        case types.FINISH_LOADING_SERVICES():
-	            return false;
-	        default:
-	            return state;
-	    }
-	};
-	
-	var loadingService = exports.loadingService = function loadingService() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.START_LOADING_SERVICE():
-	            return true;
-	        case types.FINISH_LOADING_SERVICE():
-	            return false;
-	        default:
-	            return state;
-	    }
-	};
-
-/***/ },
-/* 574 */
-/*!*************************************************!*\
-  !*** ./spas/kit/reducers/steps-menu-reducer.js ***!
-  \*************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	exports.activeStep = exports.steps = exports.stepsMenuOpened = undefined;
-	
-	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
-	
-	var types = _interopRequireWildcard(_constants);
-	
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-	
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-	
-	var stepsMenuOpened = exports.stepsMenuOpened = function stepsMenuOpened() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.OPEN_STEPS_MENU():
-	            return true;
-	        case types.CLOSE_STEPS_MENU():
-	            return false;
-	        default:
-	            return state;
-	    }
-	};
-	
-	var steps = exports.steps = function steps() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.RECEIVE_STEPS():
-	            return [].concat(_toConsumableArray(action.data));
-	        default:
-	            return state;
-	    }
-	};
-	
-	var activeStep = exports.activeStep = function activeStep() {
-	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-	    var action = arguments[1];
-	
-	    switch (action.type) {
-	        case types.SELECT_STEP():
-	            return action.data;
-	        default:
-	            return state;
-	    }
-	};
-
-/***/ },
-/* 575 */
 /*!************************************************!*\
   !*** ./spas/kit/reducers/checkout-reducers.js ***!
   \************************************************/
@@ -56734,6 +56560,180 @@
 	        case types.FINISH_REQUESTING_CODE():
 	        case types.REQUESTING_CODE_FAILED():
 	            return false;
+	        default:
+	            return state;
+	    }
+	};
+
+/***/ },
+/* 573 */
+/*!**********************************************!*\
+  !*** ./spas/kit/reducers/filter-reducers.js ***!
+  \**********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.filterMode = exports.filterPriceRange = undefined;
+	
+	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
+	
+	var types = _interopRequireWildcard(_constants);
+	
+	var _lodash = __webpack_require__(/*! lodash */ 569);
+	
+	var _lodash2 = _interopRequireDefault(_lodash);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var filterPriceRange = exports.filterPriceRange = function filterPriceRange() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { from: '', to: '' };
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.PERFORM_FILTER():
+	            return _lodash2.default.assign({}, state, action.data);
+	        default:
+	            return state;
+	    }
+	};
+	
+	var filterMode = exports.filterMode = function filterMode() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.OPEN_FILTER_POPUP():
+	            return true;
+	        case types.CLOSE_FILTER_POPUP():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+
+/***/ },
+/* 574 */
+/*!***********************************************!*\
+  !*** ./spas/kit/reducers/loading-reducers.js ***!
+  \***********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.loadingService = exports.loadingServices = exports.loadingCategories = undefined;
+	
+	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
+	
+	var types = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	var loadingCategories = exports.loadingCategories = function loadingCategories() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.START_LOADING_CATEGORIES():
+	            return true;
+	        case types.FINISH_LOADING_CATEGORIES():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var loadingServices = exports.loadingServices = function loadingServices() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.START_LOADING_SERVICES():
+	            return true;
+	        case types.FINISH_LOADING_SERVICES():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var loadingService = exports.loadingService = function loadingService() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.START_LOADING_SERVICE():
+	            return true;
+	        case types.FINISH_LOADING_SERVICE():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+
+/***/ },
+/* 575 */
+/*!*************************************************!*\
+  !*** ./spas/kit/reducers/steps-menu-reducer.js ***!
+  \*************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.activeStep = exports.steps = exports.stepsMenuOpened = undefined;
+	
+	var _constants = __webpack_require__(/*! ../helpers/constants */ 299);
+	
+	var types = _interopRequireWildcard(_constants);
+	
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+	
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+	
+	var stepsMenuOpened = exports.stepsMenuOpened = function stepsMenuOpened() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.OPEN_STEPS_MENU():
+	            return true;
+	        case types.CLOSE_STEPS_MENU():
+	            return false;
+	        default:
+	            return state;
+	    }
+	};
+	
+	var steps = exports.steps = function steps() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.RECEIVE_STEPS():
+	            return [].concat(_toConsumableArray(action.data));
+	        default:
+	            return state;
+	    }
+	};
+	
+	var activeStep = exports.activeStep = function activeStep() {
+	    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+	    var action = arguments[1];
+	
+	    switch (action.type) {
+	        case types.SELECT_STEP():
+	            return action.data;
 	        default:
 	            return state;
 	    }
