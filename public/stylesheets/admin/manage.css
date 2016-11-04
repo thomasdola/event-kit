@@ -2,11 +2,6 @@ body{
     background-color: #f2e5f2;
 }
 
-.main-content{
-    background-color: white;
-    height: 85vh;
-}
-
 .ui.vertical.segment{
     padding: 0;
     background-color: white;
@@ -19,14 +14,12 @@ body{
     border: 0;
 }
 
-.ui.labeled.icon.menu{
-    box-shadow: none;
-    border: none;
-    background-color: #800080;
-    border-radius: 0;
-    height: inherit;
+.DateRangePicker__CalendarSelection{
+    background-color: rgb(128, 0, 128) !important;
+    border-color: rgb(128, 0, 128) !important
+    ;
 }
 
-.ui.labeled.icon.menu .item{
-    color: #ffffff;
+.DateRangePicker__CalendarHighlight--single, .DateRangePicker__CalendarSelection--is-pending{
+    border-color: rgb(128, 0, 128) !important
 }

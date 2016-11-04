@@ -125,13 +125,19 @@ var data = {
         items: [
             {
                 name: 'service one',
-                image: 'public/images/logo.png',
+                image: 'public/images/cow.jpg',
                 amount: 100,
                 package: [5, 15] 
             },
             {
                 name: 'service two',
-                image: 'public/images/logo.png',
+                image: 'public/images/cow.jpg',
+                amount: 200,
+                package: null 
+            },
+            {
+                name: 'service three',
+                image: 'public/images/cow.jpg',
                 amount: 200,
                 package: null 
             }

@@ -15,7 +15,9 @@
     "test:front": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/**/*.spec.js",
     "test:front:watch": "npm run test:front -- -G --watch",
     "test:front:components": "./node_modules/.bin/mocha test-setup.js --reporter dot spas/kit/components/**/*.spec.js",
-    "test:front:components:watch": "npm run test:front:components -- -G --watch"
+    "test:front:components:watch": "npm run test:front:components -- -G --watch",
+    "test:manage:components": "./node_modules/.bin/mocha test-setup.js --reporter dot spas/manage/components/**/*.spec.js",
+    "test:manage:components:watch": "npm run test:manage:components -- -G --watch"
   },
   "dependencies": {
     "axios": "^0.15.2",
@@ -37,6 +39,8 @@
     "jade": "~1.11.0",
     "jquery": "^3.1.1",
     "lodash": "^4.16.4",
+    "moment": "^2.15.2",
+    "moment-range": "^2.2.0",
     "mongoose": "^4.6.3",
     "morgan": "~1.7.0",
     "numeral": "^1.5.3",
@@ -46,6 +50,7 @@
     "radium": "^0.18.1",
     "react": "^15.3.2",
     "react-custom-scrollbars": "^4.0.0",
+    "react-daterange-picker": "^1.1.0",
     "react-dom": "^15.3.2",
     "react-input-mask": "^0.7.5",
     "react-redux": "^4.4.5",

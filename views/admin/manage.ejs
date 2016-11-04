@@ -8,12 +8,14 @@
         <title></title>
 
         <link rel="stylesheet" href="/dist/semantic.css">
+        <link rel="stylesheet" href="/stylesheets/admin/react-calendar.css">
         <link rel="stylesheet" href="/stylesheets/admin/manage.css">
 
         <script src="/javascripts/jquery.js"></script>
         <script src="/dist/semantic.js"></script>
     </head>
     <body>
+
         <div class="ui vertical center aligned segment">
             <div class="ui container">
                 <div class="ui large secondary pointing menu">
@@ -30,23 +32,8 @@
             </div>
         </div>
 
-        <div class="ui container main-content">
+        <div id="app"></div>
 
-            <!--vertical menu-->
-            <div class="ui vertical labeled icon menu">
-                <a class="item">
-                    <i class="gamepad icon"></i>
-                    DASHBOARD
-                </a>
-                <a class="item">
-                    <i class="video camera icon"></i>
-                    ORDER LIST
-                </a>
-                <a class="item">
-                    <i class="video play icon"></i>
-                    SETTINGS
-                </a>
-            </div>
-        </div>
+        <script src="/javascripts/spas/manage.app.js"></script>
     </body>
 </html>

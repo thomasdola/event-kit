@@ -43,6 +43,8 @@ export class CategoryItemList extends React.Component{
 
         const { categories, loadingCategories } = this.props;
 
+        console.log(this.props.ownProps);
+
         const rendered = categories.map(category => (
             <CategoryItem 
                 key={category.id} 
@@ -79,7 +81,8 @@ const mapStateToProps = ({ categories, loadingCategories, filterPriceRange, sele
     return {
         categories,
         loadingCategories,
-        selectedCategory
+        selectedCategory,
+        ownProps
     }
 }
 

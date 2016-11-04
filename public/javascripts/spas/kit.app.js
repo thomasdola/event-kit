@@ -38754,12 +38754,11 @@
 	 * this state is discouraged.
 	 */
 	function routerReducer() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? initialState : arguments[0];
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
 	
-	  var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	  var type = _ref.type;
-	  var payload = _ref.payload;
+	  var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+	      type = _ref.type,
+	      payload = _ref.payload;
 	
 	  if (type === LOCATION_CHANGE) {
 	    return _extends({}, state, { locationBeforeTransitions: payload });
@@ -38849,12 +38848,11 @@
 	 * correct router state.
 	 */
 	function syncHistoryWithStore(history, store) {
-	  var _ref = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-	
-	  var _ref$selectLocationSt = _ref.selectLocationState;
-	  var selectLocationState = _ref$selectLocationSt === undefined ? defaultSelectLocationState : _ref$selectLocationSt;
-	  var _ref$adjustUrlOnRepla = _ref.adjustUrlOnReplay;
-	  var adjustUrlOnReplay = _ref$adjustUrlOnRepla === undefined ? true : _ref$adjustUrlOnRepla;
+	  var _ref = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+	      _ref$selectLocationSt = _ref.selectLocationState,
+	      selectLocationState = _ref$selectLocationSt === undefined ? defaultSelectLocationState : _ref$selectLocationSt,
+	      _ref$adjustUrlOnRepla = _ref.adjustUrlOnReplay,
+	      adjustUrlOnReplay = _ref$adjustUrlOnRepla === undefined ? true : _ref$adjustUrlOnRepla;
 	
 	  // Ensure that the reducer is mounted on the store and functioning properly.
 	  if (typeof selectLocationState(store.getState()) === 'undefined') {
@@ -38925,6 +38923,11 @@
 	    });
 	  };
 	  unsubscribeFromHistory = history.listen(handleLocationChange);
+	
+	  // support history 3.x
+	  if (history.getCurrentLocation) {
+	    handleLocationChange(history.getCurrentLocation());
+	  }
 	
 	  // The enhanced history uses store as source of truth
 	  return _extends({}, history, {
@@ -39001,9 +39004,9 @@
 	          return next(action);
 	        }
 	
-	        var _action$payload = action.payload;
-	        var method = _action$payload.method;
-	        var args = _action$payload.args;
+	        var _action$payload = action.payload,
+	            method = _action$payload.method,
+	            args = _action$payload.args;
 	
 	        history[method].apply(history, _toConsumableArray(args));
 	      };
@@ -39329,7 +39332,7 @@
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(global, module) {/**
 	 * @license
 	 * lodash <https://lodash.com/>
-	 * Copyright jQuery Foundation and other contributors <https://jquery.org/>
+	 * Copyright JS Foundation and other contributors <https://js.foundation/>
 	 * Released under MIT license <https://lodash.com/license>
 	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
 	 * Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -39340,7 +39343,7 @@
 	  var undefined;
 	
 	  /** Used as the semantic version number. */
-	  var VERSION = '4.16.4';
+	  var VERSION = '4.16.6';
 	
 	  /** Used as the size to enable large array optimizations. */
 	  var LARGE_ARRAY_SIZE = 200;
@@ -39379,7 +39382,7 @@
 	      DEFAULT_TRUNC_OMISSION = '...';
 	
 	  /** Used to detect hot functions by number of calls within a span of milliseconds. */
-	  var HOT_COUNT = 500,
+	  var HOT_COUNT = 800,
 	      HOT_SPAN = 16;
 	
 	  /** Used to indicate the type of lazy iteratees. */
@@ -39414,13 +39417,16 @@
 	  /** `Object#toString` result references. */
 	  var argsTag = '[object Arguments]',
 	      arrayTag = '[object Array]',
+	      asyncTag = '[object AsyncFunction]',
 	      boolTag = '[object Boolean]',
 	      dateTag = '[object Date]',
+	      domExcTag = '[object DOMException]',
 	      errorTag = '[object Error]',
 	      funcTag = '[object Function]',
 	      genTag = '[object GeneratorFunction]',
 	      mapTag = '[object Map]',
 	      numberTag = '[object Number]',
+	      nullTag = '[object Null]',
 	      objectTag = '[object Object]',
 	      promiseTag = '[object Promise]',
 	      proxyTag = '[object Proxy]',
@@ -39428,6 +39434,7 @@
 	      setTag = '[object Set]',
 	      stringTag = '[object String]',
 	      symbolTag = '[object Symbol]',
+	      undefinedTag = '[object Undefined]',
 	      weakMapTag = '[object WeakMap]',
 	      weakSetTag = '[object WeakSet]';
 	
@@ -39553,13 +39560,15 @@
 	      rsZWJ = '\\u200d';
 	
 	  /** Used to compose unicode regexes. */
-	  var rsLowerMisc = '(?:' + rsLower + '|' + rsMisc + ')',
-	      rsUpperMisc = '(?:' + rsUpper + '|' + rsMisc + ')',
-	      rsOptLowerContr = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
-	      rsOptUpperContr = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
+	  var rsMiscLower = '(?:' + rsLower + '|' + rsMisc + ')',
+	      rsMiscUpper = '(?:' + rsUpper + '|' + rsMisc + ')',
+	      rsOptContrLower = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
+	      rsOptContrUpper = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
 	      reOptMod = rsModifier + '?',
 	      rsOptVar = '[' + rsVarRange + ']?',
 	      rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
+	      rsOrdLower = '\\d*(?:(?:1st|2nd|3rd|(?![123])\\dth)\\b)',
+	      rsOrdUpper = '\\d*(?:(?:1ST|2ND|3RD|(?![123])\\dTH)\\b)',
 	      rsSeq = rsOptVar + reOptMod + rsOptJoin,
 	      rsEmoji = '(?:' + [rsDingbat, rsRegional, rsSurrPair].join('|') + ')' + rsSeq,
 	      rsSymbol = '(?:' + [rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral].join('|') + ')';
@@ -39578,10 +39587,12 @@
 	
 	  /** Used to match complex or compound words. */
 	  var reUnicodeWord = RegExp([
-	    rsUpper + '?' + rsLower + '+' + rsOptLowerContr + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
-	    rsUpperMisc + '+' + rsOptUpperContr + '(?=' + [rsBreak, rsUpper + rsLowerMisc, '$'].join('|') + ')',
-	    rsUpper + '?' + rsLowerMisc + '+' + rsOptLowerContr,
-	    rsUpper + '+' + rsOptUpperContr,
+	    rsUpper + '?' + rsLower + '+' + rsOptContrLower + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
+	    rsMiscUpper + '+' + rsOptContrUpper + '(?=' + [rsBreak, rsUpper + rsMiscLower, '$'].join('|') + ')',
+	    rsUpper + '?' + rsMiscLower + '+' + rsOptContrLower,
+	    rsUpper + '+' + rsOptContrUpper,
+	    rsOrdUpper,
+	    rsOrdLower,
 	    rsDigits,
 	    rsEmoji
 	  ].join('|'), 'g');
@@ -39824,7 +39835,7 @@
 	   */
 	  function arrayAggregator(array, setter, iteratee, accumulator) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array == null ? 0 : array.length;
 	
 	    while (++index < length) {
 	      var value = array[index];
@@ -39844,7 +39855,7 @@
 	   */
 	  function arrayEach(array, iteratee) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array == null ? 0 : array.length;
 	
 	    while (++index < length) {
 	      if (iteratee(array[index], index, array) === false) {
@@ -39864,7 +39875,7 @@
 	   * @returns {Array} Returns `array`.
 	   */
 	  function arrayEachRight(array, iteratee) {
-	    var length = array ? array.length : 0;
+	    var length = array == null ? 0 : array.length;
 	
 	    while (length--) {
 	      if (iteratee(array[length], length, array) === false) {
@@ -39886,7 +39897,7 @@
 	   */
 	  function arrayEvery(array, predicate) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array == null ? 0 : array.length;
 	
 	    while (++index < length) {
 	      if (!predicate(array[index], index, array)) {
@@ -39907,7 +39918,7 @@
 	   */
 	  function arrayFilter(array, predicate) {
 	    var index = -1,
-	        length = array ? array.length : 0,
+	        length = array == null ? 0 : array.length,
 	        resIndex = 0,
 	        result = [];
 	
@@ -39930,7 +39941,7 @@
 	   * @returns {boolean} Returns `true` if `target` is found, else `false`.
 	   */
 	  function arrayIncludes(array, value) {
-	    var length = array ? array.length : 0;
+	    var length = array == null ? 0 : array.length;
 	    return !!length && baseIndexOf(array, value, 0) > -1;
 	  }
 	
@@ -39945,7 +39956,7 @@
 	   */
 	  function arrayIncludesWith(array, value, comparator) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array == null ? 0 : array.length;
 	
 	    while (++index < length) {
 	      if (comparator(value, array[index])) {
@@ -39966,7 +39977,7 @@
 	   */
 	  function arrayMap(array, iteratee) {
 	    var index = -1,
-	        length = array ? array.length : 0,
+	        length = array == null ? 0 : array.length,
 	        result = Array(length);
 	
 	    while (++index < length) {
@@ -40008,7 +40019,7 @@
 	   */
 	  function arrayReduce(array, iteratee, accumulator, initAccum) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array == null ? 0 : array.length;
 	
 	    if (initAccum && length) {
 	      accumulator = array[++index];
@@ -40032,7 +40043,7 @@
 	   * @returns {*} Returns the accumulated value.
 	   */
 	  function arrayReduceRight(array, iteratee, accumulator, initAccum) {
-	    var length = array ? array.length : 0;
+	    var length = array == null ? 0 : array.length;
 	    if (initAccum && length) {
 	      accumulator = array[--length];
 	    }
@@ -40054,7 +40065,7 @@
 	   */
 	  function arraySome(array, predicate) {
 	    var index = -1,
-	        length = array ? array.length : 0;
+	        length = array == null ? 0 : array.length;
 	
 	    while (++index < length) {
 	      if (predicate(array[index], index, array)) {
@@ -40198,7 +40209,7 @@
 	   * @returns {number} Returns the mean.
 	   */
 	  function baseMean(array, iteratee) {
-	    var length = array ? array.length : 0;
+	    var length = array == null ? 0 : array.length;
 	    return length ? (baseSum(array, iteratee) / length) : NAN;
 	  }
 	
@@ -40738,7 +40749,7 @@
 	   * var defer = _.runInContext({ 'setTimeout': setImmediate }).defer;
 	   */
 	  var runInContext = (function runInContext(context) {
-	    context = context ? _.defaults(root.Object(), context, _.pick(root, contextProps)) : root;
+	    context = context == null ? root : _.defaults(root.Object(), context, _.pick(root, contextProps));
 	
 	    /** Built-in constructor references. */
 	    var Array = context.Array,
@@ -40759,12 +40770,6 @@
 	    /** Used to detect overreaching core-js shims. */
 	    var coreJsData = context['__core-js_shared__'];
 	
-	    /** Used to detect methods masquerading as native. */
-	    var maskSrcKey = (function() {
-	      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
-	      return uid ? ('Symbol(src)_1.' + uid) : '';
-	    }());
-	
 	    /** Used to resolve the decompiled source of functions. */
 	    var funcToString = funcProto.toString;
 	
@@ -40774,15 +40779,21 @@
 	    /** Used to generate unique IDs. */
 	    var idCounter = 0;
 	
-	    /** Used to infer the `Object` constructor. */
-	    var objectCtorString = funcToString.call(Object);
+	    /** Used to detect methods masquerading as native. */
+	    var maskSrcKey = (function() {
+	      var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || '');
+	      return uid ? ('Symbol(src)_1.' + uid) : '';
+	    }());
 	
 	    /**
 	     * Used to resolve the
 	     * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
 	     * of values.
 	     */
-	    var objectToString = objectProto.toString;
+	    var nativeObjectToString = objectProto.toString;
+	
+	    /** Used to infer the `Object` constructor. */
+	    var objectCtorString = funcToString.call(Object);
 	
 	    /** Used to restore the original `_` reference in `_.noConflict`. */
 	    var oldDash = root._;
@@ -40799,11 +40810,12 @@
 	        Uint8Array = context.Uint8Array,
 	        allocUnsafe = Buffer ? Buffer.allocUnsafe : undefined,
 	        getPrototype = overArg(Object.getPrototypeOf, Object),
-	        iteratorSymbol = Symbol ? Symbol.iterator : undefined,
 	        objectCreate = Object.create,
 	        propertyIsEnumerable = objectProto.propertyIsEnumerable,
 	        splice = arrayProto.splice,
-	        spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined;
+	        spreadableSymbol = Symbol ? Symbol.isConcatSpreadable : undefined,
+	        symIterator = Symbol ? Symbol.iterator : undefined,
+	        symToStringTag = Symbol ? Symbol.toStringTag : undefined;
 	
 	    var defineProperty = (function() {
 	      try {
@@ -41237,7 +41249,7 @@
 	     */
 	    function Hash(entries) {
 	      var index = -1,
-	          length = entries ? entries.length : 0;
+	          length = entries == null ? 0 : entries.length;
 	
 	      this.clear();
 	      while (++index < length) {
@@ -41341,7 +41353,7 @@
 	     */
 	    function ListCache(entries) {
 	      var index = -1,
-	          length = entries ? entries.length : 0;
+	          length = entries == null ? 0 : entries.length;
 	
 	      this.clear();
 	      while (++index < length) {
@@ -41458,7 +41470,7 @@
 	     */
 	    function MapCache(entries) {
 	      var index = -1,
-	          length = entries ? entries.length : 0;
+	          length = entries == null ? 0 : entries.length;
 	
 	      this.clear();
 	      while (++index < length) {
@@ -41562,7 +41574,7 @@
 	     */
 	    function SetCache(values) {
 	      var index = -1,
-	          length = values ? values.length : 0;
+	          length = values == null ? 0 : values.length;
 	
 	      this.__data__ = new MapCache;
 	      while (++index < length) {
@@ -41909,12 +41921,12 @@
 	     */
 	    function baseAt(object, paths) {
 	      var index = -1,
-	          isNil = object == null,
 	          length = paths.length,
-	          result = Array(length);
+	          result = Array(length),
+	          skip = object == null;
 	
 	      while (++index < length) {
-	        result[index] = isNil ? undefined : get(object, paths[index]);
+	        result[index] = skip ? undefined : get(object, paths[index]);
 	      }
 	      return result;
 	    }
@@ -42104,7 +42116,7 @@
 	      outer:
 	      while (++index < length) {
 	        var value = array[index],
-	            computed = iteratee ? iteratee(value) : value;
+	            computed = iteratee == null ? value : iteratee(value);
 	
 	        value = (comparator || value !== 0) ? value : 0;
 	        if (isCommon && computed === computed) {
@@ -42371,14 +42383,20 @@
 	    }
 	
 	    /**
-	     * The base implementation of `getTag`.
+	     * The base implementation of `getTag` without fallbacks for buggy environments.
 	     *
 	     * @private
 	     * @param {*} value The value to query.
 	     * @returns {string} Returns the `toStringTag`.
 	     */
 	    function baseGetTag(value) {
-	      return objectToString.call(value);
+	      if (value == null) {
+	        return value === undefined ? undefinedTag : nullTag;
+	      }
+	      value = Object(value);
+	      return (symToStringTag && symToStringTag in value)
+	        ? getRawTag(value)
+	        : objectToString(value);
 	    }
 	
 	    /**
@@ -42540,7 +42558,7 @@
 	     * @returns {boolean} Returns `true` if `value` is an `arguments` object,
 	     */
 	    function baseIsArguments(value) {
-	      return isObjectLike(value) && objectToString.call(value) == argsTag;
+	      return isObjectLike(value) && baseGetTag(value) == argsTag;
 	    }
 	
 	    /**
@@ -42551,7 +42569,7 @@
 	     * @returns {boolean} Returns `true` if `value` is an array buffer, else `false`.
 	     */
 	    function baseIsArrayBuffer(value) {
-	      return isObjectLike(value) && objectToString.call(value) == arrayBufferTag;
+	      return isObjectLike(value) && baseGetTag(value) == arrayBufferTag;
 	    }
 	
 	    /**
@@ -42562,7 +42580,7 @@
 	     * @returns {boolean} Returns `true` if `value` is a date object, else `false`.
 	     */
 	    function baseIsDate(value) {
-	      return isObjectLike(value) && objectToString.call(value) == dateTag;
+	      return isObjectLike(value) && baseGetTag(value) == dateTag;
 	    }
 	
 	    /**
@@ -42744,7 +42762,7 @@
 	     * @returns {boolean} Returns `true` if `value` is a regexp, else `false`.
 	     */
 	    function baseIsRegExp(value) {
-	      return isObject(value) && objectToString.call(value) == regexpTag;
+	      return isObjectLike(value) && baseGetTag(value) == regexpTag;
 	    }
 	
 	    /**
@@ -42767,7 +42785,7 @@
 	     */
 	    function baseIsTypedArray(value) {
 	      return isObjectLike(value) &&
-	        isLength(value.length) && !!typedArrayTags[objectToString.call(value)];
+	        isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
 	    }
 	
 	    /**
@@ -43428,7 +43446,7 @@
 	     */
 	    function baseSortedIndex(array, value, retHighest) {
 	      var low = 0,
-	          high = array ? array.length : low;
+	          high = array == null ? low : array.length;
 	
 	      if (typeof value == 'number' && value === value && high <= HALF_MAX_ARRAY_LENGTH) {
 	        while (low < high) {
@@ -43464,7 +43482,7 @@
 	      value = iteratee(value);
 	
 	      var low = 0,
-	          high = array ? array.length : 0,
+	          high = array == null ? 0 : array.length,
 	          valIsNaN = value !== value,
 	          valIsNull = value === null,
 	          valIsSymbol = isSymbol(value),
@@ -43714,18 +43732,24 @@
 	     * @returns {Array} Returns the new array of values.
 	     */
 	    function baseXor(arrays, iteratee, comparator) {
+	      var length = arrays.length;
+	      if (length < 2) {
+	        return length ? baseUniq(arrays[0]) : [];
+	      }
 	      var index = -1,
-	          length = arrays.length;
+	          result = Array(length);
 	
 	      while (++index < length) {
-	        var result = result
-	          ? arrayPush(
-	              baseDifference(result, arrays[index], iteratee, comparator),
-	              baseDifference(arrays[index], result, iteratee, comparator)
-	            )
-	          : arrays[index];
+	        var array = arrays[index],
+	            othIndex = -1;
+	
+	        while (++othIndex < length) {
+	          if (othIndex != index) {
+	            result[index] = baseDifference(result[index] || array, arrays[othIndex], iteratee, comparator);
+	          }
+	        }
 	      }
-	      return (result && result.length) ? baseUniq(result, iteratee, comparator) : [];
+	      return baseUniq(baseFlatten(result, 1), iteratee, comparator);
 	    }
 	
 	    /**
@@ -45263,6 +45287,33 @@
 	    }
 	
 	    /**
+	     * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+	     *
+	     * @private
+	     * @param {*} value The value to query.
+	     * @returns {string} Returns the raw `toStringTag`.
+	     */
+	    function getRawTag(value) {
+	      var isOwn = hasOwnProperty.call(value, symToStringTag),
+	          tag = value[symToStringTag];
+	
+	      try {
+	        value[symToStringTag] = undefined;
+	        var unmasked = true;
+	      } catch (e) {}
+	
+	      var result = nativeObjectToString.call(value);
+	      if (unmasked) {
+	        if (isOwn) {
+	          value[symToStringTag] = tag;
+	        } else {
+	          delete value[symToStringTag];
+	        }
+	      }
+	      return result;
+	    }
+	
+	    /**
 	     * Creates an array of the own enumerable symbol properties of `object`.
 	     *
 	     * @private
@@ -45304,9 +45355,9 @@
 	        (Set && getTag(new Set) != setTag) ||
 	        (WeakMap && getTag(new WeakMap) != weakMapTag)) {
 	      getTag = function(value) {
-	        var result = objectToString.call(value),
+	        var result = baseGetTag(value),
 	            Ctor = result == objectTag ? value.constructor : undefined,
-	            ctorString = Ctor ? toSource(Ctor) : undefined;
+	            ctorString = Ctor ? toSource(Ctor) : '';
 	
 	        if (ctorString) {
 	          switch (ctorString) {
@@ -45387,7 +45438,7 @@
 	      if (result || ++index != length) {
 	        return result;
 	      }
-	      length = object ? object.length : 0;
+	      length = object == null ? 0 : object.length;
 	      return !!length && isLength(length) && isIndex(key, length) &&
 	        (isArray(object) || isArguments(object));
 	    }
@@ -45799,6 +45850,17 @@
 	    }
 	
 	    /**
+	     * Converts `value` to a string using `Object.prototype.toString`.
+	     *
+	     * @private
+	     * @param {*} value The value to convert.
+	     * @returns {string} Returns the converted string.
+	     */
+	    function objectToString(value) {
+	      return nativeObjectToString.call(value);
+	    }
+	
+	    /**
 	     * A specialized version of `baseRest` which transforms the rest array.
 	     *
 	     * @private
@@ -46008,7 +46070,7 @@
 	     * Converts `func` to its source code.
 	     *
 	     * @private
-	     * @param {Function} func The function to process.
+	     * @param {Function} func The function to convert.
 	     * @returns {string} Returns the source code.
 	     */
 	    function toSource(func) {
@@ -46088,7 +46150,7 @@
 	      } else {
 	        size = nativeMax(toInteger(size), 0);
 	      }
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length || size < 1) {
 	        return [];
 	      }
@@ -46119,7 +46181,7 @@
 	     */
 	    function compact(array) {
 	      var index = -1,
-	          length = array ? array.length : 0,
+	          length = array == null ? 0 : array.length,
 	          resIndex = 0,
 	          result = [];
 	
@@ -46291,7 +46353,7 @@
 	     * // => [1, 2, 3]
 	     */
 	    function drop(array, n, guard) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return [];
 	      }
@@ -46325,7 +46387,7 @@
 	     * // => [1, 2, 3]
 	     */
 	    function dropRight(array, n, guard) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return [];
 	      }
@@ -46385,8 +46447,7 @@
 	     * @since 3.0.0
 	     * @category Array
 	     * @param {Array} array The array to query.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @returns {Array} Returns the slice of `array`.
 	     * @example
 	     *
@@ -46447,7 +46508,7 @@
 	     * // => [4, '*', '*', 10]
 	     */
 	    function fill(array, value, start, end) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return [];
 	      }
@@ -46467,8 +46528,7 @@
 	     * @since 1.1.0
 	     * @category Array
 	     * @param {Array} array The array to inspect.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @param {number} [fromIndex=0] The index to search from.
 	     * @returns {number} Returns the index of the found element, else `-1`.
 	     * @example
@@ -46495,7 +46555,7 @@
 	     * // => 2
 	     */
 	    function findIndex(array, predicate, fromIndex) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return -1;
 	      }
@@ -46515,8 +46575,7 @@
 	     * @since 2.0.0
 	     * @category Array
 	     * @param {Array} array The array to inspect.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @param {number} [fromIndex=array.length-1] The index to search from.
 	     * @returns {number} Returns the index of the found element, else `-1`.
 	     * @example
@@ -46543,7 +46602,7 @@
 	     * // => 0
 	     */
 	    function findLastIndex(array, predicate, fromIndex) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return -1;
 	      }
@@ -46572,7 +46631,7 @@
 	     * // => [1, 2, [3, [4]], 5]
 	     */
 	    function flatten(array) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      return length ? baseFlatten(array, 1) : [];
 	    }
 	
@@ -46591,7 +46650,7 @@
 	     * // => [1, 2, 3, 4, 5]
 	     */
 	    function flattenDeep(array) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      return length ? baseFlatten(array, INFINITY) : [];
 	    }
 	
@@ -46616,7 +46675,7 @@
 	     * // => [1, 2, 3, [4], 5]
 	     */
 	    function flattenDepth(array, depth) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return [];
 	      }
@@ -46641,7 +46700,7 @@
 	     */
 	    function fromPairs(pairs) {
 	      var index = -1,
-	          length = pairs ? pairs.length : 0,
+	          length = pairs == null ? 0 : pairs.length,
 	          result = {};
 	
 	      while (++index < length) {
@@ -46697,7 +46756,7 @@
 	     * // => 3
 	     */
 	    function indexOf(array, value, fromIndex) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return -1;
 	      }
@@ -46723,7 +46782,7 @@
 	     * // => [1, 2]
 	     */
 	    function initial(array) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      return length ? baseSlice(array, 0, -1) : [];
 	    }
 	
@@ -46813,9 +46872,8 @@
 	      var comparator = last(arrays),
 	          mapped = arrayMap(arrays, castArrayLikeObject);
 	
-	      if (comparator === last(mapped)) {
-	        comparator = undefined;
-	      } else {
+	      comparator = typeof comparator == 'function' ? comparator : undefined;
+	      if (comparator) {
 	        mapped.pop();
 	      }
 	      return (mapped.length && mapped[0] === arrays[0])
@@ -46839,7 +46897,7 @@
 	     * // => 'a~b~c'
 	     */
 	    function join(array, separator) {
-	      return array ? nativeJoin.call(array, separator) : '';
+	      return array == null ? '' : nativeJoin.call(array, separator);
 	    }
 	
 	    /**
@@ -46857,7 +46915,7 @@
 	     * // => 3
 	     */
 	    function last(array) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      return length ? array[length - 1] : undefined;
 	    }
 	
@@ -46883,7 +46941,7 @@
 	     * // => 1
 	     */
 	    function lastIndexOf(array, value, fromIndex) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return -1;
 	      }
@@ -46986,8 +47044,7 @@
 	     * @category Array
 	     * @param {Array} array The array to modify.
 	     * @param {Array} values The values to remove.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee invoked per element.
+	     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
 	     * @returns {Array} Returns `array`.
 	     * @example
 	     *
@@ -47057,7 +47114,7 @@
 	     * // => ['b', 'd']
 	     */
 	    var pullAt = flatRest(function(array, indexes) {
-	      var length = array ? array.length : 0,
+	      var length = array == null ? 0 : array.length,
 	          result = baseAt(array, indexes);
 	
 	      basePullAt(array, arrayMap(indexes, function(index) {
@@ -47080,8 +47137,7 @@
 	     * @since 2.0.0
 	     * @category Array
 	     * @param {Array} array The array to modify.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @returns {Array} Returns the new array of removed elements.
 	     * @example
 	     *
@@ -47141,7 +47197,7 @@
 	     * // => [3, 2, 1]
 	     */
 	    function reverse(array) {
-	      return array ? nativeReverse.call(array) : array;
+	      return array == null ? array : nativeReverse.call(array);
 	    }
 	
 	    /**
@@ -47161,7 +47217,7 @@
 	     * @returns {Array} Returns the slice of `array`.
 	     */
 	    function slice(array, start, end) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return [];
 	      }
@@ -47208,8 +47264,7 @@
 	     * @category Array
 	     * @param {Array} array The sorted array to inspect.
 	     * @param {*} value The value to evaluate.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee invoked per element.
+	     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
 	     * @returns {number} Returns the index at which `value` should be inserted
 	     *  into `array`.
 	     * @example
@@ -47244,7 +47299,7 @@
 	     * // => 1
 	     */
 	    function sortedIndexOf(array, value) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (length) {
 	        var index = baseSortedIndex(array, value);
 	        if (index < length && eq(array[index], value)) {
@@ -47287,8 +47342,7 @@
 	     * @category Array
 	     * @param {Array} array The sorted array to inspect.
 	     * @param {*} value The value to evaluate.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee invoked per element.
+	     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
 	     * @returns {number} Returns the index at which `value` should be inserted
 	     *  into `array`.
 	     * @example
@@ -47323,7 +47377,7 @@
 	     * // => 3
 	     */
 	    function sortedLastIndexOf(array, value) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (length) {
 	        var index = baseSortedIndex(array, value, true) - 1;
 	        if (eq(array[index], value)) {
@@ -47391,7 +47445,7 @@
 	     * // => [2, 3]
 	     */
 	    function tail(array) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      return length ? baseSlice(array, 1, length) : [];
 	    }
 	
@@ -47454,7 +47508,7 @@
 	     * // => []
 	     */
 	    function takeRight(array, n, guard) {
-	      var length = array ? array.length : 0;
+	      var length = array == null ? 0 : array.length;
 	      if (!length) {
 	        return [];
 	      }
@@ -47473,8 +47527,7 @@
 	     * @since 3.0.0
 	     * @category Array
 	     * @param {Array} array The array to query.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @returns {Array} Returns the slice of `array`.
 	     * @example
 	     *
@@ -47515,8 +47568,7 @@
 	     * @since 3.0.0
 	     * @category Array
 	     * @param {Array} array The array to query.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @returns {Array} Returns the slice of `array`.
 	     * @example
 	     *
@@ -47579,8 +47631,7 @@
 	     * @since 4.0.0
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to inspect.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee invoked per element.
+	     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
 	     * @returns {Array} Returns the new array of combined values.
 	     * @example
 	     *
@@ -47622,9 +47673,7 @@
 	     */
 	    var unionWith = baseRest(function(arrays) {
 	      var comparator = last(arrays);
-	      if (isArrayLikeObject(comparator)) {
-	        comparator = undefined;
-	      }
+	      comparator = typeof comparator == 'function' ? comparator : undefined;
 	      return baseUniq(baseFlatten(arrays, 1, isArrayLikeObject, true), undefined, comparator);
 	    });
 	
@@ -47647,9 +47696,7 @@
 	     * // => [2, 1]
 	     */
 	    function uniq(array) {
-	      return (array && array.length)
-	        ? baseUniq(array)
-	        : [];
+	      return (array && array.length) ? baseUniq(array) : [];
 	    }
 	
 	    /**
@@ -47664,8 +47711,7 @@
 	     * @since 4.0.0
 	     * @category Array
 	     * @param {Array} array The array to inspect.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee invoked per element.
+	     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
 	     * @returns {Array} Returns the new duplicate free array.
 	     * @example
 	     *
@@ -47677,9 +47723,7 @@
 	     * // => [{ 'x': 1 }, { 'x': 2 }]
 	     */
 	    function uniqBy(array, iteratee) {
-	      return (array && array.length)
-	        ? baseUniq(array, getIteratee(iteratee, 2))
-	        : [];
+	      return (array && array.length) ? baseUniq(array, getIteratee(iteratee, 2)) : [];
 	    }
 	
 	    /**
@@ -47703,9 +47747,8 @@
 	     * // => [{ 'x': 1, 'y': 2 }, { 'x': 2, 'y': 1 }]
 	     */
 	    function uniqWith(array, comparator) {
-	      return (array && array.length)
-	        ? baseUniq(array, undefined, comparator)
-	        : [];
+	      comparator = typeof comparator == 'function' ? comparator : undefined;
+	      return (array && array.length) ? baseUniq(array, undefined, comparator) : [];
 	    }
 	
 	    /**
@@ -47837,8 +47880,7 @@
 	     * @since 4.0.0
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to inspect.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee invoked per element.
+	     * @param {Function} [iteratee=_.identity] The iteratee invoked per element.
 	     * @returns {Array} Returns the new array of filtered values.
 	     * @example
 	     *
@@ -47880,9 +47922,7 @@
 	     */
 	    var xorWith = baseRest(function(arrays) {
 	      var comparator = last(arrays);
-	      if (isArrayLikeObject(comparator)) {
-	        comparator = undefined;
-	      }
+	      comparator = typeof comparator == 'function' ? comparator : undefined;
 	      return baseXor(arrayFilter(arrays, isArrayLikeObject), undefined, comparator);
 	    });
 	
@@ -47953,7 +47993,8 @@
 	     * @since 3.8.0
 	     * @category Array
 	     * @param {...Array} [arrays] The arrays to process.
-	     * @param {Function} [iteratee=_.identity] The function to combine grouped values.
+	     * @param {Function} [iteratee=_.identity] The function to combine
+	     *  grouped values.
 	     * @returns {Array} Returns the new array of grouped elements.
 	     * @example
 	     *
@@ -48330,8 +48371,7 @@
 	     * @since 0.5.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to iterate over.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee to transform keys.
+	     * @param {Function} [iteratee=_.identity] The iteratee to transform keys.
 	     * @returns {Object} Returns the composed aggregate object.
 	     * @example
 	     *
@@ -48365,8 +48405,7 @@
 	     * @since 0.1.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to iterate over.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
 	     * @returns {boolean} Returns `true` if all elements pass the predicate check,
 	     *  else `false`.
@@ -48412,8 +48451,7 @@
 	     * @since 0.1.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to iterate over.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @returns {Array} Returns the new filtered array.
 	     * @see _.reject
 	     * @example
@@ -48453,8 +48491,7 @@
 	     * @since 0.1.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to inspect.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @param {number} [fromIndex=0] The index to search from.
 	     * @returns {*} Returns the matched element, else `undefined`.
 	     * @example
@@ -48491,8 +48528,7 @@
 	     * @since 2.0.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to inspect.
-	     * @param {Function} [predicate=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	     * @param {number} [fromIndex=collection.length-1] The index to search from.
 	     * @returns {*} Returns the matched element, else `undefined`.
 	     * @example
@@ -48514,8 +48550,7 @@
 	     * @since 4.0.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to iterate over.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Array} Returns the new flattened array.
 	     * @example
 	     *
@@ -48539,8 +48574,7 @@
 	     * @since 4.7.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to iterate over.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @returns {Array} Returns the new flattened array.
 	     * @example
 	     *
@@ -48564,8 +48598,7 @@
 	     * @since 4.7.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to iterate over.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The function invoked per iteration.
+	     * @param {Function} [iteratee=_.identity] The function invoked per iteration.
 	     * @param {number} [depth=1] The maximum recursion depth.
 	     * @returns {Array} Returns the new flattened array.
 	     * @example
@@ -48654,8 +48687,7 @@
 	     * @since 0.1.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to iterate over.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee to transform keys.
+	     * @param {Function} [iteratee=_.identity] The iteratee to transform keys.
 	     * @returns {Object} Returns the composed aggregate object.
 	     * @example
 	     *
@@ -48764,8 +48796,7 @@
 	     * @since 4.0.0
 	     * @category Collection
 	     * @param {Array|Object} collection The collection to iterate over.
-	     * @param {Function} [iteratee=_.identity]
-	     *  The iteratee to transform keys.
+	     * @param {Function} [iteratee=_.identity] The iteratee to transform keys.
 	     * @returns {Object} Returns the composed aggregate object.
 	     * @example
 	     *
@@ -49780,7 +49811,7 @@
 	     * function. Its creation may be customized by replacing the `_.memoize.Cache`
 	     * constructor with one whose instances implement the
 	     * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
-	     * method interface of `delete`, `get`, `has`, and `set`.
+	     * method interface of `clear`, `delete`, `get`, `has`, and `set`.
 	     *
 	     * @static
 	     * @memberOf _
@@ -49814,7 +49845,7 @@
 	     * _.memoize.Cache = WeakMap;
 	     */
 	    function memoize(func, resolver) {
-	      if (typeof func != 'function' || (resolver && typeof resolver != 'function')) {
+	      if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
 	        throw new TypeError(FUNC_ERROR_TEXT);
 	      }
 	      var memoized = function() {
@@ -50230,8 +50261,7 @@
 	     * // => '<p>fred, barney, &amp; pebbles</p>'
 	     */
 	    function wrap(value, wrapper) {
-	      wrapper = wrapper == null ? identity : wrapper;
-	      return partial(wrapper, value);
+	      return partial(castFunction(wrapper), value);
 	    }
 	
 	    /*------------------------------------------------------------------------*/
@@ -50339,6 +50369,7 @@
 	     * // => 0
 	     */
 	    function cloneWith(value, customizer) {
+	      customizer = typeof customizer == 'function' ? customizer : undefined;
 	      return baseClone(value, false, true, customizer);
 	    }
 	
@@ -50393,6 +50424,7 @@
 	     * // => 20
 	     */
 	    function cloneDeepWith(value, customizer) {
+	      customizer = typeof customizer == 'function' ? customizer : undefined;
 	      return baseClone(value, true, true, customizer);
 	    }
 	
@@ -50656,7 +50688,7 @@
 	     */
 	    function isBoolean(value) {
 	      return value === true || value === false ||
-	        (isObjectLike(value) && objectToString.call(value) == boolTag);
+	        (isObjectLike(value) && baseGetTag(value) == boolTag);
 	    }
 	
 	    /**
@@ -50715,7 +50747,7 @@
 	     * // => false
 	     */
 	    function isElement(value) {
-	      return value != null && value.nodeType === 1 && isObjectLike(value) && !isPlainObject(value);
+	      return isObjectLike(value) && value.nodeType === 1 && !isPlainObject(value);
 	    }
 	
 	    /**
@@ -50752,6 +50784,9 @@
 	     * // => false
 	     */
 	    function isEmpty(value) {
+	      if (value == null) {
+	        return true;
+	      }
 	      if (isArrayLike(value) &&
 	          (isArray(value) || typeof value == 'string' || typeof value.splice == 'function' ||
 	            isBuffer(value) || isTypedArray(value) || isArguments(value))) {
@@ -50864,8 +50899,9 @@
 	      if (!isObjectLike(value)) {
 	        return false;
 	      }
-	      return (objectToString.call(value) == errorTag) ||
-	        (typeof value.message == 'string' && typeof value.name == 'string');
+	      var tag = baseGetTag(value);
+	      return tag == errorTag || tag == domExcTag ||
+	        (typeof value.message == 'string' && typeof value.name == 'string' && !isPlainObject(value));
 	    }
 	
 	    /**
@@ -50916,10 +50952,13 @@
 	     * // => false
 	     */
 	    function isFunction(value) {
+	      if (!isObject(value)) {
+	        return false;
+	      }
 	      // The use of `Object#toString` avoids issues with the `typeof` operator
-	      // in Safari 9 which returns 'object' for typed array and other constructors.
-	      var tag = isObject(value) ? objectToString.call(value) : '';
-	      return tag == funcTag || tag == genTag || tag == proxyTag;
+	      // in Safari 9 which returns 'object' for typed arrays and other constructors.
+	      var tag = baseGetTag(value);
+	      return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
 	    }
 	
 	    /**
@@ -51270,7 +51309,7 @@
 	     */
 	    function isNumber(value) {
 	      return typeof value == 'number' ||
-	        (isObjectLike(value) && objectToString.call(value) == numberTag);
+	        (isObjectLike(value) && baseGetTag(value) == numberTag);
 	    }
 	
 	    /**
@@ -51302,7 +51341,7 @@
 	     * // => true
 	     */
 	    function isPlainObject(value) {
-	      if (!isObjectLike(value) || objectToString.call(value) != objectTag) {
+	      if (!isObjectLike(value) || baseGetTag(value) != objectTag) {
 	        return false;
 	      }
 	      var proto = getPrototype(value);
@@ -51310,8 +51349,8 @@
 	        return true;
 	      }
 	      var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
-	      return (typeof Ctor == 'function' &&
-	        Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString);
+	      return typeof Ctor == 'function' && Ctor instanceof Ctor &&
+	        funcToString.call(Ctor) == objectCtorString;
 	    }
 	
 	    /**
@@ -51402,7 +51441,7 @@
 	     */
 	    function isString(value) {
 	      return typeof value == 'string' ||
-	        (!isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag);
+	        (!isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag);
 	    }
 	
 	    /**
@@ -51424,7 +51463,7 @@
 	     */
 	    function isSymbol(value) {
 	      return typeof value == 'symbol' ||
-	        (isObjectLike(value) && objectToString.call(value) == symbolTag);
+	        (isObjectLike(value) && baseGetTag(value) == symbolTag);
 	    }
 	
 	    /**
@@ -51506,7 +51545,7 @@
 	     * // => false
 	     */
 	    function isWeakSet(value) {
-	      return isObjectLike(value) && objectToString.call(value) == weakSetTag;
+	      return isObjectLike(value) && baseGetTag(value) == weakSetTag;
 	    }
 	
 	    /**
@@ -51591,8 +51630,8 @@
 	      if (isArrayLike(value)) {
 	        return isString(value) ? stringToArray(value) : copyArray(value);
 	      }
-	      if (iteratorSymbol && value[iteratorSymbol]) {
-	        return iteratorToArray(value[iteratorSymbol]());
+	      if (symIterator && value[symIterator]) {
+	        return iteratorToArray(value[symIterator]());
 	      }
 	      var tag = getTag(value),
 	          func = tag == mapTag ? mapToArray : (tag == setTag ? setToArray : values);
@@ -52025,7 +52064,7 @@
 	     */
 	    function create(prototype, properties) {
 	      var result = baseCreate(prototype);
-	      return properties ? baseAssign(result, properties) : result;
+	      return properties == null ? result : baseAssign(result, properties);
 	    }
 	
 	    /**
@@ -53132,7 +53171,7 @@
 	     * // => ['h', 'i']
 	     */
 	    function values(object) {
-	      return object ? baseValues(object, keys(object)) : [];
+	      return object == null ? [] : baseValues(object, keys(object));
 	    }
 	
 	    /**
@@ -54519,7 +54558,7 @@
 	     * // => 'no match'
 	     */
 	    function cond(pairs) {
-	      var length = pairs ? pairs.length : 0,
+	      var length = pairs == null ? 0 : pairs.length,
 	          toIteratee = getIteratee();
 	
 	      pairs = !length ? [] : arrayMap(pairs, function(pair) {
@@ -56271,8 +56310,8 @@
 	    // Add lazy aliases.
 	    lodash.prototype.first = lodash.prototype.head;
 	
-	    if (iteratorSymbol) {
-	      lodash.prototype[iteratorSymbol] = wrapperToIterator;
+	    if (symIterator) {
+	      lodash.prototype[symIterator] = wrapperToIterator;
 	    }
 	    return lodash;
 	  });
@@ -61766,6 +61805,24 @@
 	  }
 	});
 	
+	var _Reveal = __webpack_require__(/*! ./elements/Reveal */ 1319);
+	
+	Object.defineProperty(exports, 'Reveal', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_Reveal).default;
+	  }
+	});
+	
+	var _RevealContent = __webpack_require__(/*! ./elements/Reveal/RevealContent */ 1321);
+	
+	Object.defineProperty(exports, 'RevealContent', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_RevealContent).default;
+	  }
+	});
+	
 	var _Segment = __webpack_require__(/*! ./elements/Segment */ 1059);
 	
 	Object.defineProperty(exports, 'Segment', {
@@ -62433,13 +62490,13 @@
 	 * @see Modal
 	 */
 	function Confirm(props) {
-	  var open = props.open;
-	  var cancelButton = props.cancelButton;
-	  var confirmButton = props.confirmButton;
-	  var header = props.header;
-	  var content = props.content;
-	  var onConfirm = props.onConfirm;
-	  var onCancel = props.onCancel;
+	  var open = props.open,
+	      cancelButton = props.cancelButton,
+	      confirmButton = props.confirmButton,
+	      header = props.header,
+	      content = props.content,
+	      onConfirm = props.onConfirm,
+	      onCancel = props.onCancel;
 	
 	  var rest = (0, _lib.getUnhandledProps)(Confirm, props);
 	
@@ -62628,7 +62685,7 @@
 	  if (result || ++index != length) {
 	    return result;
 	  }
-	  length = object ? object.length : 0;
+	  length = object == null ? 0 : object.length;
 	  return !!length && isLength(length) && isIndex(key, length) &&
 	    (isArray(object) || isArguments(object));
 	}
@@ -62793,7 +62850,7 @@
 	 * function. Its creation may be customized by replacing the `_.memoize.Cache`
 	 * constructor with one whose instances implement the
 	 * [`Map`](http://ecma-international.org/ecma-262/7.0/#sec-properties-of-the-map-prototype-object)
-	 * method interface of `delete`, `get`, `has`, and `set`.
+	 * method interface of `clear`, `delete`, `get`, `has`, and `set`.
 	 *
 	 * @static
 	 * @memberOf _
@@ -62827,7 +62884,7 @@
 	 * _.memoize.Cache = WeakMap;
 	 */
 	function memoize(func, resolver) {
-	  if (typeof func != 'function' || (resolver && typeof resolver != 'function')) {
+	  if (typeof func != 'function' || (resolver != null && typeof resolver != 'function')) {
 	    throw new TypeError(FUNC_ERROR_TEXT);
 	  }
 	  var memoized = function() {
@@ -62874,7 +62931,7 @@
 	 */
 	function MapCache(entries) {
 	  var index = -1,
-	      length = entries ? entries.length : 0;
+	      length = entries == null ? 0 : entries.length;
 	
 	  this.clear();
 	  while (++index < length) {
@@ -62945,7 +63002,7 @@
 	 */
 	function Hash(entries) {
 	  var index = -1,
-	      length = entries ? entries.length : 0;
+	      length = entries == null ? 0 : entries.length;
 	
 	  this.clear();
 	  while (++index < length) {
@@ -63092,22 +63149,14 @@
   \********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObject = __webpack_require__(/*! ./isObject */ 660);
+	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 786),
+	    isObject = __webpack_require__(/*! ./isObject */ 660);
 	
 	/** `Object#toString` result references. */
-	var funcTag = '[object Function]',
+	var asyncTag = '[object AsyncFunction]',
+	    funcTag = '[object Function]',
 	    genTag = '[object GeneratorFunction]',
 	    proxyTag = '[object Proxy]';
-	
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-	
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
 	
 	/**
 	 * Checks if `value` is classified as a `Function` object.
@@ -63127,10 +63176,13 @@
 	 * // => false
 	 */
 	function isFunction(value) {
+	  if (!isObject(value)) {
+	    return false;
+	  }
 	  // The use of `Object#toString` avoids issues with the `typeof` operator
-	  // in Safari 9 which returns 'object' for typed array and other constructors.
-	  var tag = isObject(value) ? objectToString.call(value) : '';
-	  return tag == funcTag || tag == genTag || tag == proxyTag;
+	  // in Safari 9 which returns 'object' for typed arrays and other constructors.
+	  var tag = baseGetTag(value);
+	  return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
 	}
 	
 	module.exports = isFunction;
@@ -63269,7 +63321,7 @@
 	 * Converts `func` to its source code.
 	 *
 	 * @private
-	 * @param {Function} func The function to process.
+	 * @param {Function} func The function to convert.
 	 * @returns {string} Returns the source code.
 	 */
 	function toSource(func) {
@@ -63460,7 +63512,7 @@
 	 */
 	function ListCache(entries) {
 	  var index = -1,
-	      length = entries ? entries.length : 0;
+	      length = entries == null ? 0 : entries.length;
 	
 	  this.clear();
 	  while (++index < length) {
@@ -64000,7 +64052,7 @@
 	 */
 	function arrayMap(array, iteratee) {
 	  var index = -1,
-	      length = array ? array.length : 0,
+	      length = array == null ? 0 : array.length,
 	      result = Array(length);
 	
 	  while (++index < length) {
@@ -64019,20 +64071,11 @@
   \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
+	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 786),
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
 	
 	/** `Object#toString` result references. */
 	var symbolTag = '[object Symbol]';
-	
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-	
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
 	
 	/**
 	 * Checks if `value` is classified as a `Symbol` primitive or object.
@@ -64053,7 +64096,7 @@
 	 */
 	function isSymbol(value) {
 	  return typeof value == 'symbol' ||
-	    (isObjectLike(value) && objectToString.call(value) == symbolTag);
+	    (isObjectLike(value) && baseGetTag(value) == symbolTag);
 	}
 	
 	module.exports = isSymbol;
@@ -64149,20 +64192,11 @@
   \**************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
+	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 786),
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
 	
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]';
-	
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-	
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
 	
 	/**
 	 * The base implementation of `_.isArguments`.
@@ -64172,7 +64206,7 @@
 	 * @returns {boolean} Returns `true` if `value` is an `arguments` object,
 	 */
 	function baseIsArguments(value) {
-	  return isObjectLike(value) && objectToString.call(value) == argsTag;
+	  return isObjectLike(value) && baseGetTag(value) == argsTag;
 	}
 	
 	module.exports = baseIsArguments;
@@ -64511,6 +64545,10 @@
 	
 	var _pick3 = _interopRequireDefault(_pick2);
 	
+	var _startsWith2 = __webpack_require__(/*! lodash/startsWith */ 921);
+	
+	var _startsWith3 = _interopRequireDefault(_startsWith2);
+	
 	var _filter2 = __webpack_require__(/*! lodash/filter */ 752);
 	
 	var _filter3 = _interopRequireDefault(_filter2);
@@ -64666,10 +64704,10 @@
 	
 	      if (process.env.NODE_ENV !== 'production') {
 	        (function () {
-	          var _constructor = _this2.constructor;
-	          var defaultProps = _constructor.defaultProps;
-	          var name = _constructor.name;
-	          var propTypes = _constructor.propTypes;
+	          var _constructor = _this2.constructor,
+	              defaultProps = _constructor.defaultProps,
+	              name = _constructor.name,
+	              propTypes = _constructor.propTypes;
 	          // require static autoControlledProps
 	
 	          if (!autoControlledProps) {
@@ -64705,7 +64743,7 @@
 	          // Default props are automatically handled.
 	          // Listing defaults in autoControlledProps would result in allowing defaultDefaultValue props.
 	          var illegalAutoControlled = (0, _filter3.default)(autoControlledProps, function (prop) {
-	            return prop.startsWith('default');
+	            return (0, _startsWith3.default)(prop, 'default');
 	          });
 	          if (!(0, _isEmpty3.default)(illegalAutoControlled)) {
 	            console.error(['Do not add default props to autoControlledProps.', 'Default props are automatically handled.', 'See ' + name + ' autoControlledProps: "' + illegalAutoControlled + '".'].join(' '));
@@ -64836,7 +64874,7 @@
 	  outer:
 	  while (++index < length) {
 	    var value = array[index],
-	        computed = iteratee ? iteratee(value) : value;
+	        computed = iteratee == null ? value : iteratee(value);
 	
 	    value = (comparator || value !== 0) ? value : 0;
 	    if (isCommon && computed === computed) {
@@ -64879,7 +64917,7 @@
 	 */
 	function SetCache(values) {
 	  var index = -1,
-	      length = values ? values.length : 0;
+	      length = values == null ? 0 : values.length;
 	
 	  this.__data__ = new MapCache;
 	  while (++index < length) {
@@ -64964,7 +65002,7 @@
 	 * @returns {boolean} Returns `true` if `target` is found, else `false`.
 	 */
 	function arrayIncludes(array, value) {
-	  var length = array ? array.length : 0;
+	  var length = array == null ? 0 : array.length;
 	  return !!length && baseIndexOf(array, value, 0) > -1;
 	}
 	
@@ -65104,7 +65142,7 @@
 	 */
 	function arrayIncludesWith(array, value, comparator) {
 	  var index = -1,
-	      length = array ? array.length : 0;
+	      length = array == null ? 0 : array.length;
 	
 	  while (++index < length) {
 	    if (comparator(value, array[index])) {
@@ -65330,7 +65368,7 @@
 	 * // => [1, 2, [3, [4]], 5]
 	 */
 	function flatten(array) {
-	  var length = array ? array.length : 0;
+	  var length = array == null ? 0 : array.length;
 	  return length ? baseFlatten(array, 1) : [];
 	}
 	
@@ -65644,7 +65682,7 @@
 /***/ function(module, exports) {
 
 	/** Used to detect hot functions by number of calls within a span of milliseconds. */
-	var HOT_COUNT = 500,
+	var HOT_COUNT = 800,
 	    HOT_SPAN = 16;
 	
 	/* Built-in method references for those with the same name as other `lodash` methods. */
@@ -66114,7 +66152,8 @@
   \***************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var isLength = __webpack_require__(/*! ./isLength */ 696),
+	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 786),
+	    isLength = __webpack_require__(/*! ./isLength */ 696),
 	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
 	
 	/** `Object#toString` result references. */
@@ -66160,16 +66199,6 @@
 	typedArrayTags[setTag] = typedArrayTags[stringTag] =
 	typedArrayTags[weakMapTag] = false;
 	
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-	
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
-	
 	/**
 	 * The base implementation of `_.isTypedArray` without Node.js optimizations.
 	 *
@@ -66179,7 +66208,7 @@
 	 */
 	function baseIsTypedArray(value) {
 	  return isObjectLike(value) &&
-	    isLength(value.length) && !!typedArrayTags[objectToString.call(value)];
+	    isLength(value.length) && !!typedArrayTags[baseGetTag(value)];
 	}
 	
 	module.exports = baseIsTypedArray;
@@ -66527,8 +66556,7 @@
 	 * @since 0.1.0
 	 * @category Collection
 	 * @param {Array|Object} collection The collection to iterate over.
-	 * @param {Function} [predicate=_.identity]
-	 *  The function invoked per iteration.
+	 * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	 * @returns {Array} Returns the new filtered array.
 	 * @see _.reject
 	 * @example
@@ -66579,7 +66607,7 @@
 	 */
 	function arrayFilter(array, predicate) {
 	  var index = -1,
-	      length = array ? array.length : 0,
+	      length = array == null ? 0 : array.length,
 	      resIndex = 0,
 	      result = [];
 	
@@ -67440,7 +67468,7 @@
 	 */
 	function arraySome(array, predicate) {
 	  var index = -1,
-	      length = array ? array.length : 0;
+	      length = array == null ? 0 : array.length;
 	
 	  while (++index < length) {
 	    if (predicate(array[index], index, array)) {
@@ -67767,16 +67795,6 @@
 	
 	var dataViewTag = '[object DataView]';
 	
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-	
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
-	
 	/** Used to detect maps, sets, and weakmaps. */
 	var dataViewCtorString = toSource(DataView),
 	    mapCtorString = toSource(Map),
@@ -67800,9 +67818,9 @@
 	    (Set && getTag(new Set) != setTag) ||
 	    (WeakMap && getTag(new WeakMap) != weakMapTag)) {
 	  getTag = function(value) {
-	    var result = objectToString.call(value),
+	    var result = baseGetTag(value),
 	        Ctor = result == objectTag ? value.constructor : undefined,
-	        ctorString = Ctor ? toSource(Ctor) : undefined;
+	        ctorString = Ctor ? toSource(Ctor) : '';
 	
 	    if (ctorString) {
 	      switch (ctorString) {
@@ -67889,27 +67907,34 @@
 /*!*********************************!*\
   !*** ./~/lodash/_baseGetTag.js ***!
   \*********************************/
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
+	var Symbol = __webpack_require__(/*! ./_Symbol */ 688),
+	    getRawTag = __webpack_require__(/*! ./_getRawTag */ 1314),
+	    objectToString = __webpack_require__(/*! ./_objectToString */ 1315);
+	
+	/** `Object#toString` result references. */
+	var nullTag = '[object Null]',
+	    undefinedTag = '[object Undefined]';
+	
+	/** Built-in value references. */
+	var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
 	
 	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
-	
-	/**
-	 * The base implementation of `getTag`.
+	 * The base implementation of `getTag` without fallbacks for buggy environments.
 	 *
 	 * @private
 	 * @param {*} value The value to query.
 	 * @returns {string} Returns the `toStringTag`.
 	 */
 	function baseGetTag(value) {
-	  return objectToString.call(value);
+	  if (value == null) {
+	    return value === undefined ? undefinedTag : nullTag;
+	  }
+	  value = Object(value);
+	  return (symToStringTag && symToStringTag in value)
+	    ? getRawTag(value)
+	    : objectToString(value);
 	}
 	
 	module.exports = baseGetTag;
@@ -68333,6 +68358,9 @@
 	 * // => false
 	 */
 	function isEmpty(value) {
+	  if (value == null) {
+	    return true;
+	  }
 	  if (isArrayLike(value) &&
 	      (isArray(value) || typeof value == 'string' || typeof value.splice == 'function' ||
 	        isBuffer(value) || isTypedArray(value) || isArguments(value))) {
@@ -68520,7 +68548,7 @@
 
 	var arrayEach = __webpack_require__(/*! ./_arrayEach */ 804),
 	    baseEach = __webpack_require__(/*! ./_baseEach */ 755),
-	    baseIteratee = __webpack_require__(/*! ./_baseIteratee */ 763),
+	    castFunction = __webpack_require__(/*! ./_castFunction */ 1316),
 	    isArray = __webpack_require__(/*! ./isArray */ 648);
 	
 	/**
@@ -68555,7 +68583,7 @@
 	 */
 	function forEach(collection, iteratee) {
 	  var func = isArray(collection) ? arrayEach : baseEach;
-	  return func(collection, baseIteratee(iteratee, 3));
+	  return func(collection, castFunction(iteratee));
 	}
 	
 	module.exports = forEach;
@@ -68579,7 +68607,7 @@
 	 */
 	function arrayEach(array, iteratee) {
 	  var index = -1,
-	      length = array ? array.length : 0;
+	      length = array == null ? 0 : array.length;
 	
 	  while (++index < length) {
 	    if (iteratee(array[index], index, array) === false) {
@@ -68719,15 +68747,15 @@
 	});
 	exports.useVerticalAlignProp = exports.useTextAlignProp = exports.useWidthProp = exports.useKeyOrValueAndKey = exports.useValueAndKey = exports.useKeyOnly = undefined;
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; }; /*
-	                                                                                                                                                                                                                                                   * There are 4 prop patterns used to build up the className for a component.
-	                                                                                                                                                                                                                                                   * Each utility here is meant for use in a classnames() argument.
-	                                                                                                                                                                                                                                                   *
-	                                                                                                                                                                                                                                                   * There is no util for valueOnly() because it would simply return val.
-	                                                                                                                                                                                                                                                   * Use the prop value inline instead.
-	                                                                                                                                                                                                                                                   *   <Label size='big' />
-	                                                                                                                                                                                                                                                   *   <div class="ui big label"></div>
-	                                                                                                                                                                                                                                                   */
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; /*
+	                                                                                                                                                                                                                                                                               * There are 4 prop patterns used to build up the className for a component.
+	                                                                                                                                                                                                                                                                               * Each utility here is meant for use in a classnames() argument.
+	                                                                                                                                                                                                                                                                               *
+	                                                                                                                                                                                                                                                                               * There is no util for valueOnly() because it would simply return val.
+	                                                                                                                                                                                                                                                                               * Use the prop value inline instead.
+	                                                                                                                                                                                                                                                                               *   <Label size='big' />
+	                                                                                                                                                                                                                                                                               *   <div class="ui big label"></div>
+	                                                                                                                                                                                                                                                                               */
 	
 	
 	var _numberToWord = __webpack_require__(/*! ./numberToWord */ 808);
@@ -68801,8 +68829,8 @@
 	 * <div class="ui four column grid"></div>
 	 */
 	var useWidthProp = exports.useWidthProp = function useWidthProp(val) {
-	  var widthClass = arguments.length <= 1 || arguments[1] === undefined ? '' : arguments[1];
-	  var canEqual = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+	  var widthClass = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+	  var canEqual = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 	
 	  if (canEqual && val === 'equal') {
 	    return 'equal width';
@@ -68856,7 +68884,7 @@
 	  value: true
 	});
 	
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 	
 	exports.numberToWord = numberToWord;
 	var numberToWordMap = exports.numberToWordMap = {
@@ -69526,11 +69554,9 @@
 	 * @returns {object} A new props object
 	 */
 	var mergePropsAndClassName = function mergePropsAndClassName(defaultProps, props) {
-	  var _defaultProps$props = _extends({}, defaultProps, props);
-	
-	  var childKey = _defaultProps$props.childKey;
-	
-	  var newProps = _objectWithoutProperties(_defaultProps$props, ['childKey']);
+	  var _defaultProps$props = _extends({}, defaultProps, props),
+	      childKey = _defaultProps$props.childKey,
+	      newProps = _objectWithoutProperties(_defaultProps$props, ['childKey']);
 	
 	  if ((0, _has3.default)(props, 'className') || (0, _has3.default)(defaultProps.className)) {
 	    newProps.className = (0, _classnames2.default)(defaultProps.className, props.className); // eslint-disable-line react/prop-types
@@ -69554,7 +69580,7 @@
 	 * @returns {function|null}
 	 */
 	function createShorthand(Component, mapValueToProps, val) {
-	  var defaultProps = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+	  var defaultProps = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 	
 	  if (typeof Component !== 'function' && typeof Component !== 'string') {
 	    throw new Error('createShorthandFactory() Component must be a string or function.');
@@ -71302,20 +71328,11 @@
   \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
+	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 786),
+	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
 	
 	/** `Object#toString` result references. */
 	var numberTag = '[object Number]';
-	
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-	
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
 	
 	/**
 	 * Checks if `value` is classified as a `Number` primitive or object.
@@ -71345,7 +71362,7 @@
 	 */
 	function isNumber(value) {
 	  return typeof value == 'number' ||
-	    (isObjectLike(value) && objectToString.call(value) == numberTag);
+	    (isObjectLike(value) && baseGetTag(value) == numberTag);
 	}
 	
 	module.exports = isNumber;
@@ -71358,21 +71375,12 @@
   \******************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var isArray = __webpack_require__(/*! ./isArray */ 648),
+	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 786),
+	    isArray = __webpack_require__(/*! ./isArray */ 648),
 	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
 	
 	/** `Object#toString` result references. */
 	var stringTag = '[object String]';
-	
-	/** Used for built-in method references. */
-	var objectProto = Object.prototype;
-	
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
 	
 	/**
 	 * Checks if `value` is classified as a `String` primitive or object.
@@ -71393,7 +71401,7 @@
 	 */
 	function isString(value) {
 	  return typeof value == 'string' ||
-	    (!isArray(value) && isObjectLike(value) && objectToString.call(value) == stringTag);
+	    (!isArray(value) && isObjectLike(value) && baseGetTag(value) == stringTag);
 	}
 	
 	module.exports = isString;
@@ -71406,7 +71414,8 @@
   \***********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var getPrototype = __webpack_require__(/*! ./_getPrototype */ 732),
+	var baseGetTag = __webpack_require__(/*! ./_baseGetTag */ 786),
+	    getPrototype = __webpack_require__(/*! ./_getPrototype */ 732),
 	    isObjectLike = __webpack_require__(/*! ./isObjectLike */ 691);
 	
 	/** `Object#toString` result references. */
@@ -71424,13 +71433,6 @@
 	
 	/** Used to infer the `Object` constructor. */
 	var objectCtorString = funcToString.call(Object);
-	
-	/**
-	 * Used to resolve the
-	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
-	 * of values.
-	 */
-	var objectToString = objectProto.toString;
 	
 	/**
 	 * Checks if `value` is a plain object, that is, an object created by the
@@ -71461,7 +71463,7 @@
 	 * // => true
 	 */
 	function isPlainObject(value) {
-	  if (!isObjectLike(value) || objectToString.call(value) != objectTag) {
+	  if (!isObjectLike(value) || baseGetTag(value) != objectTag) {
 	    return false;
 	  }
 	  var proto = getPrototype(value);
@@ -71469,8 +71471,8 @@
 	    return true;
 	  }
 	  var Ctor = hasOwnProperty.call(proto, 'constructor') && proto.constructor;
-	  return (typeof Ctor == 'function' &&
-	    Ctor instanceof Ctor && funcToString.call(Ctor) == objectCtorString);
+	  return typeof Ctor == 'function' && Ctor instanceof Ctor &&
+	    funcToString.call(Ctor) == objectCtorString;
 	}
 	
 	module.exports = isPlainObject;
@@ -71741,8 +71743,8 @@
 	 * @returns {string|function} A ReactElement type
 	 */
 	function getElementType(Component, props, getDefault) {
-	  var _Component$defaultPro = Component.defaultProps;
-	  var defaultProps = _Component$defaultPro === undefined ? {} : _Component$defaultPro;
+	  var _Component$defaultPro = Component.defaultProps,
+	      defaultProps = _Component$defaultPro === undefined ? {} : _Component$defaultPro;
 	
 	  // ----------------------------------------
 	  // user defined "as" element type
@@ -72103,8 +72105,8 @@
   \***************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var baseIteratee = __webpack_require__(/*! ./_baseIteratee */ 763),
-	    baseTimes = __webpack_require__(/*! ./_baseTimes */ 738),
+	var baseTimes = __webpack_require__(/*! ./_baseTimes */ 738),
+	    castFunction = __webpack_require__(/*! ./_castFunction */ 1316),
 	    toInteger = __webpack_require__(/*! ./toInteger */ 847);
 	
 	/** Used as references for various `Number` constants. */
@@ -72143,7 +72145,7 @@
 	  var index = MAX_ARRAY_LENGTH,
 	      length = nativeMin(n, MAX_ARRAY_LENGTH);
 	
-	  iteratee = baseIteratee(iteratee);
+	  iteratee = castFunction(iteratee);
 	  n -= MAX_ARRAY_LENGTH;
 	
 	  var result = baseTimes(length, iteratee);
@@ -72318,8 +72320,7 @@
 	 * @since 0.1.0
 	 * @category Collection
 	 * @param {Array|Object} collection The collection to inspect.
-	 * @param {Function} [predicate=_.identity]
-	 *  The function invoked per iteration.
+	 * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	 * @param {number} [fromIndex=0] The index to search from.
 	 * @returns {*} Returns the matched element, else `undefined`.
 	 * @example
@@ -72407,8 +72408,7 @@
 	 * @since 1.1.0
 	 * @category Array
 	 * @param {Array} array The array to inspect.
-	 * @param {Function} [predicate=_.identity]
-	 *  The function invoked per iteration.
+	 * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	 * @param {number} [fromIndex=0] The index to search from.
 	 * @returns {number} Returns the index of the found element, else `-1`.
 	 * @example
@@ -72435,7 +72435,7 @@
 	 * // => 2
 	 */
 	function findIndex(array, predicate, fromIndex) {
-	  var length = array ? array.length : 0;
+	  var length = array == null ? 0 : array.length;
 	  if (!length) {
 	    return -1;
 	  }
@@ -72625,6 +72625,10 @@
 	
 	var _flow3 = _interopRequireDefault(_flow2);
 	
+	var _isNil2 = __webpack_require__(/*! lodash/fp/isNil */ 1317);
+	
+	var _isNil3 = _interopRequireDefault(_isNil2);
+	
 	var _templateObject = _taggedTemplateLiteral([' See `', '` prop in `', '`.'], [' See \\`', '\\` prop in \\`', '\\`.']);
 	
 	var _react = __webpack_require__(/*! react */ 301);
@@ -72659,11 +72663,11 @@
 	    }
 	
 	    // skip if prop is undefined
-	    if (props[propName] === undefined) return;
+	    if ((0, _isNil3.default)(props[propName]) || props[propName] === false) return;
 	
 	    // find disallowed props with values
 	    var disallowed = disallowedProps.reduce(function (acc, disallowedProp) {
-	      if (props[disallowedProp] !== undefined) {
+	      if (!(0, _isNil3.default)(props[disallowedProp]) && props[disallowedProp] !== false) {
 	        return [].concat(_toConsumableArray(acc), [disallowedProp]);
 	      }
 	      return acc;
@@ -72909,7 +72913,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var mapping = __webpack_require__(/*! ./_mapping */ 874),
-	    mutateMap = mapping.mutate,
 	    fallbackHolder = __webpack_require__(/*! ./placeholder */ 875);
 	
 	/**
@@ -73261,13 +73264,16 @@
 	   * @returns {Function} Returns the new converter function.
 	   */
 	  function createConverter(name, func) {
-	    var oldOptions = options;
+	    var realName = mapping.aliasToReal[name] || name,
+	        methodName = mapping.remap[realName] || realName,
+	        oldOptions = options;
+	
 	    return function(options) {
 	      var newUtil = isLib ? pristine : helpers,
-	          newFunc = isLib ? pristine[name] : func,
+	          newFunc = isLib ? pristine[methodName] : func,
 	          newOptions = assign(assign({}, oldOptions), options);
 	
-	      return baseConvert(newUtil, name, newFunc, newOptions);
+	      return baseConvert(newUtil, realName, newFunc, newOptions);
 	    };
 	  }
 	
@@ -73338,38 +73344,37 @@
 	   * @returns {Function} Returns the converted function.
 	   */
 	  function wrap(name, func) {
-	    name = mapping.aliasToReal[name] || name;
-	
 	    var result,
+	        realName = mapping.aliasToReal[name] || name,
 	        wrapped = func,
-	        wrapper = wrappers[name];
+	        wrapper = wrappers[realName];
 	
 	    if (wrapper) {
 	      wrapped = wrapper(func);
 	    }
 	    else if (config.immutable) {
-	      if (mutateMap.array[name]) {
+	      if (mapping.mutate.array[realName]) {
 	        wrapped = wrapImmutable(func, cloneArray);
 	      }
-	      else if (mutateMap.object[name]) {
+	      else if (mapping.mutate.object[realName]) {
 	        wrapped = wrapImmutable(func, createCloner(func));
 	      }
-	      else if (mutateMap.set[name]) {
+	      else if (mapping.mutate.set[realName]) {
 	        wrapped = wrapImmutable(func, cloneByPath);
 	      }
 	    }
 	    each(aryMethodKeys, function(aryKey) {
 	      each(mapping.aryMethod[aryKey], function(otherName) {
-	        if (name == otherName) {
-	          var spreadData = mapping.methodSpread[name],
+	        if (realName == otherName) {
+	          var spreadData = mapping.methodSpread[realName],
 	              afterRearg = spreadData && spreadData.afterRearg;
 	
 	          result = afterRearg
-	            ? castFixed(name, castRearg(name, wrapped, aryKey), aryKey)
-	            : castRearg(name, castFixed(name, wrapped, aryKey), aryKey);
+	            ? castFixed(realName, castRearg(realName, wrapped, aryKey), aryKey)
+	            : castRearg(realName, castFixed(realName, wrapped, aryKey), aryKey);
 	
-	          result = castCap(name, result);
-	          result = castCurry(name, result, aryKey);
+	          result = castCap(realName, result);
+	          result = castCurry(realName, result, aryKey);
 	          return false;
 	        }
 	      });
@@ -73382,8 +73387,8 @@
 	        return func.apply(this, arguments);
 	      };
 	    }
-	    result.convert = createConverter(name, func);
-	    if (mapping.placeholder[name]) {
+	    result.convert = createConverter(realName, func);
+	    if (mapping.placeholder[realName]) {
 	      setPlaceholder = true;
 	      result.placeholder = func.placeholder = placeholder;
 	    }
@@ -74536,7 +74541,7 @@
 	 */
 	function arrayReduce(array, iteratee, accumulator, initAccum) {
 	  var index = -1,
-	      length = array ? array.length : 0;
+	      length = array == null ? 0 : array.length;
 	
 	  if (initAccum && length) {
 	    accumulator = array[++index];
@@ -75164,7 +75169,7 @@
 	 */
 	function compact(array) {
 	  var index = -1,
-	      length = array ? array.length : 0,
+	      length = array == null ? 0 : array.length,
 	      resIndex = 0,
 	      result = [];
 	
@@ -75797,7 +75802,7 @@
 	 * // => ['h', 'i']
 	 */
 	function values(object) {
-	  return object ? baseValues(object, keys(object)) : [];
+	  return object == null ? [] : baseValues(object, keys(object));
 	}
 	
 	module.exports = values;
@@ -76034,30 +76039,30 @@
 	 * @see Label
 	 */
 	function Button(props) {
-	  var active = props.active;
-	  var animated = props.animated;
-	  var attached = props.attached;
-	  var basic = props.basic;
-	  var children = props.children;
-	  var circular = props.circular;
-	  var className = props.className;
-	  var color = props.color;
-	  var compact = props.compact;
-	  var content = props.content;
-	  var disabled = props.disabled;
-	  var floated = props.floated;
-	  var fluid = props.fluid;
-	  var icon = props.icon;
-	  var inverted = props.inverted;
-	  var label = props.label;
-	  var labelPosition = props.labelPosition;
-	  var loading = props.loading;
-	  var negative = props.negative;
-	  var positive = props.positive;
-	  var primary = props.primary;
-	  var secondary = props.secondary;
-	  var size = props.size;
-	  var toggle = props.toggle;
+	  var active = props.active,
+	      animated = props.animated,
+	      attached = props.attached,
+	      basic = props.basic,
+	      children = props.children,
+	      circular = props.circular,
+	      className = props.className,
+	      color = props.color,
+	      compact = props.compact,
+	      content = props.content,
+	      disabled = props.disabled,
+	      floated = props.floated,
+	      fluid = props.fluid,
+	      icon = props.icon,
+	      inverted = props.inverted,
+	      label = props.label,
+	      labelPosition = props.labelPosition,
+	      loading = props.loading,
+	      negative = props.negative,
+	      positive = props.positive,
+	      primary = props.primary,
+	      secondary = props.secondary,
+	      size = props.size,
+	      toggle = props.toggle;
 	
 	
 	  var labeledClasses = (0, _classnames2.default)((0, _lib.useKeyOrValueAndKey)(labelPosition || !!label, 'labeled'));
@@ -76266,20 +76271,20 @@
 	 * @see Image
 	 */
 	function Icon(props) {
-	  var bordered = props.bordered;
-	  var className = props.className;
-	  var circular = props.circular;
-	  var color = props.color;
-	  var corner = props.corner;
-	  var disabled = props.disabled;
-	  var fitted = props.fitted;
-	  var flipped = props.flipped;
-	  var inverted = props.inverted;
-	  var link = props.link;
-	  var loading = props.loading;
-	  var name = props.name;
-	  var rotated = props.rotated;
-	  var size = props.size;
+	  var bordered = props.bordered,
+	      className = props.className,
+	      circular = props.circular,
+	      color = props.color,
+	      corner = props.corner,
+	      disabled = props.disabled,
+	      fitted = props.fitted,
+	      flipped = props.flipped,
+	      inverted = props.inverted,
+	      link = props.link,
+	      loading = props.loading,
+	      name = props.name,
+	      rotated = props.rotated,
+	      size = props.size;
 	
 	
 	  var classes = (0, _classnames2.default)(size, color, (0, _lib.useKeyOnly)(bordered, 'bordered'), (0, _lib.useKeyOnly)(circular, 'circular'), (0, _lib.useKeyOnly)(corner, 'corner'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(fitted, 'fitted'), (0, _lib.useValueAndKey)(flipped, 'flipped'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(link, 'link'), (0, _lib.useKeyOnly)(loading, 'loading'), (0, _lib.useValueAndKey)(rotated, 'rotated'), name, className, 'icon');
@@ -76391,9 +76396,9 @@
 	 * Several icons can be used together as a group
 	 */
 	function IconGroup(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var size = props.size;
+	  var children = props.children,
+	      className = props.className,
+	      size = props.size;
 	
 	
 	  var classes = (0, _classnames2.default)(size, 'icons', className);
@@ -76534,27 +76539,27 @@
 	  _createClass(Label, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var attached = _props.attached;
-	      var basic = _props.basic;
-	      var children = _props.children;
-	      var circular = _props.circular;
-	      var className = _props.className;
-	      var color = _props.color;
-	      var content = _props.content;
-	      var corner = _props.corner;
-	      var detail = _props.detail;
-	      var empty = _props.empty;
-	      var floating = _props.floating;
-	      var horizontal = _props.horizontal;
-	      var icon = _props.icon;
-	      var image = _props.image;
-	      var onRemove = _props.onRemove;
-	      var pointing = _props.pointing;
-	      var removable = _props.removable;
-	      var ribbon = _props.ribbon;
-	      var size = _props.size;
-	      var tag = _props.tag;
+	      var _props = this.props,
+	          attached = _props.attached,
+	          basic = _props.basic,
+	          children = _props.children,
+	          circular = _props.circular,
+	          className = _props.className,
+	          color = _props.color,
+	          content = _props.content,
+	          corner = _props.corner,
+	          detail = _props.detail,
+	          empty = _props.empty,
+	          floating = _props.floating,
+	          horizontal = _props.horizontal,
+	          icon = _props.icon,
+	          image = _props.image,
+	          onRemove = _props.onRemove,
+	          pointing = _props.pointing,
+	          removable = _props.removable,
+	          ribbon = _props.ribbon,
+	          size = _props.size,
+	          tag = _props.tag;
 	
 	
 	      var pointingClass = pointing === true && 'pointing' || (pointing === 'left' || pointing === 'right') && pointing + ' pointing' || (pointing === 'above' || pointing === 'below') && 'pointing ' + pointing;
@@ -76707,27 +76712,27 @@
 	 * @see Icon
 	 */
 	function Image(props) {
-	  var alt = props.alt;
-	  var avatar = props.avatar;
-	  var bordered = props.bordered;
-	  var centered = props.centered;
-	  var className = props.className;
-	  var disabled = props.disabled;
-	  var floated = props.floated;
-	  var fluid = props.fluid;
-	  var height = props.height;
-	  var hidden = props.hidden;
-	  var href = props.href;
-	  var inline = props.inline;
-	  var label = props.label;
-	  var shape = props.shape;
-	  var size = props.size;
-	  var spaced = props.spaced;
-	  var src = props.src;
-	  var verticalAlign = props.verticalAlign;
-	  var width = props.width;
-	  var wrapped = props.wrapped;
-	  var ui = props.ui;
+	  var alt = props.alt,
+	      avatar = props.avatar,
+	      bordered = props.bordered,
+	      centered = props.centered,
+	      className = props.className,
+	      disabled = props.disabled,
+	      floated = props.floated,
+	      fluid = props.fluid,
+	      height = props.height,
+	      hidden = props.hidden,
+	      href = props.href,
+	      inline = props.inline,
+	      label = props.label,
+	      shape = props.shape,
+	      size = props.size,
+	      spaced = props.spaced,
+	      src = props.src,
+	      verticalAlign = props.verticalAlign,
+	      width = props.width,
+	      wrapped = props.wrapped,
+	      ui = props.ui;
 	
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(ui, 'ui'), size, (0, _lib.useVerticalAlignProp)(verticalAlign, 'aligned'), (0, _lib.useKeyOnly)(avatar, 'avatar'), (0, _lib.useKeyOnly)(bordered, 'bordered'), (0, _lib.useKeyOnly)(centered, 'centered'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useValueAndKey)(floated, 'floated'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(hidden, 'hidden'), (0, _lib.useKeyOnly)(inline, 'inline'), (0, _lib.useKeyOrValueAndKey)(spaced, 'spaced'), shape, className, 'image');
@@ -76876,9 +76881,9 @@
 	 * A group of images
 	 */
 	function ImageGroup(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var size = props.size;
+	  var children = props.children,
+	      className = props.className,
+	      size = props.size;
 	
 	  var classes = (0, _classnames2.default)('ui', size, className, 'images');
 	  var rest = (0, _lib.getUnhandledProps)(ImageGroup, props);
@@ -76944,9 +76949,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function LabelDetail(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)('detail', className);
 	  var rest = (0, _lib.getUnhandledProps)(LabelDetail, props);
@@ -77009,12 +77014,12 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function LabelGroup(props) {
-	  var children = props.children;
-	  var circular = props.circular;
-	  var className = props.className;
-	  var color = props.color;
-	  var size = props.size;
-	  var tag = props.tag;
+	  var children = props.children,
+	      circular = props.circular,
+	      className = props.className,
+	      color = props.color,
+	      size = props.size,
+	      tag = props.tag;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', color, size, (0, _lib.useKeyOnly)(circular, 'circular'), (0, _lib.useKeyOnly)(tag, 'tag'), 'labels', className);
@@ -77094,10 +77099,10 @@
 	 * Used in some Button types, such as `animated`
 	 */
 	function ButtonContent(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var hidden = props.hidden;
-	  var visible = props.visible;
+	  var children = props.children,
+	      className = props.className,
+	      hidden = props.hidden,
+	      visible = props.visible;
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(visible, 'visible'), (0, _lib.useKeyOnly)(hidden, 'hidden'), 'content', className);
 	  var rest = (0, _lib.getUnhandledProps)(ButtonContent, props);
@@ -77166,19 +77171,28 @@
 	 * Button.Group
 	 */
 	function ButtonGroup(props) {
-	  var attached = props.attached;
-	  var basic = props.basic;
-	  var children = props.children;
-	  var className = props.className;
-	  var color = props.color;
-	  var icon = props.icon;
-	  var labeled = props.labeled;
-	  var size = props.size;
-	  var vertical = props.vertical;
-	  var widths = props.widths;
+	  var attached = props.attached,
+	      basic = props.basic,
+	      children = props.children,
+	      className = props.className,
+	      color = props.color,
+	      compact = props.compact,
+	      fluid = props.fluid,
+	      icon = props.icon,
+	      inverted = props.inverted,
+	      labeled = props.labeled,
+	      negative = props.negative,
+	      positive = props.positive,
+	      primary = props.primary,
+	      secondary = props.secondary,
+	      size = props.size,
+	      toggle = props.toggle,
+	      vertical = props.vertical,
+	      widths = props.widths;
 	
 	
-	  var classes = (0, _classnames2.default)('ui', size, color, (0, _lib.useValueAndKey)(attached, 'attached'), (0, _lib.useKeyOnly)(basic, 'basic'), (0, _lib.useKeyOnly)(icon, 'icon'), (0, _lib.useKeyOnly)(labeled, 'labeled'), (0, _lib.useKeyOnly)(vertical, 'vertical'), (0, _lib.useWidthProp)(widths), 'buttons', className);
+	  var classes = (0, _classnames2.default)('ui', size, color, (0, _lib.useValueAndKey)(attached, 'attached'), (0, _lib.useKeyOnly)(basic, 'basic'), (0, _lib.useKeyOnly)(compact, 'compact'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(icon, 'icon'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(labeled, 'labeled'), (0, _lib.useKeyOnly)(negative, 'negative'), (0, _lib.useKeyOnly)(positive, 'positive'), (0, _lib.useKeyOnly)(primary, 'primary'), (0, _lib.useKeyOnly)(secondary, 'secondary'), (0, _lib.useKeyOnly)(toggle, 'toggle'), (0, _lib.useKeyOnly)(vertical, 'vertical'), (0, _lib.useWidthProp)(widths), 'buttons', className);
+	
 	  var rest = (0, _lib.getUnhandledProps)(ButtonGroup, props);
 	  var ElementType = (0, _lib.getElementType)(ButtonGroup, props);
 	
@@ -77220,14 +77234,38 @@
 	  /** Groups can have a shared color */
 	  color: _react.PropTypes.oneOf(ButtonGroup._meta.props.color),
 	
+	  /** Groups can reduce their padding to fit into tighter spaces */
+	  compact: _react.PropTypes.bool,
+	
+	  /** Groups can take the width of their container */
+	  fluid: _react.PropTypes.bool,
+	
 	  /** Groups can be formatted as icons */
 	  icon: _react.PropTypes.bool,
+	
+	  /** Groups can be formatted to appear on dark backgrounds */
+	  inverted: _react.PropTypes.bool,
 	
 	  /** Groups can be formatted as labeled icon buttons */
 	  labeled: _react.PropTypes.bool,
 	
+	  /** Groups can hint towards a negative consequence */
+	  negative: _react.PropTypes.bool,
+	
+	  /** Groups can hint towards a positive consequence */
+	  positive: _react.PropTypes.bool,
+	
+	  /** Groups can be formatted to show different levels of emphasis */
+	  primary: _react.PropTypes.bool,
+	
+	  /** Groups can be formatted to show different levels of emphasis */
+	  secondary: _react.PropTypes.bool,
+	
 	  /** Groups can have different sizes */
 	  size: _react.PropTypes.oneOf(ButtonGroup._meta.props.size),
+	
+	  /** Groups can be formatted to toggle on and off */
+	  toggle: _react.PropTypes.bool,
 	
 	  /** Groups can be formatted to appear vertically */
 	  vertical: _react.PropTypes.bool,
@@ -77418,8 +77456,16 @@
 	      args[_key] = arguments[_key];
 	    }
 	
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Modal.__proto__ || Object.getPrototypeOf(Modal)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _this.handleMount = function () {
-	      debug('handleOpen()');
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Modal.__proto__ || Object.getPrototypeOf(Modal)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _this.handleClose = function (e) {
+	      var onClose = _this.props.onClose;
+	
+	      if (onClose) onClose(e, _this.props);
+	    }, _this.handleOpen = function (e) {
+	      var onOpen = _this.props.onOpen;
+	
+	      if (onOpen) onOpen(e, _this.props);
+	    }, _this.handlePortalMount = function (e) {
+	      debug('handlePortalMount()');
 	      var dimmer = _this.props.dimmer;
 	
 	      var mountNode = _this.getMountNode();
@@ -77433,24 +77479,34 @@
 	          mountNode.classList.add('blurring');
 	        }
 	      }
-	    }, _this.handleUnmount = function () {
-	      debug('handleUnmount()');
 	
-	      var mountNode = _this.getMountNode();
+	      _this.setPosition();
+	
+	      var onMount = _this.props.onMount;
+	
+	      if (onMount) onMount(e, _this.props);
+	    }, _this.handlePortalUnmount = function (e) {
+	      debug('handlePortalUnmount()');
 	
 	      // Always remove all dimmer classes.
-	      // If the dimmer value changes while the modal is open,
-	      //   then removing its current value could leave cruft classes previously added.
+	      // If the dimmer value changes while the modal is open, then removing its
+	      // current value could leave cruft classes previously added.
+	      var mountNode = _this.getMountNode();
 	      mountNode.classList.remove('blurring', 'dimmable', 'dimmed', 'scrollable');
+	
+	      cancelAnimationFrame(_this.animationRequestId);
+	
+	      var onUnmount = _this.props.onUnmount;
+	
+	      if (onUnmount) onUnmount(e, _this.props);
 	    }, _this.getMountNode = function () {
 	      return _this.props.mountNode || document.body;
 	    }, _this.setPosition = function () {
 	      if (_this._modalNode) {
 	        var mountNode = _this.getMountNode();
 	
-	        var _this$_modalNode$getB = _this._modalNode.getBoundingClientRect();
-	
-	        var height = _this$_modalNode$getB.height;
+	        var _this$_modalNode$getB = _this._modalNode.getBoundingClientRect(),
+	            height = _this$_modalNode$getB.height;
 	
 	        var scrolling = height >= window.innerHeight;
 	
@@ -77471,36 +77527,30 @@
 	        }
 	      }
 	
-	      requestAnimationFrame(_this.setPosition);
+	      _this.animationRequestId = requestAnimationFrame(_this.setPosition);
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
 	  _createClass(Modal, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      debug('componentDidMount()');
-	      this.setPosition();
-	    }
-	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
 	      debug('componentWillUnmount()');
-	      this.handleUnmount();
+	      this.handlePortalUnmount();
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var _this2 = this;
 	
-	      var _props = this.props;
-	      var basic = _props.basic;
-	      var children = _props.children;
-	      var className = _props.className;
-	      var dimmer = _props.dimmer;
-	      var size = _props.size;
-	      var _state = this.state;
-	      var marginTop = _state.marginTop;
-	      var scrolling = _state.scrolling;
+	      var _props = this.props,
+	          basic = _props.basic,
+	          children = _props.children,
+	          className = _props.className,
+	          dimmer = _props.dimmer,
+	          size = _props.size;
+	      var _state = this.state,
+	          marginTop = _state.marginTop,
+	          scrolling = _state.scrolling;
 	
 	      var classes = (0, _classnames2.default)('ui', size, (0, _lib.useKeyOnly)(basic, 'basic'), (0, _lib.useKeyOnly)(scrolling, 'scrolling'), 'modal transition visible active', className);
 	      var unhandled = (0, _lib.getUnhandledProps)(Modal, this.props);
@@ -77534,11 +77584,16 @@
 	
 	      return _react2.default.createElement(
 	        _Portal2.default,
-	        _extends({}, portalProps, {
+	        _extends({
+	          closeOnRootNodeClick: true,
+	          closeOnDocumentClick: false
+	        }, portalProps, {
 	          className: dimmerClasses,
 	          mountNode: this.getMountNode(),
-	          onMount: this.handleMount,
-	          onUnmount: this.handleUnmount
+	          onClose: this.handleClose,
+	          onMount: this.handlePortalMount,
+	          onOpen: this.handleOpen,
+	          onUnmount: this.handlePortalUnmount
 	        }),
 	        modalJSX
 	      );
@@ -77566,6 +77621,18 @@
 	
 	  /** The node where the modal should mount.. */
 	  mountNode: _react.PropTypes.any,
+	
+	  /** Called when a close event happens */
+	  onClose: _react.PropTypes.func,
+	
+	  /** Called when the portal is mounted on the DOM */
+	  onMount: _react.PropTypes.func,
+	
+	  /** Called when an open event happens */
+	  onOpen: _react.PropTypes.func,
+	
+	  /** Called when the portal is unmounted from the DOM */
+	  onUnmount: _react.PropTypes.func,
 	
 	  /** A modal can vary in size */
 	  size: _react.PropTypes.oneOf(_meta.props.size)
@@ -77609,8 +77676,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ModalHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)(className, 'header');
 	  var rest = (0, _lib.getUnhandledProps)(ModalHeader, props);
@@ -77670,9 +77737,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ModalContent(props) {
-	  var children = props.children;
-	  var image = props.image;
-	  var className = props.className;
+	  var children = props.children,
+	      image = props.image,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)(className, (0, _lib.useKeyOnly)(image, 'image'), 'content');
 	  var rest = (0, _lib.getUnhandledProps)(ModalContent, props);
@@ -77735,8 +77802,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ModalActions(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)(className, 'actions');
 	  var rest = (0, _lib.getUnhandledProps)(ModalActions, props);
@@ -77796,8 +77863,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ModalDescription(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)(className, 'description');
 	  var rest = (0, _lib.getUnhandledProps)(ModalDescription, props);
@@ -77916,28 +77983,33 @@
 	      args[_key] = arguments[_key];
 	    }
 	
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Portal.__proto__ || Object.getPrototypeOf(Portal)).call.apply(_ref, [this].concat(args))), _this), _this.closeOnDocumentClick = function (e) {
-	      if (!_this.props.closeOnDocumentClick) return;
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Portal.__proto__ || Object.getPrototypeOf(Portal)).call.apply(_ref, [this].concat(args))), _this), _this.handleDocumentClick = function (e) {
+	      var _this$props = _this.props,
+	          closeOnDocumentClick = _this$props.closeOnDocumentClick,
+	          closeOnRootNodeClick = _this$props.closeOnRootNodeClick;
 	
 	      // If event happened in the portal, ignore it
+	
 	      if (_this.portal.contains(e.target)) return;
 	
-	      debug('closeOnDocumentClick()');
+	      if (closeOnDocumentClick || closeOnRootNodeClick && _this.node.contains(e.target)) {
+	        debug('handleDocumentClick()');
 	
-	      e.stopPropagation();
-	      _this.close(e);
-	    }, _this.closeOnEscape = function (e) {
+	        e.stopPropagation();
+	        _this.close(e);
+	      }
+	    }, _this.handleEscape = function (e) {
 	      if (!_this.props.closeOnEscape) return;
 	      if (_lib.keyboardKey.getCode(e) !== _lib.keyboardKey.Escape) return;
 	
-	      debug('closeOnEscape()');
+	      debug('handleEscape()');
 	
 	      e.preventDefault();
 	      _this.close(e);
 	    }, _this.handlePortalMouseLeave = function (e) {
-	      var _this$props = _this.props;
-	      var closeOnPortalMouseLeave = _this$props.closeOnPortalMouseLeave;
-	      var mouseLeaveDelay = _this$props.mouseLeaveDelay;
+	      var _this$props2 = _this.props,
+	          closeOnPortalMouseLeave = _this$props2.closeOnPortalMouseLeave,
+	          mouseLeaveDelay = _this$props2.mouseLeaveDelay;
 	
 	
 	      if (!closeOnPortalMouseLeave) return;
@@ -77955,9 +78027,9 @@
 	      debug('handlePortalMouseOver()');
 	      clearTimeout(_this.mouseLeaveTimer);
 	    }, _this.handleTriggerBlur = function (e) {
-	      var _this$props2 = _this.props;
-	      var trigger = _this$props2.trigger;
-	      var closeOnTriggerBlur = _this$props2.closeOnTriggerBlur;
+	      var _this$props3 = _this.props,
+	          trigger = _this$props3.trigger,
+	          closeOnTriggerBlur = _this$props3.closeOnTriggerBlur;
 	
 	      // Call original event handler
 	
@@ -77968,10 +78040,10 @@
 	      debug('handleTriggerBlur()');
 	      _this.close(e);
 	    }, _this.handleTriggerClick = function (e) {
-	      var _this$props3 = _this.props;
-	      var trigger = _this$props3.trigger;
-	      var closeOnTriggerClick = _this$props3.closeOnTriggerClick;
-	      var openOnTriggerClick = _this$props3.openOnTriggerClick;
+	      var _this$props4 = _this.props,
+	          trigger = _this$props4.trigger,
+	          closeOnTriggerClick = _this$props4.closeOnTriggerClick,
+	          openOnTriggerClick = _this$props4.openOnTriggerClick;
 	      var open = _this.state.open;
 	
 	      // Call original event handler
@@ -77979,21 +78051,25 @@
 	      (0, _invoke3.default)(trigger, 'props.onClick', e);
 	
 	      if (open && closeOnTriggerClick) {
+	        debug('handleTriggerClick() - close');
+	
 	        e.stopPropagation();
 	        _this.close(e);
 	      } else if (!open && openOnTriggerClick) {
+	        debug('handleTriggerClick() - open');
+	
 	        e.stopPropagation();
 	        _this.open(e);
 	      }
 	
-	      // Prevents closeOnDocumentClick from closing the portal when
+	      // Prevents handleDocumentClick from closing the portal when
 	      // openOnTriggerFocus is set. Focus shifts on mousedown so the portal opens
 	      // before the click finishes so it may actually wind up on the document.
 	      e.nativeEvent.stopImmediatePropagation();
 	    }, _this.handleTriggerFocus = function (e) {
-	      var _this$props4 = _this.props;
-	      var trigger = _this$props4.trigger;
-	      var openOnTriggerFocus = _this$props4.openOnTriggerFocus;
+	      var _this$props5 = _this.props,
+	          trigger = _this$props5.trigger,
+	          openOnTriggerFocus = _this$props5.openOnTriggerFocus;
 	
 	      // Call original event handler
 	
@@ -78006,10 +78082,10 @@
 	    }, _this.handleTriggerMouseLeave = function (e) {
 	      clearTimeout(_this.mouseOverTimer);
 	
-	      var _this$props5 = _this.props;
-	      var trigger = _this$props5.trigger;
-	      var closeOnTriggerMouseLeave = _this$props5.closeOnTriggerMouseLeave;
-	      var mouseLeaveDelay = _this$props5.mouseLeaveDelay;
+	      var _this$props6 = _this.props,
+	          trigger = _this$props6.trigger,
+	          closeOnTriggerMouseLeave = _this$props6.closeOnTriggerMouseLeave,
+	          mouseLeaveDelay = _this$props6.mouseLeaveDelay;
 	
 	      // Call original event handler
 	
@@ -78022,10 +78098,10 @@
 	    }, _this.handleTriggerMouseOver = function (e) {
 	      clearTimeout(_this.mouseLeaveTimer);
 	
-	      var _this$props6 = _this.props;
-	      var trigger = _this$props6.trigger;
-	      var mouseOverDelay = _this$props6.mouseOverDelay;
-	      var openOnTriggerMouseOver = _this$props6.openOnTriggerMouseOver;
+	      var _this$props7 = _this.props,
+	          trigger = _this$props7.trigger,
+	          mouseOverDelay = _this$props7.mouseOverDelay,
+	          openOnTriggerMouseOver = _this$props7.openOnTriggerMouseOver;
 	
 	      // Call original event handler
 	
@@ -78040,7 +78116,7 @@
 	
 	      var onOpen = _this.props.onOpen;
 	
-	      if (onOpen) onOpen(e);
+	      if (onOpen) onOpen(e, _this.props);
 	
 	      _this.trySetState({ open: true });
 	    }, _this.openWithTimeout = function (e, delay) {
@@ -78056,7 +78132,7 @@
 	
 	      var onClose = _this.props.onClose;
 	
-	      if (onClose) onClose(e);
+	      if (onClose) onClose(e, _this.props);
 	
 	      _this.trySetState({ open: false });
 	    }, _this.closeWithTimeout = function (e, delay) {
@@ -78070,21 +78146,32 @@
 	    }, _this.mountPortal = function () {
 	      if (_this.node) return;
 	
-	      var _this$props$mountNode = _this.props.mountNode;
-	      var mountNode = _this$props$mountNode === undefined ? document.body : _this$props$mountNode;
+	      debug('mountPortal()');
+	
+	      var _this$props8 = _this.props,
+	          _this$props8$mountNod = _this$props8.mountNode,
+	          mountNode = _this$props8$mountNod === undefined ? document.body : _this$props8$mountNod,
+	          prepend = _this$props8.prepend;
 	
 	
 	      _this.node = document.createElement('div');
-	      mountNode.appendChild(_this.node);
 	
-	      document.addEventListener('keydown', _this.closeOnEscape);
-	      document.addEventListener('click', _this.closeOnDocumentClick);
+	      if (prepend) {
+	        mountNode.insertBefore(_this.node, mountNode.firstElementChild);
+	      } else {
+	        mountNode.appendChild(_this.node);
+	      }
+	
+	      document.addEventListener('click', _this.handleDocumentClick);
+	      document.addEventListener('keydown', _this.handleEscape);
 	
 	      var onMount = _this.props.onMount;
 	
-	      if (onMount) onMount();
+	      if (onMount) onMount(null, _this.props);
 	    }, _this.unmountPortal = function () {
 	      if (!_this.node) return;
+	
+	      debug('unmountPortal()');
 	
 	      _reactDom2.default.unmountComponentAtNode(_this.node);
 	      _this.node.parentNode.removeChild(_this.node);
@@ -78095,12 +78182,12 @@
 	      _this.node = null;
 	      _this.portal = null;
 	
-	      document.removeEventListener('keydown', _this.closeOnEscape);
-	      document.removeEventListener('click', _this.closeOnDocumentClick);
+	      document.removeEventListener('click', _this.handleDocumentClick);
+	      document.removeEventListener('keydown', _this.handleEscape);
 	
 	      var onUnmount = _this.props.onUnmount;
 	
-	      if (onUnmount) onUnmount();
+	      if (onUnmount) onUnmount(null, _this.props);
 	    }, _temp), _possibleConstructorReturn(_this, _ret);
 	  }
 	
@@ -78153,16 +78240,18 @@
 	  }, {
 	    key: 'renderPortal',
 	    value: function renderPortal() {
-	      var _props = this.props;
-	      var children = _props.children;
-	      var className = _props.className;
+	      var _props = this.props,
+	          children = _props.children,
+	          className = _props.className;
 	
 	
 	      this.mountPortal();
 	
-	      this.node.className = className;
+	      this.node.className = className || '';
 	
-	      this.portal = _reactDom2.default.unstable_renderSubtreeIntoContainer(this, _react.Children.only(children), this.node);
+	      _reactDom2.default.unstable_renderSubtreeIntoContainer(this, _react.Children.only(children), this.node);
+	
+	      this.portal = this.node.firstElementChild;
 	
 	      this.portal.addEventListener('mouseleave', this.handlePortalMouseLeave);
 	      this.portal.addEventListener('mouseover', this.handlePortalMouseOver);
@@ -78195,8 +78284,16 @@
 	  /** Additional classes. */
 	  className: _react.PropTypes.string,
 	
+	  /**
+	   * Controls whether or not the portal should close on a click on the portal background.
+	   * NOTE: This differs from closeOnDocumentClick:
+	   * - DocumentClick - any click not within the portal
+	   * - RootNodeClick - a click not within the portal but within the portal's wrapper
+	   */
+	  closeOnRootNodeClick: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['closeOnDocumentClick']), _react.PropTypes.bool]),
+	
 	  /** Controls whether or not the portal should close on a click outside. */
-	  closeOnDocumentClick: _react.PropTypes.bool,
+	  closeOnDocumentClick: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['closeOnRootNodeClick']), _react.PropTypes.bool]),
 	
 	  /** Controls whether or not the portal should close when escape is pressed is displayed. */
 	  closeOnEscape: _react.PropTypes.bool,
@@ -78220,7 +78317,7 @@
 	  /** Initial value of open. */
 	  defaultOpen: _react.PropTypes.bool,
 	
-	  /** The node where the portal should mount.. */
+	  /** The node where the portal should mount. */
 	  mountNode: _react.PropTypes.any,
 	
 	  /** Milliseconds to wait before closing on mouse leave */
@@ -78253,12 +78350,15 @@
 	  /** Controls whether or not the portal should open when mousing over the trigger. */
 	  openOnTriggerMouseOver: _react.PropTypes.bool,
 	
+	  /** Controls whether the portal should be prepended to the mountNode instead of appended. */
+	  prepend: _react.PropTypes.bool,
+	
 	  /** Element to be rendered in-place where the portal is defined. */
 	  trigger: _react.PropTypes.node
 	};
 	Portal.defaultProps = {
-	  closeOnEscape: true,
 	  closeOnDocumentClick: true,
+	  closeOnEscape: true,
 	  openOnTriggerClick: true
 	};
 	Portal.autoControlledProps = ['open'];
@@ -78357,7 +78457,7 @@
 	 * // => 3
 	 */
 	function last(array) {
-	  var length = array ? array.length : 0;
+	  var length = array == null ? 0 : array.length;
 	  return length ? array[length - 1] : undefined;
 	}
 	
@@ -78445,9 +78545,9 @@
 	 * @see Form
 	 */
 	function Radio(props) {
-	  var slider = props.slider;
-	  var toggle = props.toggle;
-	  var type = props.type;
+	  var slider = props.slider,
+	      toggle = props.toggle,
+	      type = props.type;
 	
 	  var rest = (0, _lib.getUnhandledProps)(Radio, props);
 	  // const ElementType = getElementType(Radio, props)
@@ -78571,21 +78671,21 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Checkbox.__proto__ || Object.getPrototypeOf(Checkbox)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _this.canToggle = function () {
-	      var _this$props = _this.props;
-	      var disabled = _this$props.disabled;
-	      var radio = _this$props.radio;
-	      var readOnly = _this$props.readOnly;
+	      var _this$props = _this.props,
+	          disabled = _this$props.disabled,
+	          radio = _this$props.radio,
+	          readOnly = _this$props.readOnly;
 	      var checked = _this.state.checked;
 	
 	
 	      return !disabled && !readOnly && !(radio && checked);
 	    }, _this.handleClick = function (e) {
 	      debug('handleClick()');
-	      var _this$props2 = _this.props;
-	      var onChange = _this$props2.onChange;
-	      var onClick = _this$props2.onClick;
-	      var name = _this$props2.name;
-	      var value = _this$props2.value;
+	      var _this$props2 = _this.props,
+	          onChange = _this$props2.onChange,
+	          onClick = _this$props2.onClick,
+	          name = _this$props2.name,
+	          value = _this$props2.value;
 	      var checked = _this.state.checked;
 	
 	      debug('  name:       ' + name);
@@ -78604,17 +78704,17 @@
 	  _createClass(Checkbox, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var className = _props.className;
-	      var label = _props.label;
-	      var name = _props.name;
-	      var radio = _props.radio;
-	      var slider = _props.slider;
-	      var toggle = _props.toggle;
-	      var type = _props.type;
-	      var value = _props.value;
-	      var disabled = _props.disabled;
-	      var readOnly = _props.readOnly;
+	      var _props = this.props,
+	          className = _props.className,
+	          label = _props.label,
+	          name = _props.name,
+	          radio = _props.radio,
+	          slider = _props.slider,
+	          toggle = _props.toggle,
+	          type = _props.type,
+	          value = _props.value,
+	          disabled = _props.disabled,
+	          readOnly = _props.readOnly;
 	      var checked = this.state.checked;
 	
 	      var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(checked, 'checked'),
@@ -78958,9 +79058,9 @@
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).call.apply(_ref, [this].concat(args))), _this), _this.handleChange = function (e, value) {
 	      debug('handleChange()');
 	      debug(value);
-	      var _this$props = _this.props;
-	      var name = _this$props.name;
-	      var onChange = _this$props.onChange;
+	      var _this$props = _this.props,
+	          name = _this$props.name,
+	          onChange = _this$props.onChange;
 	
 	      if (onChange) onChange(e, { name: name, value: value });
 	    }, _this.closeOnEscape = function (e) {
@@ -78997,11 +79097,11 @@
 	      _this.trySetState({ open: true });
 	    }, _this.selectHighlightedItem = function (e) {
 	      var open = _this.state.open;
-	      var _this$props2 = _this.props;
-	      var multiple = _this$props2.multiple;
-	      var name = _this$props2.name;
-	      var onAddItem = _this$props2.onAddItem;
-	      var options = _this$props2.options;
+	      var _this$props2 = _this.props,
+	          multiple = _this$props2.multiple,
+	          name = _this$props2.name,
+	          onAddItem = _this$props2.onAddItem,
+	          options = _this$props2.options;
 	
 	      var value = (0, _get4.default)(_this.getSelectedItem(), 'value');
 	
@@ -79037,12 +79137,12 @@
 	      debug(_lib.keyboardKey.getName(e));
 	      if (_lib.keyboardKey.getCode(e) !== _lib.keyboardKey.Backspace) return;
 	
-	      var _this$props3 = _this.props;
-	      var multiple = _this$props3.multiple;
-	      var search = _this$props3.search;
-	      var _this$state = _this.state;
-	      var searchQuery = _this$state.searchQuery;
-	      var value = _this$state.value;
+	      var _this$props3 = _this.props,
+	          multiple = _this$props3.multiple,
+	          search = _this$props3.search;
+	      var _this$state = _this.state,
+	          searchQuery = _this$state.searchQuery,
+	          value = _this$state.value;
 	
 	
 	      if (searchQuery || !search || !multiple || (0, _isEmpty3.default)(value)) return;
@@ -79080,11 +79180,11 @@
 	    }, _this.handleItemClick = function (e, value) {
 	      debug('handleItemClick()');
 	      debug(value);
-	      var _this$props4 = _this.props;
-	      var multiple = _this$props4.multiple;
-	      var name = _this$props4.name;
-	      var onAddItem = _this$props4.onAddItem;
-	      var options = _this$props4.options;
+	      var _this$props4 = _this.props,
+	          multiple = _this$props4.multiple,
+	          name = _this$props4.name,
+	          onAddItem = _this$props4.onAddItem,
+	          options = _this$props4.options;
 	
 	      var item = _this.getItemByValue(value) || {};
 	
@@ -79120,10 +79220,10 @@
 	      _this.setState({ focus: true });
 	    }, _this.handleBlur = function (e) {
 	      debug('handleBlur()');
-	      var _this$props5 = _this.props;
-	      var multiple = _this$props5.multiple;
-	      var onBlur = _this$props5.onBlur;
-	      var selectOnBlur = _this$props5.selectOnBlur;
+	      var _this$props5 = _this.props,
+	          multiple = _this$props5.multiple,
+	          onBlur = _this$props5.onBlur,
+	          selectOnBlur = _this$props5.selectOnBlur;
 	      // do not "blur" when the mouse is down inside of the Dropdown
 	
 	      if (_this.isMouseDown) return;
@@ -79135,9 +79235,9 @@
 	      debug(e.target.value);
 	      // prevent propagating to this.props.onChange()
 	      e.stopPropagation();
-	      var _this$props6 = _this.props;
-	      var search = _this$props6.search;
-	      var onSearchChange = _this$props6.onSearchChange;
+	      var _this$props6 = _this.props,
+	          search = _this$props6.search,
+	          onSearchChange = _this$props6.onSearchChange;
 	      var open = _this.state.open;
 	
 	      var newQuery = e.target.value;
@@ -79152,14 +79252,14 @@
 	        searchQuery: newQuery
 	      });
 	    }, _this.getMenuOptions = function () {
-	      var value = arguments.length <= 0 || arguments[0] === undefined ? _this.state.value : arguments[0];
-	      var _this$props7 = _this.props;
-	      var multiple = _this$props7.multiple;
-	      var search = _this$props7.search;
-	      var allowAdditions = _this$props7.allowAdditions;
-	      var additionPosition = _this$props7.additionPosition;
-	      var additionLabel = _this$props7.additionLabel;
-	      var options = _this$props7.options;
+	      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.state.value;
+	      var _this$props7 = _this.props,
+	          multiple = _this$props7.multiple,
+	          search = _this$props7.search,
+	          allowAdditions = _this$props7.allowAdditions,
+	          additionPosition = _this$props7.additionPosition,
+	          additionLabel = _this$props7.additionLabel,
+	          options = _this$props7.options;
 	      var searchQuery = _this.state.searchQuery;
 	
 	
@@ -79267,7 +79367,7 @@
 	      _this.setValue(newValue);
 	      _this.handleChange(e, newValue);
 	    }, _this.moveSelectionBy = function (offset) {
-	      var startIndex = arguments.length <= 1 || arguments[1] === undefined ? _this.state.selectedIndex : arguments[1];
+	      var startIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _this.state.selectedIndex;
 	
 	      debug('moveSelectionBy()');
 	      debug('offset: ' + offset);
@@ -79296,8 +79396,10 @@
 	      var isOutOfUpperView = item.offsetTop < menu.scrollTop;
 	      var isOutOfLowerView = item.offsetTop + item.clientHeight > menu.scrollTop + menu.clientHeight;
 	
-	      if (isOutOfUpperView || isOutOfLowerView) {
+	      if (isOutOfUpperView) {
 	        menu.scrollTop = item.offsetTop;
+	      } else if (isOutOfLowerView) {
+	        menu.scrollTop = item.offsetTop + item.clientHeight - menu.clientHeight;
 	      }
 	    }, _this.open = function () {
 	      debug('open()');
@@ -79311,19 +79413,26 @@
 	      _this.trySetState({ open: false });
 	    }, _this.handleClose = function () {
 	      debug('handleClose()');
+	      // https://github.com/Semantic-Org/Semantic-UI-React/issues/627
+	      // Blur the Dropdown on close so it is blurred after selecting an item.
+	      // This is to prevent it from re-opening when switching tabs after selecting an item.
 	      _this._dropdown.blur();
+	
+	      // We need to keep the virtual model in sync with the browser focus change
+	      // https://github.com/Semantic-Org/Semantic-UI-React/issues/692
+	      _this.setState({ focus: false });
 	    }, _this.toggle = function () {
 	      return _this.state.open ? _this.close() : _this.open();
 	    }, _this.renderText = function () {
-	      var _this$props8 = _this.props;
-	      var multiple = _this$props8.multiple;
-	      var placeholder = _this$props8.placeholder;
-	      var search = _this$props8.search;
-	      var text = _this$props8.text;
-	      var _this$state2 = _this.state;
-	      var searchQuery = _this$state2.searchQuery;
-	      var value = _this$state2.value;
-	      var open = _this$state2.open;
+	      var _this$props8 = _this.props,
+	          multiple = _this$props8.multiple,
+	          placeholder = _this$props8.placeholder,
+	          search = _this$props8.search,
+	          text = _this$props8.text;
+	      var _this$state2 = _this.state,
+	          searchQuery = _this$state2.searchQuery,
+	          value = _this$state2.value,
+	          open = _this$state2.open;
 	
 	      var hasValue = multiple ? !(0, _isEmpty3.default)(value) : !!value;
 	
@@ -79347,11 +79456,11 @@
 	    }, _this.renderHiddenInput = function () {
 	      debug('renderHiddenInput()');
 	      var value = _this.state.value;
-	      var _this$props9 = _this.props;
-	      var multiple = _this$props9.multiple;
-	      var name = _this$props9.name;
-	      var options = _this$props9.options;
-	      var selection = _this$props9.selection;
+	      var _this$props9 = _this.props,
+	          multiple = _this$props9.multiple,
+	          name = _this$props9.name,
+	          options = _this$props9.options,
+	          selection = _this$props9.selection;
 	
 	      debug('name:      ' + name);
 	      debug('selection: ' + selection);
@@ -79370,9 +79479,9 @@
 	        })
 	      );
 	    }, _this.renderSearchInput = function () {
-	      var _this$props10 = _this.props;
-	      var search = _this$props10.search;
-	      var name = _this$props10.name;
+	      var _this$props10 = _this.props,
+	          search = _this$props10.search,
+	          name = _this$props10.name;
 	      var searchQuery = _this.state.searchQuery;
 	
 	
@@ -79400,9 +79509,9 @@
 	        }
 	      });
 	    }, _this.renderSearchSizer = function () {
-	      var _this$props11 = _this.props;
-	      var search = _this$props11.search;
-	      var multiple = _this$props11.multiple;
+	      var _this$props11 = _this.props,
+	          search = _this$props11.search,
+	          multiple = _this$props11.multiple;
 	
 	
 	      if (!(search && multiple)) return null;
@@ -79433,13 +79542,13 @@
 	        });
 	      });
 	    }, _this.renderOptions = function () {
-	      var _this$props12 = _this.props;
-	      var multiple = _this$props12.multiple;
-	      var search = _this$props12.search;
-	      var noResultsMessage = _this$props12.noResultsMessage;
-	      var _this$state3 = _this.state;
-	      var selectedIndex = _this$state3.selectedIndex;
-	      var value = _this$state3.value;
+	      var _this$props12 = _this.props,
+	          multiple = _this$props12.multiple,
+	          search = _this$props12.search,
+	          noResultsMessage = _this$props12.noResultsMessage;
+	      var _this$state3 = _this.state,
+	          selectedIndex = _this$state3.selectedIndex,
+	          value = _this$state3.value;
 	
 	      var options = _this.getMenuOptions();
 	
@@ -79469,9 +79578,9 @@
 	        }));
 	      });
 	    }, _this.renderMenu = function () {
-	      var _this$props13 = _this.props;
-	      var children = _this$props13.children;
-	      var header = _this$props13.header;
+	      var _this$props13 = _this.props,
+	          children = _this$props13.children,
+	          header = _this$props13.header;
 	      var open = _this.state.open;
 	
 	      var menuClasses = open ? 'visible' : '';
@@ -79500,9 +79609,9 @@
 	    value: function componentWillMount() {
 	      if (_get2(Dropdown.prototype.__proto__ || Object.getPrototypeOf(Dropdown.prototype), 'componentWillMount', this)) _get2(Dropdown.prototype.__proto__ || Object.getPrototypeOf(Dropdown.prototype), 'componentWillMount', this).call(this);
 	      debug('componentWillMount()');
-	      var _state = this.state;
-	      var open = _state.open;
-	      var value = _state.value;
+	      var _state = this.state,
+	          open = _state.open,
+	          value = _state.value;
 	
 	
 	      this.setValue(value);
@@ -79594,10 +79703,6 @@
 	        document.removeEventListener('keydown', this.selectItemOnEnter);
 	        document.removeEventListener('keydown', this.removeItemOnBackspace);
 	        document.removeEventListener('click', this.closeOnDocumentClick);
-	        if (prevState.focus && this.state.focus) {
-	          document.addEventListener('keydown', this.openOnArrow);
-	          document.addEventListener('keydown', this.openOnSpace);
-	        }
 	      }
 	    }
 	  }, {
@@ -79654,26 +79759,26 @@
 	      debug('props', this.props);
 	      debug('state', this.state);
 	      var open = this.state.open;
-	      var _props = this.props;
-	      var basic = _props.basic;
-	      var button = _props.button;
-	      var className = _props.className;
-	      var compact = _props.compact;
-	      var fluid = _props.fluid;
-	      var floating = _props.floating;
-	      var icon = _props.icon;
-	      var inline = _props.inline;
-	      var labeled = _props.labeled;
-	      var multiple = _props.multiple;
-	      var pointing = _props.pointing;
-	      var search = _props.search;
-	      var selection = _props.selection;
-	      var simple = _props.simple;
-	      var loading = _props.loading;
-	      var error = _props.error;
-	      var disabled = _props.disabled;
-	      var scrolling = _props.scrolling;
-	      var trigger = _props.trigger;
+	      var _props = this.props,
+	          basic = _props.basic,
+	          button = _props.button,
+	          className = _props.className,
+	          compact = _props.compact,
+	          fluid = _props.fluid,
+	          floating = _props.floating,
+	          icon = _props.icon,
+	          inline = _props.inline,
+	          labeled = _props.labeled,
+	          multiple = _props.multiple,
+	          pointing = _props.pointing,
+	          search = _props.search,
+	          selection = _props.selection,
+	          simple = _props.simple,
+	          loading = _props.loading,
+	          error = _props.error,
+	          disabled = _props.disabled,
+	          scrolling = _props.scrolling,
+	          trigger = _props.trigger;
 	
 	      // Classes
 	
@@ -79718,42 +79823,6 @@
 	}(_lib.AutoControlledComponent);
 	
 	Dropdown.propTypes = {
-	  /** An element type to render as (string or function). */
-	  as: _lib.customPropTypes.as,
-	
-	  // ------------------------------------
-	  // Behavior
-	  // ------------------------------------
-	  /** Add an icon by name or as a component. */
-	  icon: _react.PropTypes.oneOfType([_react.PropTypes.element, _react.PropTypes.string]),
-	
-	  /** Array of Dropdown.Item props e.g. `{ text: '', value: '' }` */
-	  options: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _lib.customPropTypes.demand(['selection']), _react.PropTypes.arrayOf(_react.PropTypes.shape(_DropdownItem2.default.propTypes))]),
-	
-	  /** Controls whether or not the dropdown menu is displayed. */
-	  open: _react.PropTypes.bool,
-	
-	  /** Initial value of open. */
-	  defaultOpen: _react.PropTypes.bool,
-	
-	  /** Primary content. */
-	  children: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['options', 'selection']), _lib.customPropTypes.demand(['text']), _lib.customPropTypes.givenProps({ children: _react.PropTypes.any.isRequired }, _react2.default.PropTypes.element.isRequired)]),
-	
-	  /** Current value or value array if multiple. Creates a controlled component. */
-	  value: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number, _react.PropTypes.arrayOf(_react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]))]),
-	
-	  /** Initial value or value array if multiple. */
-	  defaultValue: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number, _react.PropTypes.arrayOf(_react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]))]),
-	
-	  /** Placeholder text. */
-	  placeholder: _react.PropTypes.string,
-	
-	  /** Name of the hidden input which holds the value. */
-	  name: _react.PropTypes.string,
-	
-	  /** Custom element to trigger the menu to become visible. Takes place of 'text'. */
-	  trigger: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['selection', 'text']), _react.PropTypes.node]),
-	
 	  /**
 	   * Allow user additions to the list of options (boolean).
 	   * Requires the use of `selection`, `options` and `search`.
@@ -79766,18 +79835,67 @@
 	  /** Label prefixed to an option added by a user. */
 	  additionLabel: _react.PropTypes.string,
 	
+	  /** An element type to render as (string or function). */
+	  as: _lib.customPropTypes.as,
+	
+	  /** A Dropdown can reduce its complexity */
+	  basic: _react.PropTypes.bool,
+	
+	  /** Format the Dropdown to appear as a button. */
+	  button: _react.PropTypes.bool,
+	
+	  /** Primary content. */
+	  children: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['options', 'selection']), _lib.customPropTypes.givenProps({ children: _react.PropTypes.any.isRequired }, _react2.default.PropTypes.element.isRequired)]),
+	
+	  /** Additional classes. */
+	  className: _react.PropTypes.string,
+	
+	  /** A compact dropdown has no minimum width. */
+	  compact: _react.PropTypes.bool,
+	
+	  /** Initial value of open. */
+	  defaultOpen: _react.PropTypes.bool,
+	
+	  /** Initial value or value array if multiple. */
+	  defaultValue: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number, _react.PropTypes.arrayOf(_react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]))]),
+	
+	  /** A disabled dropdown menu or item does not allow user interaction. */
+	  disabled: _react.PropTypes.bool,
+	
+	  /** An errored dropdown can alert a user to a problem. */
+	  error: _react.PropTypes.bool,
+	
+	  /** A dropdown menu can contain floated content. */
+	  floating: _react.PropTypes.bool,
+	
+	  /** A dropdown can take the full width of its parent */
+	  fluid: _react.PropTypes.bool,
+	
+	  /** A dropdown menu can contain a header. */
+	  header: _react.PropTypes.node,
+	
+	  /** Add an icon by name or as a component. */
+	  icon: _react.PropTypes.oneOfType([_react.PropTypes.element, _react.PropTypes.string]),
+	
+	  /** A dropdown can be formatted to appear inline in other content. */
+	  inline: _react.PropTypes.bool,
+	
+	  /** A dropdown can be labeled. */
+	  labeled: _react.PropTypes.bool,
+	
+	  // linkItem: PropTypes.bool,
+	
+	  /** A dropdown can show that it is currently loading data. */
+	  loading: _react.PropTypes.bool,
+	
+	  /** A selection dropdown can allow multiple selections. */
+	  multiple: _react.PropTypes.bool,
+	
+	  /** Name of the hidden input which holds the value. */
+	  name: _react.PropTypes.string,
+	
 	  /** Message to display when there are no results. */
 	  noResultsMessage: _react.PropTypes.string,
-	
-	  /** Define whether the highlighted item should be selected on blur. */
-	  selectOnBlur: _react.PropTypes.bool,
-	
-	  /** Make the dropdown options searchable by substring matching (default) or with a custom search function. */
-	  search: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.func]),
-	
-	  // ------------------------------------
-	  // Callbacks
-	  // ------------------------------------
 	
 	  /** Called with the name and new value added by the user. Use this to update the options list. */
 	  onAddItem: _react.PropTypes.func,
@@ -79800,55 +79918,46 @@
 	  /** Called with the React Synthetic Event on Dropdown mouse down. */
 	  onMouseDown: _react.PropTypes.func,
 	
-	  // ------------------------------------
-	  // Style
-	  // ------------------------------------
+	  /** Controls whether or not the dropdown menu is displayed. */
+	  open: _react.PropTypes.bool,
 	
-	  /** A Dropdown can reduce its complexity */
-	  basic: _react.PropTypes.bool,
+	  /** Array of Dropdown.Item props e.g. `{ text: '', value: '' }` */
+	  options: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _react.PropTypes.arrayOf(_react.PropTypes.shape(_DropdownItem2.default.propTypes))]),
 	
-	  /** Format the Dropdown to appear as a button. */
-	  button: _react.PropTypes.bool,
+	  /** Placeholder text. */
+	  placeholder: _react.PropTypes.string,
 	
-	  /** Additional classes. */
-	  className: _react.PropTypes.string,
-	
-	  /** Format the dropdown to only take up as much width as needed. */
-	  compact: _react.PropTypes.bool,
-	
-	  /** Format the dropdown to only take up as much width as possible. */
-	  fluid: _react.PropTypes.bool,
-	
-	  /** Display the menu as detached from the Dropdown. */
-	  floating: _react.PropTypes.bool,
-	
-	  /** A dropdown menu can contain a header. */
-	  header: _react.PropTypes.node,
-	
-	  inline: _react.PropTypes.bool,
-	  labeled: _react.PropTypes.bool,
-	  // linkItem: PropTypes.bool,
-	
-	  /** Allow selecting multiple options. */
-	  multiple: _react.PropTypes.bool,
-	
-	  /** Use a detached menu that is pointing to the Dropdown. */
+	  /** A dropdown can be formatted so that its menu is pointing. */
 	  pointing: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.oneOf(_meta.props.pointing)]),
+	
+	  /** A dropdown can have its menu scroll. */
+	  scrolling: _react.PropTypes.bool,
+	
+	  /**
+	   * A selection dropdown can allow a user to search through a large list of choices.
+	   * Pass a function here to replace the default search.
+	   */
+	  search: _react.PropTypes.oneOfType([_react.PropTypes.bool, _react.PropTypes.func]),
+	
+	  // TODO 'searchInMenu' or 'search='in menu' or ???  How to handle this markup and functionality?
+	
+	  /** A dropdown can be used to select between choices in a form. */
+	  selection: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _lib.customPropTypes.demand(['options']), _react.PropTypes.bool]),
+	
+	  /** Define whether the highlighted item should be selected on blur. */
+	  selectOnBlur: _react.PropTypes.bool,
+	
+	  /** A simple dropdown can open without Javascript. */
+	  simple: _react.PropTypes.bool,
 	
 	  /** The text displayed in the dropdown, usually for the active item. */
 	  text: _react.PropTypes.string,
 	
-	  // TODO 'searchInMenu' or 'search='in menu' or ???  How to handle this markup and functionality?
+	  /** Custom element to trigger the menu to become visible. Takes place of 'text'. */
+	  trigger: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['selection', 'text']), _react.PropTypes.node]),
 	
-	  /** Behave as an html select. */
-	  selection: _lib.customPropTypes.every([_lib.customPropTypes.disallow(['children']), _lib.customPropTypes.demand(['options']), _react.PropTypes.bool]),
-	  simple: _react.PropTypes.bool,
-	
-	  loading: _react.PropTypes.bool,
-	  error: _react.PropTypes.bool,
-	  disabled: _react.PropTypes.bool,
-	
-	  scrolling: _react.PropTypes.bool
+	  /** Current value or value array if multiple. Creates a controlled component. */
+	  value: _react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number, _react.PropTypes.arrayOf(_react.PropTypes.oneOfType([_react.PropTypes.string, _react.PropTypes.number]))])
 	};
 	Dropdown.defaultProps = {
 	  icon: 'dropdown',
@@ -79893,8 +80002,7 @@
 	 * @since 0.1.0
 	 * @category Collection
 	 * @param {Array|Object} collection The collection to iterate over.
-	 * @param {Function} [predicate=_.identity]
-	 *  The function invoked per iteration.
+	 * @param {Function} [predicate=_.identity] The function invoked per iteration.
 	 * @param- {Object} [guard] Enables use as an iteratee for methods like `_.map`.
 	 * @returns {boolean} Returns `true` if all elements pass the predicate check,
 	 *  else `false`.
@@ -79950,7 +80058,7 @@
 	 */
 	function arrayEvery(array, predicate) {
 	  var index = -1,
-	      length = array ? array.length : 0;
+	      length = array == null ? 0 : array.length;
 	
 	  while (++index < length) {
 	    if (!predicate(array[index], index, array)) {
@@ -80202,7 +80310,7 @@
 	 * // => [1, 2, 3]
 	 */
 	function dropRight(array, n, guard) {
-	  var length = array ? array.length : 0;
+	  var length = array == null ? 0 : array.length;
 	  if (!length) {
 	    return [];
 	  }
@@ -80338,9 +80446,21 @@
 	
 	var _lib = __webpack_require__(/*! ../../lib */ 698);
 	
+	var _Flag = __webpack_require__(/*! ../../elements/Flag */ 1040);
+	
+	var _Flag2 = _interopRequireDefault(_Flag);
+	
 	var _Icon = __webpack_require__(/*! ../../elements/Icon */ 973);
 	
 	var _Icon2 = _interopRequireDefault(_Icon);
+	
+	var _Image = __webpack_require__(/*! ../../elements/Image */ 1044);
+	
+	var _Image2 = _interopRequireDefault(_Image);
+	
+	var _Label = __webpack_require__(/*! ../../elements/Label */ 974);
+	
+	var _Label2 = _interopRequireDefault(_Label);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -80368,9 +80488,9 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = DropdownItem.__proto__ || Object.getPrototypeOf(DropdownItem)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (e) {
-	      var _this$props = _this.props;
-	      var onClick = _this$props.onClick;
-	      var value = _this$props.value;
+	      var _this$props = _this.props,
+	          onClick = _this$props.onClick,
+	          value = _this$props.value;
 	
 	
 	      if (onClick) onClick(e, value);
@@ -80380,15 +80500,18 @@
 	  _createClass(DropdownItem, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var active = _props.active;
-	      var children = _props.children;
-	      var className = _props.className;
-	      var disabled = _props.disabled;
-	      var description = _props.description;
-	      var icon = _props.icon;
-	      var selected = _props.selected;
-	      var text = _props.text;
+	      var _props = this.props,
+	          active = _props.active,
+	          children = _props.children,
+	          className = _props.className,
+	          disabled = _props.disabled,
+	          description = _props.description,
+	          flag = _props.flag,
+	          icon = _props.icon,
+	          image = _props.image,
+	          label = _props.label,
+	          selected = _props.selected,
+	          text = _props.text;
 	
 	
 	      var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(selected, 'selected'), 'item', className);
@@ -80397,14 +80520,45 @@
 	      var rest = (0, _lib.getUnhandledProps)(DropdownItem, this.props);
 	      var ElementType = (0, _lib.getElementType)(DropdownItem, this.props);
 	
+	      if (children) {
+	        return _react2.default.createElement(
+	          ElementType,
+	          _extends({}, rest, { className: classes, onClick: this.handleClick }),
+	          children
+	        );
+	      }
+	
+	      var flagElement = _Flag2.default.create(flag);
+	      var iconElement = _Icon2.default.create(iconName);
+	      var imageElement = _Image2.default.create(image);
+	      var labelElement = _Label2.default.create(label);
+	      var descriptionElement = (0, _lib.createShorthand)('span', function (val) {
+	        return { className: 'description', children: val };
+	      }, description);
+	
+	      if (descriptionElement) {
+	        return _react2.default.createElement(
+	          ElementType,
+	          _extends({}, rest, { className: classes, onClick: this.handleClick }),
+	          imageElement,
+	          iconElement,
+	          flagElement,
+	          labelElement,
+	          descriptionElement,
+	          (0, _lib.createShorthand)('span', function (val) {
+	            return { className: 'text', children: val };
+	          }, text)
+	        );
+	      }
+	
 	      return _react2.default.createElement(
 	        ElementType,
 	        _extends({}, rest, { className: classes, onClick: this.handleClick }),
-	        (0, _lib.createShorthand)('span', function (val) {
-	          return { className: 'description', children: val };
-	        }, description),
-	        _Icon2.default.create(iconName),
-	        children || text
+	        imageElement,
+	        iconElement,
+	        flagElement,
+	        labelElement,
+	        text
 	      );
 	    }
 	  }]);
@@ -80431,8 +80585,17 @@
 	  /** A dropdown item can be disabled. */
 	  disabled: _react.PropTypes.bool,
 	
-	  /** Add an icon to the item. */
-	  icon: _react.PropTypes.string,
+	  /** Shorthand for Flag. */
+	  flag: _lib.customPropTypes.itemShorthand,
+	
+	  /** Shorthand for Icon. */
+	  icon: _lib.customPropTypes.itemShorthand,
+	
+	  /** Shorthand for Image. */
+	  image: _lib.customPropTypes.itemShorthand,
+	
+	  /** Shorthand for Label. */
+	  label: _lib.customPropTypes.itemShorthand,
 	
 	  /**
 	   * The item currently selected by keyboard shortcut.
@@ -80488,10 +80651,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function DropdownHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var icon = props.icon;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      icon = props.icon;
 	
 	  var classes = (0, _classnames2.default)('header', className);
 	  var rest = (0, _lib.getUnhandledProps)(DropdownHeader, props);
@@ -80566,10 +80729,11 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function DropdownMenu(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className,
+	      scrolling = props.scrolling;
 	
-	  var classes = (0, _classnames2.default)('menu transition', className);
+	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(scrolling, 'scrolling'), 'menu transition', className);
 	  var rest = (0, _lib.getUnhandledProps)(DropdownMenu, props);
 	  var ElementType = (0, _lib.getElementType)(DropdownMenu, props);
 	
@@ -80594,7 +80758,10 @@
 	  children: _react.PropTypes.node,
 	
 	  /** Additional classes. */
-	  className: _react.PropTypes.string
+	  className: _react.PropTypes.string,
+	
+	  /** A dropdown menu can scroll. */
+	  scrolling: _react.PropTypes.bool
 	};
 	
 	exports.default = DropdownMenu;
@@ -80741,12 +80908,12 @@
 	 * A breadcrumb is used to show hierarchy between content.
 	 */
 	function Breadcrumb(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var divider = props.divider;
-	  var icon = props.icon;
-	  var size = props.size;
-	  var sections = props.sections;
+	  var children = props.children,
+	      className = props.className,
+	      divider = props.divider,
+	      icon = props.icon,
+	      size = props.size,
+	      sections = props.sections;
 	
 	  var classes = (0, _classnames2.default)('ui', className, size, 'breadcrumb');
 	  var rest = (0, _lib.getUnhandledProps)(Breadcrumb, props);
@@ -80768,10 +80935,9 @@
 	  var sectionsJSX = [];
 	
 	  (0, _each3.default)(sections, function (_ref, index) {
-	    var text = _ref.text;
-	    var key = _ref.key;
-	
-	    var restSection = _objectWithoutProperties(_ref, ['text', 'key']);
+	    var text = _ref.text,
+	        key = _ref.key,
+	        restSection = _objectWithoutProperties(_ref, ['text', 'key']);
 	
 	    var finalKey = key || text;
 	    var dividerKey = finalKey + '-divider';
@@ -80866,9 +81032,9 @@
 	 * A divider sub-component for Breadcrumb component.
 	 */
 	function BreadcrumbDivider(props) {
-	  var children = props.children;
-	  var icon = props.icon;
-	  var className = props.className;
+	  var children = props.children,
+	      icon = props.icon,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)(className, 'divider');
 	  var rest = (0, _lib.getUnhandledProps)(BreadcrumbDivider, props);
@@ -80968,13 +81134,13 @@
 	  _createClass(BreadcrumbSection, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var active = _props.active;
-	      var children = _props.children;
-	      var className = _props.className;
-	      var href = _props.href;
-	      var link = _props.link;
-	      var onClick = _props.onClick;
+	      var _props = this.props,
+	          active = _props.active,
+	          children = _props.children,
+	          className = _props.className,
+	          href = _props.href,
+	          link = _props.link,
+	          onClick = _props.onClick;
 	
 	
 	      var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), 'section', className);
@@ -81303,9 +81469,9 @@
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref2 = Form.__proto__ || Object.getPrototypeOf(Form)).call.apply(_ref2, [this].concat(args))), _this), _this._form = null, _this.handleRef = function (c) {
 	      return _this._form = _this._form || c;
 	    }, _this.handleSubmit = function (e) {
-	      var _this$props = _this.props;
-	      var onSubmit = _this$props.onSubmit;
-	      var serializer = _this$props.serializer;
+	      var _this$props = _this.props,
+	          onSubmit = _this$props.onSubmit,
+	          serializer = _this$props.serializer;
 	
 	
 	      if (onSubmit) onSubmit(e, serializer(_this._form));
@@ -81315,16 +81481,16 @@
 	  _createClass(Form, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var children = _props.children;
-	      var className = _props.className;
-	      var error = _props.error;
-	      var loading = _props.loading;
-	      var reply = _props.reply;
-	      var size = _props.size;
-	      var success = _props.success;
-	      var warning = _props.warning;
-	      var widths = _props.widths;
+	      var _props = this.props,
+	          children = _props.children,
+	          className = _props.className,
+	          error = _props.error,
+	          loading = _props.loading,
+	          reply = _props.reply,
+	          size = _props.size,
+	          success = _props.success,
+	          warning = _props.warning,
+	          widths = _props.widths;
 	
 	
 	      var classes = (0, _classnames2.default)('ui', size, (0, _lib.useKeyOnly)(error, 'error'), (0, _lib.useKeyOnly)(loading, 'loading'), (0, _lib.useKeyOnly)(reply, 'reply'), (0, _lib.useKeyOnly)(success, 'success'), (0, _lib.useKeyOnly)(warning, 'warning'), (0, _lib.useWidthProp)(widths, null, true), 'form', className);
@@ -81509,16 +81675,16 @@
 	 * @see TextArea
 	 */
 	function FormField(props) {
-	  var control = props.control;
-	  var children = props.children;
-	  var className = props.className;
-	  var disabled = props.disabled;
-	  var error = props.error;
-	  var inline = props.inline;
-	  var label = props.label;
-	  var required = props.required;
-	  var type = props.type;
-	  var width = props.width;
+	  var control = props.control,
+	      children = props.children,
+	      className = props.className,
+	      disabled = props.disabled,
+	      error = props.error,
+	      inline = props.inline,
+	      label = props.label,
+	      required = props.required,
+	      type = props.type,
+	      width = props.width;
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(error, 'error'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(inline, 'inline'), (0, _lib.useKeyOnly)(required, 'required'), (0, _lib.useWidthProp)(width, 'wide'), 'field', className);
 	  var rest = (0, _lib.getUnhandledProps)(FormField, props);
@@ -81824,11 +81990,11 @@
 	 * @see Form
 	 */
 	function FormGroup(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var grouped = props.grouped;
-	  var inline = props.inline;
-	  var widths = props.widths;
+	  var children = props.children,
+	      className = props.className,
+	      grouped = props.grouped,
+	      inline = props.inline,
+	      widths = props.widths;
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useWidthProp)(widths, null, true), (0, _lib.useKeyOnly)(inline, 'inline'), (0, _lib.useKeyOnly)(grouped, 'grouped'), 'fields', className);
 	  var rest = (0, _lib.getUnhandledProps)(FormGroup, props);
@@ -82033,24 +82199,24 @@
 	 * @see Label
 	 */
 	function Input(props) {
-	  var action = props.action;
-	  var actionPosition = props.actionPosition;
-	  var children = props.children;
-	  var className = props.className;
-	  var disabled = props.disabled;
-	  var error = props.error;
-	  var focus = props.focus;
-	  var fluid = props.fluid;
-	  var icon = props.icon;
-	  var iconPosition = props.iconPosition;
-	  var inverted = props.inverted;
-	  var label = props.label;
-	  var labelPosition = props.labelPosition;
-	  var loading = props.loading;
-	  var size = props.size;
-	  var type = props.type;
-	  var input = props.input;
-	  var transparent = props.transparent;
+	  var action = props.action,
+	      actionPosition = props.actionPosition,
+	      children = props.children,
+	      className = props.className,
+	      disabled = props.disabled,
+	      error = props.error,
+	      focus = props.focus,
+	      fluid = props.fluid,
+	      icon = props.icon,
+	      iconPosition = props.iconPosition,
+	      inverted = props.inverted,
+	      label = props.label,
+	      labelPosition = props.labelPosition,
+	      loading = props.loading,
+	      size = props.size,
+	      type = props.type,
+	      input = props.input,
+	      transparent = props.transparent;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', size, (0, _lib.useValueAndKey)(actionPosition, 'action') || (0, _lib.useKeyOnly)(action, 'action'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(error, 'error'), (0, _lib.useKeyOnly)(focus, 'focus'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useValueAndKey)(labelPosition, 'labeled') || (0, _lib.useKeyOnly)(label, 'labeled'), (0, _lib.useKeyOnly)(loading, 'loading'), (0, _lib.useKeyOnly)(transparent, 'transparent'), (0, _lib.useValueAndKey)(iconPosition, 'icon') || (0, _lib.useKeyOnly)(icon, 'icon'), className, 'input');
@@ -82436,20 +82602,20 @@
 	 * A grid is used to harmonize negative space in a layout.
 	 */
 	function Grid(props) {
-	  var celled = props.celled;
-	  var centered = props.centered;
-	  var children = props.children;
-	  var className = props.className;
-	  var columns = props.columns;
-	  var divided = props.divided;
-	  var doubling = props.doubling;
-	  var padded = props.padded;
-	  var relaxed = props.relaxed;
-	  var reversed = props.reversed;
-	  var stackable = props.stackable;
-	  var stretched = props.stretched;
-	  var textAlign = props.textAlign;
-	  var verticalAlign = props.verticalAlign;
+	  var celled = props.celled,
+	      centered = props.centered,
+	      children = props.children,
+	      className = props.className,
+	      columns = props.columns,
+	      divided = props.divided,
+	      doubling = props.doubling,
+	      padded = props.padded,
+	      relaxed = props.relaxed,
+	      reversed = props.reversed,
+	      stackable = props.stackable,
+	      stretched = props.stretched,
+	      textAlign = props.textAlign,
+	      verticalAlign = props.verticalAlign;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(centered, 'centered'), (0, _lib.useKeyOnly)(doubling, 'doubling'), (0, _lib.useKeyOnly)(stackable, 'stackable'), (0, _lib.useKeyOnly)(stretched, 'stretched'), (0, _lib.useKeyOrValueAndKey)(celled, 'celled'), (0, _lib.useKeyOrValueAndKey)(divided, 'divided'), (0, _lib.useKeyOrValueAndKey)(padded, 'padded'), (0, _lib.useKeyOrValueAndKey)(relaxed, 'relaxed'), (0, _lib.useTextAlignProp)(textAlign), (0, _lib.useValueAndKey)(reversed, 'reversed'), (0, _lib.useVerticalAlignProp)(verticalAlign), (0, _lib.useWidthProp)(columns, 'column', true), 'grid', className);
@@ -82561,20 +82727,20 @@
 	 * A column sub-component for Grid.
 	 */
 	function GridColumn(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var computer = props.computer;
-	  var color = props.color;
-	  var floated = props.floated;
-	  var largeScreen = props.largeScreen;
-	  var mobile = props.mobile;
-	  var only = props.only;
-	  var stretched = props.stretched;
-	  var tablet = props.tablet;
-	  var textAlign = props.textAlign;
-	  var verticalAlign = props.verticalAlign;
-	  var widescreen = props.widescreen;
-	  var width = props.width;
+	  var children = props.children,
+	      className = props.className,
+	      computer = props.computer,
+	      color = props.color,
+	      floated = props.floated,
+	      largeScreen = props.largeScreen,
+	      mobile = props.mobile,
+	      only = props.only,
+	      stretched = props.stretched,
+	      tablet = props.tablet,
+	      textAlign = props.textAlign,
+	      verticalAlign = props.verticalAlign,
+	      widescreen = props.widescreen,
+	      width = props.width;
 	
 	
 	  var classes = (0, _classnames2.default)(color, (0, _lib.useKeyOnly)(stretched, 'stretched'), (0, _lib.useTextAlignProp)(textAlign), (0, _lib.useValueAndKey)(floated, 'floated'), (0, _lib.useValueAndKey)(only, 'only'), (0, _lib.useVerticalAlignProp)(verticalAlign), (0, _lib.useWidthProp)(computer, 'wide computer'), (0, _lib.useWidthProp)(largeScreen, 'wide large screen'), (0, _lib.useWidthProp)(mobile, 'wide mobile'), (0, _lib.useWidthProp)(tablet, 'wide tablet'), (0, _lib.useWidthProp)(widescreen, 'wide widescreen'), (0, _lib.useWidthProp)(width, 'wide'), 'column', className);
@@ -82689,17 +82855,17 @@
 	 * A row sub-component for Grid.
 	 */
 	function GridRow(props) {
-	  var centered = props.centered;
-	  var children = props.children;
-	  var className = props.className;
-	  var color = props.color;
-	  var columns = props.columns;
-	  var divided = props.divided;
-	  var only = props.only;
-	  var reversed = props.reversed;
-	  var stretched = props.stretched;
-	  var textAlign = props.textAlign;
-	  var verticalAlign = props.verticalAlign;
+	  var centered = props.centered,
+	      children = props.children,
+	      className = props.className,
+	      color = props.color,
+	      columns = props.columns,
+	      divided = props.divided,
+	      only = props.only,
+	      reversed = props.reversed,
+	      stretched = props.stretched,
+	      textAlign = props.textAlign,
+	      verticalAlign = props.verticalAlign;
 	
 	
 	  var classes = (0, _classnames2.default)(color, (0, _lib.useKeyOnly)(centered, 'centered'), (0, _lib.useKeyOnly)(divided, 'divided'), (0, _lib.useKeyOnly)(stretched, 'stretched'), (0, _lib.useTextAlignProp)(textAlign), (0, _lib.useValueAndKey)(only, 'only'), (0, _lib.useValueAndKey)(reversed, 'reversed'), (0, _lib.useVerticalAlignProp)(verticalAlign), (0, _lib.useWidthProp)(columns, 'column', true), 'row', className);
@@ -82882,13 +83048,13 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Menu.__proto__ || Object.getPrototypeOf(Menu)).call.apply(_ref, [this].concat(args))), _this), _this.handleItemClick = function (e, _ref2) {
-	      var name = _ref2.name;
-	      var index = _ref2.index;
+	      var name = _ref2.name,
+	          index = _ref2.index;
 	
 	      _this.trySetState({ activeIndex: index });
-	      var _this$props = _this.props;
-	      var items = _this$props.items;
-	      var onItemClick = _this$props.onItemClick;
+	      var _this$props = _this.props,
+	          items = _this$props.items,
+	          onItemClick = _this$props.onItemClick;
 	
 	
 	      if ((0, _get3.default)(items[index], 'onClick')) items[index].onClick(e, { name: name, index: index });
@@ -82911,8 +83077,8 @@
 	        }, item, {
 	          active: activeIndex === index,
 	          childKey: function childKey(_ref3) {
-	            var content = _ref3.content;
-	            var name = _ref3.name;
+	            var content = _ref3.content,
+	                name = _ref3.name;
 	            return [content, name].join('-');
 	          },
 	          index: index,
@@ -82923,27 +83089,27 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var attached = _props.attached;
-	      var borderless = _props.borderless;
-	      var children = _props.children;
-	      var className = _props.className;
-	      var color = _props.color;
-	      var compact = _props.compact;
-	      var fixed = _props.fixed;
-	      var floated = _props.floated;
-	      var fluid = _props.fluid;
-	      var icon = _props.icon;
-	      var inverted = _props.inverted;
-	      var pagination = _props.pagination;
-	      var pointing = _props.pointing;
-	      var secondary = _props.secondary;
-	      var stackable = _props.stackable;
-	      var tabular = _props.tabular;
-	      var text = _props.text;
-	      var vertical = _props.vertical;
-	      var size = _props.size;
-	      var widths = _props.widths;
+	      var _props = this.props,
+	          attached = _props.attached,
+	          borderless = _props.borderless,
+	          children = _props.children,
+	          className = _props.className,
+	          color = _props.color,
+	          compact = _props.compact,
+	          fixed = _props.fixed,
+	          floated = _props.floated,
+	          fluid = _props.fluid,
+	          icon = _props.icon,
+	          inverted = _props.inverted,
+	          pagination = _props.pagination,
+	          pointing = _props.pointing,
+	          secondary = _props.secondary,
+	          stackable = _props.stackable,
+	          tabular = _props.tabular,
+	          text = _props.text,
+	          vertical = _props.vertical,
+	          size = _props.size,
+	          widths = _props.widths;
 	
 	      var classes = (0, _classnames2.default)('ui', color, size, (0, _lib.useWidthProp)(widths, 'item'), (0, _lib.useKeyOrValueAndKey)(attached, 'attached'), (0, _lib.useKeyOnly)(borderless, 'borderless'), (0, _lib.useKeyOnly)(compact, 'compact'), (0, _lib.useValueAndKey)(fixed, 'fixed'), (0, _lib.useKeyOrValueAndKey)(floated, 'floated'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOrValueAndKey)(icon, 'icon'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(pagination, 'pagination'), (0, _lib.useKeyOnly)(pointing, 'pointing'), (0, _lib.useKeyOnly)(secondary, 'secondary'), (0, _lib.useKeyOnly)(stackable, 'stackable'), (0, _lib.useKeyOrValueAndKey)(tabular, 'tabular'), (0, _lib.useKeyOnly)(text, 'text'), (0, _lib.useKeyOnly)(vertical, 'vertical'), className, 'menu');
 	      var rest = (0, _lib.getUnhandledProps)(Menu, this.props);
@@ -83071,9 +83237,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function MenuHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'header');
 	  var rest = (0, _lib.getUnhandledProps)(MenuHeader, props);
@@ -83177,10 +83343,10 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = MenuItem.__proto__ || Object.getPrototypeOf(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (e) {
-	      var _this$props = _this.props;
-	      var index = _this$props.index;
-	      var name = _this$props.name;
-	      var onClick = _this$props.onClick;
+	      var _this$props = _this.props,
+	          index = _this$props.index,
+	          name = _this$props.name,
+	          onClick = _this$props.onClick;
 	
 	
 	      if (onClick) onClick(e, { name: name, index: index });
@@ -83190,19 +83356,19 @@
 	  _createClass(MenuItem, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var active = _props.active;
-	      var children = _props.children;
-	      var className = _props.className;
-	      var color = _props.color;
-	      var content = _props.content;
-	      var fitted = _props.fitted;
-	      var header = _props.header;
-	      var icon = _props.icon;
-	      var link = _props.link;
-	      var name = _props.name;
-	      var onClick = _props.onClick;
-	      var position = _props.position;
+	      var _props = this.props,
+	          active = _props.active,
+	          children = _props.children,
+	          className = _props.className,
+	          color = _props.color,
+	          content = _props.content,
+	          fitted = _props.fitted,
+	          header = _props.header,
+	          icon = _props.icon,
+	          link = _props.link,
+	          name = _props.name,
+	          onClick = _props.onClick,
+	          position = _props.position;
 	
 	
 	      var classes = (0, _classnames2.default)(color, position, (0, _lib.useKeyOnly)(active, 'active'), (0, _lib.useKeyOnly)(icon === true || icon && !(name || content), 'icon'), (0, _lib.useKeyOnly)(header, 'header'), (0, _lib.useKeyOnly)(link, 'link'), (0, _lib.useKeyOrValueAndKey)(fitted, 'fitted'), 'item', className);
@@ -83633,22 +83799,26 @@
 	    rsZWJ = '\\u200d';
 	
 	/** Used to compose unicode regexes. */
-	var rsLowerMisc = '(?:' + rsLower + '|' + rsMisc + ')',
-	    rsUpperMisc = '(?:' + rsUpper + '|' + rsMisc + ')',
-	    rsOptLowerContr = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
-	    rsOptUpperContr = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
+	var rsMiscLower = '(?:' + rsLower + '|' + rsMisc + ')',
+	    rsMiscUpper = '(?:' + rsUpper + '|' + rsMisc + ')',
+	    rsOptContrLower = '(?:' + rsApos + '(?:d|ll|m|re|s|t|ve))?',
+	    rsOptContrUpper = '(?:' + rsApos + '(?:D|LL|M|RE|S|T|VE))?',
 	    reOptMod = rsModifier + '?',
 	    rsOptVar = '[' + rsVarRange + ']?',
 	    rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*',
+	    rsOrdLower = '\\d*(?:(?:1st|2nd|3rd|(?![123])\\dth)\\b)',
+	    rsOrdUpper = '\\d*(?:(?:1ST|2ND|3RD|(?![123])\\dTH)\\b)',
 	    rsSeq = rsOptVar + reOptMod + rsOptJoin,
 	    rsEmoji = '(?:' + [rsDingbat, rsRegional, rsSurrPair].join('|') + ')' + rsSeq;
 	
 	/** Used to match complex or compound words. */
 	var reUnicodeWord = RegExp([
-	  rsUpper + '?' + rsLower + '+' + rsOptLowerContr + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
-	  rsUpperMisc + '+' + rsOptUpperContr + '(?=' + [rsBreak, rsUpper + rsLowerMisc, '$'].join('|') + ')',
-	  rsUpper + '?' + rsLowerMisc + '+' + rsOptLowerContr,
-	  rsUpper + '+' + rsOptUpperContr,
+	  rsUpper + '?' + rsLower + '+' + rsOptContrLower + '(?=' + [rsBreak, rsUpper, '$'].join('|') + ')',
+	  rsMiscUpper + '+' + rsOptContrUpper + '(?=' + [rsBreak, rsUpper + rsMiscLower, '$'].join('|') + ')',
+	  rsUpper + '?' + rsMiscLower + '+' + rsOptContrLower,
+	  rsUpper + '+' + rsOptContrUpper,
+	  rsOrdUpper,
+	  rsOrdLower,
 	  rsDigits,
 	  rsEmoji
 	].join('|'), 'g');
@@ -83896,9 +84066,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function MenuMenu(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var position = props.position;
+	  var children = props.children,
+	      className = props.className,
+	      position = props.position;
 	
 	  var classes = (0, _classnames2.default)(className, position, 'menu');
 	  var rest = (0, _lib.getUnhandledProps)(MenuMenu, props);
@@ -84014,26 +84184,26 @@
 	 * @see Form
 	 */
 	function Message(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var header = props.header;
-	  var icon = props.icon;
-	  var list = props.list;
-	  var onDismiss = props.onDismiss;
-	  var hidden = props.hidden;
-	  var visible = props.visible;
-	  var floating = props.floating;
-	  var compact = props.compact;
-	  var attached = props.attached;
-	  var warning = props.warning;
-	  var info = props.info;
-	  var positive = props.positive;
-	  var success = props.success;
-	  var negative = props.negative;
-	  var error = props.error;
-	  var color = props.color;
-	  var size = props.size;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      header = props.header,
+	      icon = props.icon,
+	      list = props.list,
+	      onDismiss = props.onDismiss,
+	      hidden = props.hidden,
+	      visible = props.visible,
+	      floating = props.floating,
+	      compact = props.compact,
+	      attached = props.attached,
+	      warning = props.warning,
+	      info = props.info,
+	      positive = props.positive,
+	      success = props.success,
+	      negative = props.negative,
+	      error = props.error,
+	      color = props.color,
+	      size = props.size;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', size, color, (0, _lib.useKeyOnly)(icon, 'icon'), (0, _lib.useKeyOnly)(hidden, 'hidden'), (0, _lib.useKeyOnly)(visible, 'visible'), (0, _lib.useKeyOnly)(floating, 'floating'), (0, _lib.useKeyOnly)(compact, 'compact'), (0, _lib.useKeyOrValueAndKey)(attached, 'attached'), (0, _lib.useKeyOnly)(warning, 'warning'), (0, _lib.useKeyOnly)(info, 'info'), (0, _lib.useKeyOnly)(positive, 'positive'), (0, _lib.useKeyOnly)(success, 'success'), (0, _lib.useKeyOnly)(negative, 'negative'), (0, _lib.useKeyOnly)(error, 'error'), 'message', className);
@@ -84185,8 +84355,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function MessageContent(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)('content', className);
 	  var rest = (0, _lib.getUnhandledProps)(MessageContent, props);
@@ -84246,8 +84416,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function MessageHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)('header', className);
 	  var rest = (0, _lib.getUnhandledProps)(MessageHeader, props);
@@ -84315,9 +84485,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function MessageList(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var items = props.items;
+	  var children = props.children,
+	      className = props.className,
+	      items = props.items;
 	
 	  var classes = (0, _classnames2.default)('list', className);
 	  var rest = (0, _lib.getUnhandledProps)(MessageList, props);
@@ -84400,8 +84570,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function MessageItem(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)('content', className);
 	  var rest = (0, _lib.getUnhandledProps)(MessageItem, props);
@@ -84522,30 +84692,30 @@
 	 * A table displays a collections of data grouped into rows
 	 */
 	function Table(props) {
-	  var basic = props.basic;
-	  var attached = props.attached;
-	  var renderBodyRow = props.renderBodyRow;
-	  var celled = props.celled;
-	  var children = props.children;
-	  var className = props.className;
-	  var collapsing = props.collapsing;
-	  var color = props.color;
-	  var columns = props.columns;
-	  var compact = props.compact;
-	  var definition = props.definition;
-	  var fixed = props.fixed;
-	  var footerRow = props.footerRow;
-	  var headerRow = props.headerRow;
-	  var inverted = props.inverted;
-	  var padded = props.padded;
-	  var selectable = props.selectable;
-	  var singleLine = props.singleLine;
-	  var size = props.size;
-	  var stackable = props.stackable;
-	  var striped = props.striped;
-	  var structured = props.structured;
-	  var tableData = props.tableData;
-	  var unstackable = props.unstackable;
+	  var basic = props.basic,
+	      attached = props.attached,
+	      renderBodyRow = props.renderBodyRow,
+	      celled = props.celled,
+	      children = props.children,
+	      className = props.className,
+	      collapsing = props.collapsing,
+	      color = props.color,
+	      columns = props.columns,
+	      compact = props.compact,
+	      definition = props.definition,
+	      fixed = props.fixed,
+	      footerRow = props.footerRow,
+	      headerRow = props.headerRow,
+	      inverted = props.inverted,
+	      padded = props.padded,
+	      selectable = props.selectable,
+	      singleLine = props.singleLine,
+	      size = props.size,
+	      stackable = props.stackable,
+	      striped = props.striped,
+	      structured = props.structured,
+	      tableData = props.tableData,
+	      unstackable = props.unstackable;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', color, size, (0, _lib.useKeyOrValueAndKey)(attached, 'attached'), (0, _lib.useKeyOrValueAndKey)(basic, 'basic'), (0, _lib.useKeyOnly)(celled, 'celled'), (0, _lib.useKeyOnly)(collapsing, 'collapsing'), (0, _lib.useKeyOrValueAndKey)(compact, 'compact'), (0, _lib.useKeyOnly)(definition, 'definition'), (0, _lib.useKeyOnly)(fixed, 'fixed'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOrValueAndKey)(padded, 'padded'), (0, _lib.useKeyOnly)(selectable, 'selectable'), (0, _lib.useKeyOnly)(singleLine, 'single line'), (0, _lib.useKeyOnly)(stackable, 'stackable'), (0, _lib.useKeyOnly)(striped, 'striped'), (0, _lib.useKeyOnly)(structured, 'structured'), (0, _lib.useKeyOnly)(unstackable, 'unstackable'), (0, _lib.useWidthProp)(columns, 'column'), className, 'table');
@@ -84720,8 +84890,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function TableBody(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)(className);
 	  var rest = (0, _lib.getUnhandledProps)(TableBody, props);
@@ -84789,21 +84959,21 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function TableCell(props) {
-	  var active = props.active;
-	  var children = props.children;
-	  var className = props.className;
-	  var collapsing = props.collapsing;
-	  var content = props.content;
-	  var disabled = props.disabled;
-	  var error = props.error;
-	  var icon = props.icon;
-	  var negative = props.negative;
-	  var positive = props.positive;
-	  var singleLine = props.singleLine;
-	  var textAlign = props.textAlign;
-	  var verticalAlign = props.verticalAlign;
-	  var warning = props.warning;
-	  var width = props.width;
+	  var active = props.active,
+	      children = props.children,
+	      className = props.className,
+	      collapsing = props.collapsing,
+	      content = props.content,
+	      disabled = props.disabled,
+	      error = props.error,
+	      icon = props.icon,
+	      negative = props.negative,
+	      positive = props.positive,
+	      singleLine = props.singleLine,
+	      textAlign = props.textAlign,
+	      verticalAlign = props.verticalAlign,
+	      warning = props.warning,
+	      width = props.width;
 	
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), (0, _lib.useKeyOnly)(collapsing, 'collapsing'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(error, 'error'), (0, _lib.useKeyOnly)(negative, 'negative'), (0, _lib.useKeyOnly)(positive, 'positive'), (0, _lib.useKeyOnly)(singleLine, 'single line'), (0, _lib.useKeyOnly)(warning, 'warning'), (0, _lib.useTextAlignProp)(textAlign), (0, _lib.useVerticalAlignProp)(verticalAlign), (0, _lib.useWidthProp)(width, 'wide'), className);
@@ -84966,9 +85136,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function TableHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var fullWidth = props.fullWidth;
+	  var children = props.children,
+	      className = props.className,
+	      fullWidth = props.fullWidth;
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(fullWidth, 'full-width'), className);
 	  var rest = (0, _lib.getUnhandledProps)(TableHeader, props);
@@ -85084,18 +85254,18 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function TableRow(props) {
-	  var active = props.active;
-	  var cellAs = props.cellAs;
-	  var cells = props.cells;
-	  var children = props.children;
-	  var className = props.className;
-	  var disabled = props.disabled;
-	  var error = props.error;
-	  var negative = props.negative;
-	  var positive = props.positive;
-	  var textAlign = props.textAlign;
-	  var verticalAlign = props.verticalAlign;
-	  var warning = props.warning;
+	  var active = props.active,
+	      cellAs = props.cellAs,
+	      cells = props.cells,
+	      children = props.children,
+	      className = props.className,
+	      disabled = props.disabled,
+	      error = props.error,
+	      negative = props.negative,
+	      positive = props.positive,
+	      textAlign = props.textAlign,
+	      verticalAlign = props.verticalAlign,
+	      warning = props.warning;
 	
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(error, 'error'), (0, _lib.useKeyOnly)(negative, 'negative'), (0, _lib.useKeyOnly)(positive, 'positive'), (0, _lib.useKeyOnly)(warning, 'warning'), (0, _lib.useTextAlignProp)(textAlign), (0, _lib.useVerticalAlignProp)(verticalAlign), className);
@@ -85234,11 +85404,11 @@
 	 * A container limits content to a maximum width
 	 */
 	function Container(props) {
-	  var text = props.text;
-	  var textAlign = props.textAlign;
-	  var fluid = props.fluid;
-	  var children = props.children;
-	  var className = props.className;
+	  var text = props.text,
+	      textAlign = props.textAlign,
+	      fluid = props.fluid,
+	      children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(text, 'text'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useTextAlignProp)(textAlign), 'container', className);
 	  var rest = (0, _lib.getUnhandledProps)(Container, props);
@@ -85334,15 +85504,15 @@
 	 * A divider visually segments content into groups
 	 */
 	function Divider(props) {
-	  var horizontal = props.horizontal;
-	  var vertical = props.vertical;
-	  var inverted = props.inverted;
-	  var fitted = props.fitted;
-	  var hidden = props.hidden;
-	  var section = props.section;
-	  var clearing = props.clearing;
-	  var children = props.children;
-	  var className = props.className;
+	  var horizontal = props.horizontal,
+	      vertical = props.vertical,
+	      inverted = props.inverted,
+	      fitted = props.fitted,
+	      hidden = props.hidden,
+	      section = props.section,
+	      clearing = props.clearing,
+	      children = props.children,
+	      className = props.className;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(horizontal, 'horizontal'), (0, _lib.useKeyOnly)(vertical, 'vertical'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(fitted, 'fitted'), (0, _lib.useKeyOnly)(hidden, 'hidden'), (0, _lib.useKeyOnly)(section, 'section'), (0, _lib.useKeyOnly)(clearing, 'clearing'), 'divider', className);
@@ -85447,8 +85617,8 @@
 	var names = ['ad', 'andorra', 'ae', 'united arab emirates', 'uae', 'af', 'afghanistan', 'ag', 'antigua', 'ai', 'anguilla', 'al', 'albania', 'am', 'armenia', 'an', 'netherlands antilles', 'ao', 'angola', 'ar', 'argentina', 'as', 'american samoa', 'at', 'austria', 'au', 'australia', 'aw', 'aruba', 'ax', 'aland islands', 'az', 'azerbaijan', 'ba', 'bosnia', 'bb', 'barbados', 'bd', 'bangladesh', 'be', 'belgium', 'bf', 'burkina faso', 'bg', 'bulgaria', 'bh', 'bahrain', 'bi', 'burundi', 'bj', 'benin', 'bm', 'bermuda', 'bn', 'brunei', 'bo', 'bolivia', 'br', 'brazil', 'bs', 'bahamas', 'bt', 'bhutan', 'bv', 'bouvet island', 'bw', 'botswana', 'by', 'belarus', 'bz', 'belize', 'ca', 'canada', 'cc', 'cocos islands', 'cd', 'congo', 'cf', 'central african republic', 'cg', 'congo brazzaville', 'ch', 'switzerland', 'ci', 'cote divoire', 'ck', 'cook islands', 'cl', 'chile', 'cm', 'cameroon', 'cn', 'china', 'co', 'colombia', 'cr', 'costa rica', 'cs', 'cu', 'cuba', 'cv', 'cape verde', 'cx', 'christmas island', 'cy', 'cyprus', 'cz', 'czech republic', 'de', 'germany', 'dj', 'djibouti', 'dk', 'denmark', 'dm', 'dominica', 'do', 'dominican republic', 'dz', 'algeria', 'ec', 'ecuador', 'ee', 'estonia', 'eg', 'egypt', 'eh', 'western sahara', 'er', 'eritrea', 'es', 'spain', 'et', 'ethiopia', 'eu', 'european union', 'fi', 'finland', 'fj', 'fiji', 'fk', 'falkland islands', 'fm', 'micronesia', 'fo', 'faroe islands', 'fr', 'france', 'ga', 'gabon', 'gb', 'united kingdom', 'gd', 'grenada', 'ge', 'georgia', 'gf', 'french guiana', 'gh', 'ghana', 'gi', 'gibraltar', 'gl', 'greenland', 'gm', 'gambia', 'gn', 'guinea', 'gp', 'guadeloupe', 'gq', 'equatorial guinea', 'gr', 'greece', 'gs', 'sandwich islands', 'gt', 'guatemala', 'gu', 'guam', 'gw', 'guinea-bissau', 'gy', 'guyana', 'hk', 'hong kong', 'hm', 'heard island', 'hn', 'honduras', 'hr', 'croatia', 'ht', 'haiti', 'hu', 'hungary', 'id', 'indonesia', 'ie', 'ireland', 'il', 'israel', 'in', 'india', 'io', 'indian ocean territory', 'iq', 'iraq', 'ir', 'iran', 'is', 'iceland', 'it', 'italy', 'jm', 'jamaica', 'jo', 'jordan', 'jp', 'japan', 'ke', 'kenya', 'kg', 'kyrgyzstan', 'kh', 'cambodia', 'ki', 'kiribati', 'km', 'comoros', 'kn', 'saint kitts and nevis', 'kp', 'north korea', 'kr', 'south korea', 'kw', 'kuwait', 'ky', 'cayman islands', 'kz', 'kazakhstan', 'la', 'laos', 'lb', 'lebanon', 'lc', 'saint lucia', 'li', 'liechtenstein', 'lk', 'sri lanka', 'lr', 'liberia', 'ls', 'lesotho', 'lt', 'lithuania', 'lu', 'luxembourg', 'lv', 'latvia', 'ly', 'libya', 'ma', 'morocco', 'mc', 'monaco', 'md', 'moldova', 'me', 'montenegro', 'mg', 'madagascar', 'mh', 'marshall islands', 'mk', 'macedonia', 'ml', 'mali', 'mm', 'myanmar', 'burma', 'mn', 'mongolia', 'mo', 'macau', 'mp', 'northern mariana islands', 'mq', 'martinique', 'mr', 'mauritania', 'ms', 'montserrat', 'mt', 'malta', 'mu', 'mauritius', 'mv', 'maldives', 'mw', 'malawi', 'mx', 'mexico', 'my', 'malaysia', 'mz', 'mozambique', 'na', 'namibia', 'nc', 'new caledonia', 'ne', 'niger', 'nf', 'norfolk island', 'ng', 'nigeria', 'ni', 'nicaragua', 'nl', 'netherlands', 'no', 'norway', 'np', 'nepal', 'nr', 'nauru', 'nu', 'niue', 'nz', 'new zealand', 'om', 'oman', 'pa', 'panama', 'pe', 'peru', 'pf', 'french polynesia', 'pg', 'new guinea', 'ph', 'philippines', 'pk', 'pakistan', 'pl', 'poland', 'pm', 'saint pierre', 'pn', 'pitcairn islands', 'pr', 'puerto rico', 'ps', 'palestine', 'pt', 'portugal', 'pw', 'palau', 'py', 'paraguay', 'qa', 'qatar', 're', 'reunion', 'ro', 'romania', 'rs', 'serbia', 'ru', 'russia', 'rw', 'rwanda', 'sa', 'saudi arabia', 'sb', 'solomon islands', 'sc', 'seychelles', 'gb sct', 'scotland', 'sd', 'sudan', 'se', 'sweden', 'sg', 'singapore', 'sh', 'saint helena', 'si', 'slovenia', 'sj', 'svalbard', 'jan mayen', 'sk', 'slovakia', 'sl', 'sierra leone', 'sm', 'san marino', 'sn', 'senegal', 'so', 'somalia', 'sr', 'suriname', 'st', 'sao tome', 'sv', 'el salvador', 'sy', 'syria', 'sz', 'swaziland', 'tc', 'caicos islands', 'td', 'chad', 'tf', 'french territories', 'tg', 'togo', 'th', 'thailand', 'tj', 'tajikistan', 'tk', 'tokelau', 'tl', 'timorleste', 'tm', 'turkmenistan', 'tn', 'tunisia', 'to', 'tonga', 'tr', 'turkey', 'tt', 'trinidad', 'tv', 'tuvalu', 'tw', 'taiwan', 'tz', 'tanzania', 'ua', 'ukraine', 'ug', 'uganda', 'um', 'us minor islands', 'us', 'america', 'united states', 'uy', 'uruguay', 'uz', 'uzbekistan', 'va', 'vatican city', 'vc', 'saint vincent', 've', 'venezuela', 'vg', 'british virgin islands', 'vi', 'us virgin islands', 'vn', 'vietnam', 'vu', 'vanuatu', 'gb wls', 'wales', 'wf', 'wallis and futuna', 'ws', 'samoa', 'ye', 'yemen', 'yt', 'mayotte', 'za', 'south africa', 'zm', 'zambia', 'zw', 'zimbabwe'];
 	
 	function Flag(props) {
-	  var className = props.className;
-	  var name = props.name;
+	  var className = props.className,
+	      name = props.name;
 	
 	  var classes = (0, _classnames2.default)(name, className, 'flag');
 	  var rest = (0, _lib.getUnhandledProps)(Flag, props);
@@ -85479,6 +85649,10 @@
 	Flag.defaultProps = {
 	  as: 'i'
 	};
+	
+	Flag.create = (0, _lib.createShorthandFactory)(Flag, function (value) {
+	  return { name: value };
+	});
 	
 	exports.default = Flag;
 
@@ -85555,22 +85729,22 @@
 	 * A header provides a short summary of content
 	 */
 	function Header(props) {
-	  var color = props.color;
-	  var content = props.content;
-	  var dividing = props.dividing;
-	  var block = props.block;
-	  var attached = props.attached;
-	  var floated = props.floated;
-	  var inverted = props.inverted;
-	  var disabled = props.disabled;
-	  var sub = props.sub;
-	  var size = props.size;
-	  var textAlign = props.textAlign;
-	  var icon = props.icon;
-	  var image = props.image;
-	  var children = props.children;
-	  var className = props.className;
-	  var subheader = props.subheader;
+	  var color = props.color,
+	      content = props.content,
+	      dividing = props.dividing,
+	      block = props.block,
+	      attached = props.attached,
+	      floated = props.floated,
+	      inverted = props.inverted,
+	      disabled = props.disabled,
+	      sub = props.sub,
+	      size = props.size,
+	      textAlign = props.textAlign,
+	      icon = props.icon,
+	      image = props.image,
+	      children = props.children,
+	      className = props.className,
+	      subheader = props.subheader;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', size, color, (0, _lib.useKeyOrValueAndKey)(attached, 'attached'), (0, _lib.useKeyOnly)(block, 'block'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(dividing, 'dividing'), (0, _lib.useValueAndKey)(floated, 'floated'), (0, _lib.useKeyOnly)(icon === true, 'icon'), (0, _lib.useKeyOnly)(image === true, 'image'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(sub, 'sub'), (0, _lib.useTextAlignProp)(textAlign), className, 'header');
@@ -85734,9 +85908,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function HeaderSubheader(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)('sub header', className);
 	  var rest = (0, _lib.getUnhandledProps)(HeaderSubheader, props);
@@ -85802,8 +85976,8 @@
 	 * Header content wraps the main content when there is an adjacent Icon or Image.
 	 */
 	function HeaderContent(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)(className, 'content');
 	  var rest = (0, _lib.getUnhandledProps)(HeaderContent, props);
@@ -85916,22 +86090,22 @@
 	 * A list groups related content
 	 **/
 	function List(props) {
-	  var animated = props.animated;
-	  var bulleted = props.bulleted;
-	  var celled = props.celled;
-	  var children = props.children;
-	  var className = props.className;
-	  var divided = props.divided;
-	  var floated = props.floated;
-	  var horizontal = props.horizontal;
-	  var inverted = props.inverted;
-	  var items = props.items;
-	  var link = props.link;
-	  var ordered = props.ordered;
-	  var relaxed = props.relaxed;
-	  var size = props.size;
-	  var selection = props.selection;
-	  var verticalAlign = props.verticalAlign;
+	  var animated = props.animated,
+	      bulleted = props.bulleted,
+	      celled = props.celled,
+	      children = props.children,
+	      className = props.className,
+	      divided = props.divided,
+	      floated = props.floated,
+	      horizontal = props.horizontal,
+	      inverted = props.inverted,
+	      items = props.items,
+	      link = props.link,
+	      ordered = props.ordered,
+	      relaxed = props.relaxed,
+	      size = props.size,
+	      selection = props.selection,
+	      verticalAlign = props.verticalAlign;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', size, (0, _lib.useKeyOnly)(animated, 'animated'), (0, _lib.useKeyOnly)(bulleted, 'bulleted'), (0, _lib.useKeyOnly)(celled, 'celled'), (0, _lib.useKeyOnly)(divided, 'divided'), (0, _lib.useKeyOnly)(horizontal, 'horizontal'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(link, 'link'), (0, _lib.useKeyOnly)(ordered, 'ordered'), (0, _lib.useKeyOnly)(selection, 'selection'), (0, _lib.useKeyOrValueAndKey)(relaxed, 'relaxed'), (0, _lib.useValueAndKey)(floated, 'floated'), (0, _lib.useVerticalAlignProp)(verticalAlign), 'list', className);
@@ -86064,13 +86238,13 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ListContent(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var description = props.description;
-	  var floated = props.floated;
-	  var header = props.header;
-	  var verticalAlign = props.verticalAlign;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      description = props.description,
+	      floated = props.floated,
+	      header = props.header,
+	      verticalAlign = props.verticalAlign;
 	
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useValueAndKey)(floated, 'floated'), (0, _lib.useVerticalAlignProp)(verticalAlign), 'content', className);
@@ -86164,9 +86338,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ListDescription(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'description');
 	  var rest = (0, _lib.getUnhandledProps)(ListDescription, props);
@@ -86233,9 +86407,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ListHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'header');
 	  var rest = (0, _lib.getUnhandledProps)(ListHeader, props);
@@ -86306,8 +86480,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ListIcon(props) {
-	  var className = props.className;
-	  var verticalAlign = props.verticalAlign;
+	  var className = props.className,
+	      verticalAlign = props.verticalAlign;
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useVerticalAlignProp)(verticalAlign), className);
 	  var rest = (0, _lib.getUnhandledProps)(ListIcon, props);
@@ -86390,16 +86564,16 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ListItem(props) {
-	  var active = props.active;
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var description = props.description;
-	  var disabled = props.disabled;
-	  var header = props.header;
-	  var icon = props.icon;
-	  var image = props.image;
-	  var value = props.value;
+	  var active = props.active,
+	      children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      description = props.description,
+	      disabled = props.disabled,
+	      header = props.header,
+	      icon = props.icon,
+	      image = props.image,
+	      value = props.value;
 	
 	
 	  var ElementType = (0, _lib.getElementType)(ListItem, props);
@@ -86544,8 +86718,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function ListList(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	
 	  var rest = (0, _lib.getUnhandledProps)(ListList, props);
@@ -86628,15 +86802,15 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function Loader(props) {
-	  var active = props.active;
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var disabled = props.disabled;
-	  var indeterminate = props.indeterminate;
-	  var inline = props.inline;
-	  var inverted = props.inverted;
-	  var size = props.size;
+	  var active = props.active,
+	      children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      disabled = props.disabled,
+	      indeterminate = props.indeterminate,
+	      inline = props.inline,
+	      inverted = props.inverted,
+	      size = props.size;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', size, (0, _lib.useKeyOnly)(active, 'active'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(indeterminate, 'indeterminate'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(children || content, 'text'), (0, _lib.useKeyOrValueAndKey)(inline, 'inline'), 'loader', className);
@@ -86750,14 +86924,14 @@
 	 * A rail is used to show accompanying content outside the boundaries of the main view of a site.
 	 */
 	function Rail(props) {
-	  var attached = props.attached;
-	  var children = props.children;
-	  var className = props.className;
-	  var close = props.close;
-	  var dividing = props.dividing;
-	  var internal = props.internal;
-	  var position = props.position;
-	  var size = props.size;
+	  var attached = props.attached,
+	      children = props.children,
+	      className = props.className,
+	      close = props.close,
+	      dividing = props.dividing,
+	      internal = props.internal,
+	      position = props.position,
+	      size = props.size;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', position, size, (0, _lib.useKeyOnly)(attached, 'attached'), (0, _lib.useKeyOnly)(dividing, 'dividing'), (0, _lib.useKeyOnly)(internal, 'internal'), (0, _lib.useKeyOrValueAndKey)(close, 'close'), 'rail', className);
@@ -86873,27 +87047,27 @@
 	 * A segment is used to create a grouping of related content.
 	 */
 	function Segment(props) {
-	  var attached = props.attached;
-	  var basic = props.basic;
-	  var children = props.children;
-	  var circular = props.circular;
-	  var className = props.className;
-	  var clearing = props.clearing;
-	  var color = props.color;
-	  var compact = props.compact;
-	  var disabled = props.disabled;
-	  var floated = props.floated;
-	  var inverted = props.inverted;
-	  var loading = props.loading;
-	  var padded = props.padded;
-	  var piled = props.piled;
-	  var raised = props.raised;
-	  var secondary = props.secondary;
-	  var size = props.size;
-	  var stacked = props.stacked;
-	  var tertiary = props.tertiary;
-	  var textAlign = props.textAlign;
-	  var vertical = props.vertical;
+	  var attached = props.attached,
+	      basic = props.basic,
+	      children = props.children,
+	      circular = props.circular,
+	      className = props.className,
+	      clearing = props.clearing,
+	      color = props.color,
+	      compact = props.compact,
+	      disabled = props.disabled,
+	      floated = props.floated,
+	      inverted = props.inverted,
+	      loading = props.loading,
+	      padded = props.padded,
+	      piled = props.piled,
+	      raised = props.raised,
+	      secondary = props.secondary,
+	      size = props.size,
+	      stacked = props.stacked,
+	      tertiary = props.tertiary,
+	      textAlign = props.textAlign,
+	      vertical = props.vertical;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', color, size, (0, _lib.useKeyOrValueAndKey)(attached, 'attached'), (0, _lib.useKeyOnly)(basic, 'basic'), (0, _lib.useKeyOnly)(circular, 'circular'), (0, _lib.useKeyOnly)(clearing, 'clearing'), (0, _lib.useKeyOnly)(compact, 'compact'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useValueAndKey)(floated, 'floated'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(loading, 'loading'), (0, _lib.useKeyOrValueAndKey)(padded, 'padded'), (0, _lib.useKeyOnly)(piled, 'piled'), (0, _lib.useKeyOnly)(raised, 'raised'), (0, _lib.useKeyOnly)(secondary, 'secondary'), (0, _lib.useKeyOnly)(stacked, 'stacked'), (0, _lib.useKeyOnly)(tertiary, 'tertiary'), (0, _lib.useTextAlignProp)(textAlign), (0, _lib.useKeyOnly)(vertical, 'vertical'), className, 'segment');
@@ -87027,14 +87201,14 @@
 	 * A group of segments can be formatted to appear together.
 	 */
 	function SegmentGroup(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var compact = props.compact;
-	  var horizontal = props.horizontal;
-	  var piled = props.piled;
-	  var raised = props.raised;
-	  var size = props.size;
-	  var stacked = props.stacked;
+	  var children = props.children,
+	      className = props.className,
+	      compact = props.compact,
+	      horizontal = props.horizontal,
+	      piled = props.piled,
+	      raised = props.raised,
+	      size = props.size,
+	      stacked = props.stacked;
 	
 	  var classes = (0, _classnames2.default)('ui', size, (0, _lib.useKeyOnly)(horizontal, 'horizontal'), (0, _lib.useKeyOnly)(compact, 'compact'), (0, _lib.useKeyOnly)(piled, 'piled'), (0, _lib.useKeyOnly)(raised, 'raised'), (0, _lib.useKeyOnly)(stacked, 'stacked'), className, 'segments');
 	  var rest = (0, _lib.getUnhandledProps)(SegmentGroup, props);
@@ -87192,18 +87366,18 @@
 	  _createClass(Step, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var active = _props.active;
-	      var children = _props.children;
-	      var className = _props.className;
-	      var completed = _props.completed;
-	      var description = _props.description;
-	      var disabled = _props.disabled;
-	      var href = _props.href;
-	      var icon = _props.icon;
-	      var link = _props.link;
-	      var onClick = _props.onClick;
-	      var title = _props.title;
+	      var _props = this.props,
+	          active = _props.active,
+	          children = _props.children,
+	          className = _props.className,
+	          completed = _props.completed,
+	          description = _props.description,
+	          disabled = _props.disabled,
+	          href = _props.href,
+	          icon = _props.icon,
+	          link = _props.link,
+	          onClick = _props.onClick,
+	          title = _props.title;
 	
 	
 	      var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), (0, _lib.useKeyOnly)(completed, 'completed'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(link, 'link'), 'step', className);
@@ -87318,10 +87492,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function StepContent(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var description = props.description;
-	  var title = props.title;
+	  var children = props.children,
+	      className = props.className,
+	      description = props.description,
+	      title = props.title;
 	
 	  var classes = (0, _classnames2.default)(className, 'content');
 	  var rest = (0, _lib.getUnhandledProps)(StepContent, props);
@@ -87400,9 +87574,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function StepDescription(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var description = props.description;
+	  var children = props.children,
+	      className = props.className,
+	      description = props.description;
 	
 	  var classes = (0, _classnames2.default)(className, 'description');
 	  var rest = (0, _lib.getUnhandledProps)(StepDescription, props);
@@ -87465,9 +87639,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function StepTitle(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var title = props.title;
+	  var children = props.children,
+	      className = props.className,
+	      title = props.title;
 	
 	  var classes = (0, _classnames2.default)(className, 'title');
 	  var rest = (0, _lib.getUnhandledProps)(StepTitle, props);
@@ -87542,14 +87716,14 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function StepGroup(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var fluid = props.fluid;
-	  var items = props.items;
-	  var ordered = props.ordered;
-	  var size = props.size;
-	  var stackable = props.stackable;
-	  var vertical = props.vertical;
+	  var children = props.children,
+	      className = props.className,
+	      fluid = props.fluid,
+	      items = props.items,
+	      ordered = props.ordered,
+	      size = props.size,
+	      stackable = props.stackable,
+	      vertical = props.vertical;
 	
 	  var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(ordered, 'ordered'), (0, _lib.useValueAndKey)(stackable, 'stackable'), (0, _lib.useKeyOnly)(vertical, 'vertical'), size, className, 'steps');
 	  var rest = (0, _lib.getUnhandledProps)(StepGroup, props);
@@ -87774,12 +87948,12 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var className = _props.className;
-	      var fluid = _props.fluid;
-	      var inverted = _props.inverted;
-	      var panels = _props.panels;
-	      var styled = _props.styled;
+	      var _props = this.props,
+	          className = _props.className,
+	          fluid = _props.fluid,
+	          inverted = _props.inverted,
+	          panels = _props.panels,
+	          styled = _props.styled;
 	
 	
 	      var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(inverted, 'inverted'), (0, _lib.useKeyOnly)(styled, 'styled'), 'accordion', className);
@@ -87875,9 +88049,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function AccordionContent(props) {
-	  var active = props.active;
-	  var children = props.children;
-	  var className = props.className;
+	  var active = props.active,
+	      children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)('content', (0, _lib.useKeyOnly)(active, 'active'), className);
 	  var rest = (0, _lib.getUnhandledProps)(AccordionContent, props);
@@ -87977,10 +88151,10 @@
 	  _createClass(AccordionTitle, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var active = _props.active;
-	      var children = _props.children;
-	      var className = _props.className;
+	      var _props = this.props,
+	          active = _props.active,
+	          children = _props.children,
+	          className = _props.className;
 	
 	
 	      var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), 'title', className);
@@ -88057,13 +88231,17 @@
 	  value: true
 	});
 	
-	var _keys2 = __webpack_require__(/*! lodash/keys */ 759);
-	
-	var _keys3 = _interopRequireDefault(_keys2);
-	
 	var _pick2 = __webpack_require__(/*! lodash/pick */ 751);
 	
 	var _pick3 = _interopRequireDefault(_pick2);
+	
+	var _omit2 = __webpack_require__(/*! lodash/omit */ 700);
+	
+	var _omit3 = _interopRequireDefault(_omit2);
+	
+	var _keys2 = __webpack_require__(/*! lodash/keys */ 759);
+	
+	var _keys3 = _interopRequireDefault(_keys2);
 	
 	var _assign2 = __webpack_require__(/*! lodash/assign */ 1073);
 	
@@ -88149,17 +88327,34 @@
 	      args[_key] = arguments[_key];
 	    }
 	
-	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Popup.__proto__ || Object.getPrototypeOf(Popup)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _this.hideOnScroll = function (event) {
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Popup.__proto__ || Object.getPrototypeOf(Popup)).call.apply(_ref, [this].concat(args))), _this), _this.state = {}, _this.hideOnScroll = function (e) {
 	      _this.setState({ closed: true });
 	      window.removeEventListener('scroll', _this.hideOnScroll);
 	      setTimeout(function () {
 	        return _this.setState({ closed: false });
 	      }, 50);
-	    }, _this.onOpen = function (event) {
-	      _this.coords = event.currentTarget.getBoundingClientRect();
+	    }, _this.handleClose = function (e) {
+	      var onClose = _this.props.onClose;
+	
+	      if (onClose) onClose(e, _this.props);
+	    }, _this.handleOpen = function (e) {
+	      _this.coords = e.currentTarget.getBoundingClientRect();
+	
+	      var onOpen = _this.props.onOpen;
+	
+	      if (onOpen) onOpen(e, _this.props);
+	    }, _this.handlePortalMount = function (e) {
 	      if (_this.props.hideOnScroll) {
 	        window.addEventListener('scroll', _this.hideOnScroll);
 	      }
+	
+	      var onMount = _this.props.onMount;
+	
+	      if (onMount) onMount(e, _this.props);
+	    }, _this.handlePortalUnmount = function (e) {
+	      var onUnmount = _this.props.onUnmount;
+	
+	      if (onUnmount) onUnmount(e, _this.props);
 	    }, _this.popupMounted = function (ref) {
 	      _this.popupCoords = ref ? ref.getBoundingClientRect() : null;
 	      _this.setPopupStyle();
@@ -88171,12 +88366,12 @@
 	    value: function computePopupStyle(positions) {
 	      var style = { position: 'absolute' };
 	      var offset = this.props.offset;
-	      var _window = window;
-	      var pageYOffset = _window.pageYOffset;
-	      var pageXOffset = _window.pageXOffset;
-	      var _document$documentEle = document.documentElement;
-	      var clientWidth = _document$documentEle.clientWidth;
-	      var clientHeight = _document$documentEle.clientHeight;
+	      var _window = window,
+	          pageYOffset = _window.pageYOffset,
+	          pageXOffset = _window.pageXOffset;
+	      var _document$documentEle = document.documentElement,
+	          clientWidth = _document$documentEle.clientWidth,
+	          clientHeight = _document$documentEle.clientHeight;
 	
 	
 	      if ((0, _includes3.default)(positions, 'right')) {
@@ -88229,12 +88424,12 @@
 	  }, {
 	    key: 'isStyleInViewport',
 	    value: function isStyleInViewport(style) {
-	      var _window2 = window;
-	      var pageYOffset = _window2.pageYOffset;
-	      var pageXOffset = _window2.pageXOffset;
-	      var _document$documentEle2 = document.documentElement;
-	      var clientWidth = _document$documentEle2.clientWidth;
-	      var clientHeight = _document$documentEle2.clientHeight;
+	      var _window2 = window,
+	          pageYOffset = _window2.pageYOffset,
+	          pageXOffset = _window2.pageXOffset;
+	      var _document$documentEle2 = document.documentElement,
+	          clientWidth = _document$documentEle2.clientWidth,
+	          clientHeight = _document$documentEle2.clientHeight;
 	
 	
 	      var element = {
@@ -88285,10 +88480,11 @@
 	  }, {
 	    key: 'getPortalProps',
 	    value: function getPortalProps() {
-	      var portalProps = { onOpen: this.onOpen };
-	      var _props = this.props;
-	      var on = _props.on;
-	      var hoverable = _props.hoverable;
+	      var portalProps = {};
+	
+	      var _props = this.props,
+	          on = _props.on,
+	          hoverable = _props.hoverable;
 	
 	
 	      switch (on) {
@@ -88323,29 +88519,32 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _props2 = this.props;
-	      var basic = _props2.basic;
-	      var children = _props2.children;
-	      var className = _props2.className;
-	      var content = _props2.content;
-	      var flowing = _props2.flowing;
-	      var header = _props2.header;
-	      var inverted = _props2.inverted;
-	      var size = _props2.size;
-	      var trigger = _props2.trigger;
-	      var wide = _props2.wide;
-	      var _state = this.state;
-	      var positioning = _state.positioning;
-	      var closed = _state.closed;
+	      var _props2 = this.props,
+	          basic = _props2.basic,
+	          children = _props2.children,
+	          className = _props2.className,
+	          content = _props2.content,
+	          flowing = _props2.flowing,
+	          header = _props2.header,
+	          inverted = _props2.inverted,
+	          size = _props2.size,
+	          trigger = _props2.trigger,
+	          wide = _props2.wide;
+	      var _state = this.state,
+	          positioning = _state.positioning,
+	          closed = _state.closed;
 	
 	      var style = (0, _assign3.default)({}, this.state.style, this.props.style);
 	      var classes = (0, _classnames2.default)('ui', positioning, size, (0, _lib.useKeyOrValueAndKey)(wide, 'wide'), (0, _lib.useKeyOnly)(basic, 'basic'), (0, _lib.useKeyOnly)(flowing, 'flowing'), (0, _lib.useKeyOnly)(inverted, 'inverted'), 'popup transition visible', className);
 	
 	      if (closed) return trigger;
 	
-	      var rest = (0, _lib.getUnhandledProps)(Popup, this.props);
+	      var unhandled = (0, _lib.getUnhandledProps)(Popup, this.props);
+	      var portalPropNames = (0, _keys3.default)(_Portal2.default.propTypes);
+	
+	      var rest = (0, _omit3.default)(unhandled, portalPropNames);
+	      var portalProps = (0, _pick3.default)(unhandled, portalPropNames);
 	      var ElementType = (0, _lib.getElementType)(Popup, this.props);
-	      var portalProps = (0, _pick3.default)(rest, (0, _keys3.default)(_Portal2.default.propTypes));
 	
 	      var popupJSX = _react2.default.createElement(
 	        ElementType,
@@ -88357,9 +88556,13 @@
 	
 	      return _react2.default.createElement(
 	        _Portal2.default,
-	        _extends({}, portalProps, {
-	          trigger: trigger
-	        }, this.getPortalProps()),
+	        _extends({}, this.getPortalProps(), portalProps, {
+	          trigger: trigger,
+	          onClose: this.handleClose,
+	          onMount: this.handlePortalMount,
+	          onOpen: this.handleOpen,
+	          onUnmount: this.handlePortalUnmount
+	        }),
 	        popupJSX
 	      );
 	    }
@@ -88405,6 +88608,18 @@
 	
 	  /** Event triggering the popup */
 	  on: _react.PropTypes.oneOf(_meta.props.on),
+	
+	  /** Called when a close event happens */
+	  onClose: _react.PropTypes.func,
+	
+	  /** Called when the portal is mounted on the DOM */
+	  onMount: _react.PropTypes.func,
+	
+	  /** Called when an open event happens */
+	  onOpen: _react.PropTypes.func,
+	
+	  /** Called when the portal is unmounted from the DOM */
+	  onUnmount: _react.PropTypes.func,
 	
 	  /** Positioning for the popover */
 	  positioning: _react.PropTypes.oneOf(_meta.props.positioning),
@@ -88628,8 +88843,8 @@
 	 * A PopupContent displays the content body of a Popover.
 	 */
 	function PopupContent(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)('content', className);
 	  var rest = (0, _lib.getUnhandledProps)(PopupContent, props);
@@ -88693,8 +88908,8 @@
 	 * A PopupHeader displays a header in a Popover.
 	 */
 	function PopupHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)('header', className);
 	  var rest = (0, _lib.getUnhandledProps)(PopupHeader, props);
@@ -88795,25 +89010,25 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function Progress(props) {
-	  var active = props.active;
-	  var attached = props.attached;
-	  var autoSuccess = props.autoSuccess;
-	  var color = props.color;
-	  var children = props.children;
-	  var className = props.className;
-	  var disabled = props.disabled;
-	  var error = props.error;
-	  var indicating = props.indicating;
-	  var inverted = props.inverted;
-	  var label = props.label;
-	  var percent = props.percent;
-	  var precision = props.precision;
-	  var progress = props.progress;
-	  var size = props.size;
-	  var success = props.success;
-	  var total = props.total;
-	  var value = props.value;
-	  var warning = props.warning;
+	  var active = props.active,
+	      attached = props.attached,
+	      autoSuccess = props.autoSuccess,
+	      color = props.color,
+	      children = props.children,
+	      className = props.className,
+	      disabled = props.disabled,
+	      error = props.error,
+	      indicating = props.indicating,
+	      inverted = props.inverted,
+	      label = props.label,
+	      percent = props.percent,
+	      precision = props.precision,
+	      progress = props.progress,
+	      size = props.size,
+	      success = props.success,
+	      total = props.total,
+	      value = props.value,
+	      warning = props.warning;
 	
 	
 	  var isAutoSuccess = autoSuccess && (percent >= 100 || value >= total);
@@ -89210,16 +89425,16 @@
 	    value: function render() {
 	      var _this2 = this;
 	
-	      var _props = this.props;
-	      var className = _props.className;
-	      var disabled = _props.disabled;
-	      var icon = _props.icon;
-	      var maxRating = _props.maxRating;
-	      var size = _props.size;
-	      var _state = this.state;
-	      var rating = _state.rating;
-	      var selectedIndex = _state.selectedIndex;
-	      var isSelecting = _state.isSelecting;
+	      var _props = this.props,
+	          className = _props.className,
+	          disabled = _props.disabled,
+	          icon = _props.icon,
+	          maxRating = _props.maxRating,
+	          size = _props.size;
+	      var _state = this.state,
+	          rating = _state.rating,
+	          selectedIndex = _state.selectedIndex,
+	          isSelecting = _state.isSelecting;
 	
 	
 	      var classes = (0, _classnames2.default)('ui', icon, size, (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(isSelecting && !disabled && selectedIndex >= 0, 'selected'), 'rating', className);
@@ -89292,11 +89507,11 @@
 	  var _this3 = this;
 	
 	  this.handleIconClick = function (e, index) {
-	    var _props2 = _this3.props;
-	    var clearable = _props2.clearable;
-	    var disabled = _props2.disabled;
-	    var maxRating = _props2.maxRating;
-	    var onRate = _props2.onRate;
+	    var _props2 = _this3.props,
+	        clearable = _props2.clearable,
+	        disabled = _props2.disabled,
+	        maxRating = _props2.maxRating,
+	        onRate = _props2.onRate;
 	    var rating = _this3.state.rating;
 	
 	    if (disabled) return;
@@ -89388,16 +89603,16 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = RatingIcon.__proto__ || Object.getPrototypeOf(RatingIcon)).call.apply(_ref, [this].concat(args))), _this), _this.handleClick = function (e) {
-	      var _this$props = _this.props;
-	      var onClick = _this$props.onClick;
-	      var index = _this$props.index;
+	      var _this$props = _this.props,
+	          onClick = _this$props.onClick,
+	          index = _this$props.index;
 	
 	
 	      if (onClick) onClick(e, index);
 	    }, _this.handleMouseEnter = function () {
-	      var _this$props2 = _this.props;
-	      var onMouseEnter = _this$props2.onMouseEnter;
-	      var index = _this$props2.index;
+	      var _this$props2 = _this.props,
+	          onMouseEnter = _this$props2.onMouseEnter,
+	          index = _this$props2.index;
 	
 	
 	      if (onMouseEnter) onMouseEnter(index);
@@ -89407,9 +89622,9 @@
 	  _createClass(RatingIcon, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var active = _props.active;
-	      var selected = _props.selected;
+	      var _props = this.props,
+	          active = _props.active,
+	          selected = _props.selected;
 	
 	      var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), (0, _lib.useKeyOnly)(selected, 'selected'), 'icon');
 	
@@ -89671,9 +89886,9 @@
 	      debug(e.target.value);
 	      // prevent propagating to this.props.onChange()
 	      e.stopPropagation();
-	      var _this$props = _this.props;
-	      var onSearchChange = _this$props.onSearchChange;
-	      var minCharacters = _this$props.minCharacters;
+	      var _this$props = _this.props,
+	          onSearchChange = _this$props.onSearchChange,
+	          minCharacters = _this$props.minCharacters;
 	      var open = _this.state.open;
 	
 	      var newQuery = e.target.value;
@@ -89689,16 +89904,16 @@
 	
 	      _this.setValue(newQuery);
 	    }, _this.getFlattenedResults = function () {
-	      var _this$props2 = _this.props;
-	      var category = _this$props2.category;
-	      var results = _this$props2.results;
+	      var _this$props2 = _this.props,
+	          category = _this$props2.category,
+	          results = _this$props2.results;
 	
 	
 	      return !category ? results : (0, _reduce3.default)(results, function (memo, categoryData) {
 	        return memo.concat(categoryData.results);
 	      }, []);
 	    }, _this.getSelectedResult = function () {
-	      var index = arguments.length <= 0 || arguments[0] === undefined ? _this.state.selectedIndex : arguments[0];
+	      var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.state.selectedIndex;
 	
 	      var results = _this.getFlattenedResults();
 	      return (0, _get4.default)(results, index);
@@ -89735,11 +89950,13 @@
 	      var isOutOfUpperView = item.offsetTop < menu.scrollTop;
 	      var isOutOfLowerView = item.offsetTop + item.clientHeight > menu.scrollTop + menu.clientHeight;
 	
-	      if (isOutOfUpperView || isOutOfLowerView) {
+	      if (isOutOfUpperView) {
 	        menu.scrollTop = item.offsetTop;
+	      } else if (isOutOfLowerView) {
+	        menu.scrollTop = item.offsetTop + item.clientHeight - menu.clientHeight;
 	      }
 	    }, _this.tryOpen = function () {
-	      var currentValue = arguments.length <= 0 || arguments[0] === undefined ? _this.state.value : arguments[0];
+	      var currentValue = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _this.state.value;
 	
 	      debug('open()');
 	
@@ -89755,9 +89972,9 @@
 	      debug('close()');
 	      _this.trySetState({ open: false });
 	    }, _this.renderSearchInput = function () {
-	      var _this$props3 = _this.props;
-	      var icon = _this$props3.icon;
-	      var placeholder = _this$props3.placeholder;
+	      var _this$props3 = _this.props,
+	          icon = _this$props3.icon,
+	          placeholder = _this$props3.placeholder;
 	      var value = _this.state.value;
 	
 	
@@ -89772,9 +89989,9 @@
 	        icon: icon
 	      });
 	    }, _this.renderNoResults = function () {
-	      var _this$props4 = _this.props;
-	      var noResultsMessage = _this$props4.noResultsMessage;
-	      var noResultsDescription = _this$props4.noResultsDescription;
+	      var _this$props4 = _this.props,
+	          noResultsMessage = _this$props4.noResultsMessage,
+	          noResultsDescription = _this$props4.noResultsDescription;
 	
 	
 	      return _react2.default.createElement(
@@ -89792,11 +90009,10 @@
 	        )
 	      );
 	    }, _this.renderResult = function (_ref2, index, _array) {
-	      var childKey = _ref2.childKey;
+	      var childKey = _ref2.childKey,
+	          result = _objectWithoutProperties(_ref2, ['childKey']);
 	
-	      var result = _objectWithoutProperties(_ref2, ['childKey']);
-	
-	      var offset = arguments.length <= 3 || arguments[3] === undefined ? 0 : arguments[3];
+	      var offset = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
 	      var resultRenderer = _this.props.resultRenderer;
 	      var selectedIndex = _this.state.selectedIndex;
 	
@@ -89819,18 +90035,17 @@
 	
 	      return (0, _map3.default)(results, _this.renderResult);
 	    }, _this.renderCategories = function () {
-	      var _this$props5 = _this.props;
-	      var categoryRenderer = _this$props5.categoryRenderer;
-	      var categories = _this$props5.results;
+	      var _this$props5 = _this.props,
+	          categoryRenderer = _this$props5.categoryRenderer,
+	          categories = _this$props5.results;
 	      var selectedIndex = _this.state.selectedIndex;
 	
 	
 	      var count = 0;
 	
 	      return (0, _map3.default)(categories, function (_ref3, name, index) {
-	        var childKey = _ref3.childKey;
-	
-	        var category = _objectWithoutProperties(_ref3, ['childKey']);
+	        var childKey = _ref3.childKey,
+	            category = _objectWithoutProperties(_ref3, ['childKey']);
 	
 	        var categoryProps = _extends({
 	          key: childKey || category.name,
@@ -89848,10 +90063,10 @@
 	        );
 	      });
 	    }, _this.renderMenuContent = function () {
-	      var _this$props6 = _this.props;
-	      var category = _this$props6.category;
-	      var showNoResults = _this$props6.showNoResults;
-	      var results = _this$props6.results;
+	      var _this$props6 = _this.props,
+	          category = _this$props6.category,
+	          showNoResults = _this$props6.showNoResults,
+	          results = _this$props6.results;
 	
 	
 	      if ((0, _isEmpty3.default)(results)) {
@@ -89880,9 +90095,9 @@
 	    value: function componentWillMount() {
 	      if (_get2(Search.prototype.__proto__ || Object.getPrototypeOf(Search.prototype), 'componentWillMount', this)) _get2(Search.prototype.__proto__ || Object.getPrototypeOf(Search.prototype), 'componentWillMount', this).call(this);
 	      debug('componentWillMount()');
-	      var _state = this.state;
-	      var open = _state.open;
-	      var value = _state.value;
+	      var _state = this.state,
+	          open = _state.open,
+	          value = _state.value;
 	
 	
 	      this.setValue(value);
@@ -90005,17 +90220,17 @@
 	      debug('render()');
 	      debug('props', this.props);
 	      debug('state', this.state);
-	      var _state2 = this.state;
-	      var searchClasses = _state2.searchClasses;
-	      var focus = _state2.focus;
-	      var open = _state2.open;
-	      var _props = this.props;
-	      var aligned = _props.aligned;
-	      var category = _props.category;
-	      var className = _props.className;
-	      var fluid = _props.fluid;
-	      var loading = _props.loading;
-	      var size = _props.size;
+	      var _state2 = this.state,
+	          searchClasses = _state2.searchClasses,
+	          focus = _state2.focus,
+	          open = _state2.open;
+	      var _props = this.props,
+	          aligned = _props.aligned,
+	          category = _props.category,
+	          className = _props.className,
+	          fluid = _props.fluid,
+	          loading = _props.loading,
+	          size = _props.size;
 	
 	      // Classes
 	
@@ -90338,10 +90553,10 @@
 	};
 	
 	function SearchCategory(props) {
-	  var active = props.active;
-	  var children = props.children;
-	  var className = props.className;
-	  var renderer = props.renderer;
+	  var active = props.active,
+	      children = props.children,
+	      className = props.className,
+	      renderer = props.renderer;
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), 'category', className);
 	  var rest = (0, _lib.getUnhandledProps)(SearchCategory, props);
@@ -90436,10 +90651,10 @@
 	// Note: To avoid requiring a wrapping div, we return an array here so to
 	// prevent rendering issues each node needs a unique key.
 	var defaultRenderer = function defaultRenderer(_ref) {
-	  var image = _ref.image;
-	  var price = _ref.price;
-	  var title = _ref.title;
-	  var description = _ref.description;
+	  var image = _ref.image,
+	      price = _ref.price,
+	      title = _ref.title,
+	      description = _ref.description;
 	  return [image && _react2.default.createElement(
 	    'div',
 	    { key: 'image', className: 'image' },
@@ -90480,9 +90695,9 @@
 	    }
 	
 	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref2 = SearchResult.__proto__ || Object.getPrototypeOf(SearchResult)).call.apply(_ref2, [this].concat(args))), _this), _this.handleClick = function (e) {
-	      var _this$props = _this.props;
-	      var id = _this$props.id;
-	      var onClick = _this$props.onClick;
+	      var _this$props = _this.props,
+	          id = _this$props.id,
+	          onClick = _this$props.onClick;
 	
 	
 	      if (onClick) onClick(e, id);
@@ -90492,10 +90707,10 @@
 	  _createClass(SearchResult, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var active = _props.active;
-	      var className = _props.className;
-	      var renderer = _props.renderer;
+	      var _props = this.props,
+	          active = _props.active,
+	          className = _props.className,
+	          renderer = _props.renderer;
 	
 	
 	      var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), 'result', className);
@@ -90586,8 +90801,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function SearchResults(props) {
-	  var children = props.children;
-	  var className = props.className;
+	  var children = props.children,
+	      className = props.className;
 	
 	  var classes = (0, _classnames2.default)('results transition', className);
 	  var rest = (0, _lib.getUnhandledProps)(SearchResults, props);
@@ -90715,20 +90930,20 @@
 	  _createClass(Card, [{
 	    key: 'render',
 	    value: function render() {
-	      var _props = this.props;
-	      var centered = _props.centered;
-	      var children = _props.children;
-	      var className = _props.className;
-	      var color = _props.color;
-	      var description = _props.description;
-	      var extra = _props.extra;
-	      var fluid = _props.fluid;
-	      var header = _props.header;
-	      var href = _props.href;
-	      var image = _props.image;
-	      var meta = _props.meta;
-	      var onClick = _props.onClick;
-	      var raised = _props.raised;
+	      var _props = this.props,
+	          centered = _props.centered,
+	          children = _props.children,
+	          className = _props.className,
+	          color = _props.color,
+	          description = _props.description,
+	          extra = _props.extra,
+	          fluid = _props.fluid,
+	          header = _props.header,
+	          href = _props.href,
+	          image = _props.image,
+	          meta = _props.meta,
+	          onClick = _props.onClick,
+	          raised = _props.raised;
 	
 	
 	      var classes = (0, _classnames2.default)('ui', color, (0, _lib.useKeyOnly)(centered, 'centered'), (0, _lib.useKeyOnly)(fluid, 'fluid'), (0, _lib.useKeyOnly)(raised, 'raised'), 'card', className);
@@ -90856,12 +91071,12 @@
 	 * A card can contain blocks of content or extra content meant to be formatted separately from the main content
 	 */
 	function CardContent(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var description = props.description;
-	  var extra = props.extra;
-	  var header = props.header;
-	  var meta = props.meta;
+	  var children = props.children,
+	      className = props.className,
+	      description = props.description,
+	      extra = props.extra,
+	      header = props.header,
+	      meta = props.meta;
 	
 	  var classes = (0, _classnames2.default)(className, (0, _lib.useKeyOnly)(extra, 'extra'), 'content');
 	  var rest = (0, _lib.getUnhandledProps)(CardContent, props);
@@ -90952,9 +91167,9 @@
 	 * A card can contain a description with one or more paragraphs
 	 */
 	function CardDescription(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'description');
 	  var rest = (0, _lib.getUnhandledProps)(CardDescription, props);
@@ -91020,9 +91235,9 @@
 	 * A card can contain a header
 	 */
 	function CardHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'header');
 	  var rest = (0, _lib.getUnhandledProps)(CardHeader, props);
@@ -91088,9 +91303,9 @@
 	 * A card can contain content metadata
 	 */
 	function CardMeta(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'meta');
 	  var rest = (0, _lib.getUnhandledProps)(CardMeta, props);
@@ -91164,12 +91379,12 @@
 	 * A group of cards.
 	 */
 	function CardGroup(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var doubling = props.doubling;
-	  var items = props.items;
-	  var itemsPerRow = props.itemsPerRow;
-	  var stackable = props.stackable;
+	  var children = props.children,
+	      className = props.className,
+	      doubling = props.doubling,
+	      items = props.items,
+	      itemsPerRow = props.itemsPerRow,
+	      stackable = props.stackable;
 	
 	  var classes = (0, _classnames2.default)('ui', (0, _lib.useWidthProp)(itemsPerRow), (0, _lib.useKeyOnly)(doubling, 'doubling'), (0, _lib.useKeyOnly)(stackable, 'stackable'), className, 'cards');
 	  var rest = (0, _lib.getUnhandledProps)(CardGroup, props);
@@ -91314,9 +91529,9 @@
 	 * A comment displays user feedback to site content
 	 * */
 	function Comment(props) {
-	  var className = props.className;
-	  var children = props.children;
-	  var collapsed = props.collapsed;
+	  var className = props.className,
+	      children = props.children,
+	      collapsed = props.collapsed;
 	
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(collapsed, 'collapsed'), 'comment', className);
@@ -91388,9 +91603,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function CommentAction(props) {
-	  var active = props.active;
-	  var className = props.className;
-	  var children = props.children;
+	  var active = props.active,
+	      className = props.className,
+	      children = props.children;
 	
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(active, 'active'), className);
@@ -91458,8 +91673,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function CommentActions(props) {
-	  var className = props.className;
-	  var children = props.children;
+	  var className = props.className,
+	      children = props.children;
 	
 	  var classes = (0, _classnames2.default)('actions', className);
 	  var rest = (0, _lib.getUnhandledProps)(CommentActions, props);
@@ -91519,8 +91734,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function CommentAuthor(props) {
-	  var className = props.className;
-	  var children = props.children;
+	  var className = props.className,
+	      children = props.children;
 	
 	  var classes = (0, _classnames2.default)('author', className);
 	  var rest = (0, _lib.getUnhandledProps)(CommentAuthor, props);
@@ -91580,8 +91795,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function CommentAvatar(props) {
-	  var className = props.className;
-	  var src = props.src;
+	  var className = props.className,
+	      src = props.src;
 	
 	  var classes = (0, _classnames2.default)('avatar', className);
 	  var rest = (0, _lib.getUnhandledProps)(CommentAvatar, props);
@@ -91641,8 +91856,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function CommentContent(props) {
-	  var className = props.className;
-	  var children = props.children;
+	  var className = props.className,
+	      children = props.children;
 	
 	  var classes = (0, _classnames2.default)('content', className);
 	  var rest = (0, _lib.getUnhandledProps)(CommentContent, props);
@@ -91702,11 +91917,11 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function CommentGroup(props) {
-	  var className = props.className;
-	  var children = props.children;
-	  var collapsed = props.collapsed;
-	  var minimal = props.minimal;
-	  var threaded = props.threaded;
+	  var className = props.className,
+	      children = props.children,
+	      collapsed = props.collapsed,
+	      minimal = props.minimal,
+	      threaded = props.threaded;
 	
 	
 	  var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(collapsed, 'collapsed'), (0, _lib.useKeyOnly)(minimal, 'minimal'), (0, _lib.useKeyOnly)(threaded, 'threaded'), 'comments', className);
@@ -91776,8 +91991,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function CommentMetadata(props) {
-	  var className = props.className;
-	  var children = props.children;
+	  var className = props.className,
+	      children = props.children;
 	
 	  var classes = (0, _classnames2.default)('metadata', className);
 	  var rest = (0, _lib.getUnhandledProps)(CommentMetadata, props);
@@ -91837,8 +92052,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function CommentText(props) {
-	  var className = props.className;
-	  var children = props.children;
+	  var className = props.className,
+	      children = props.children;
 	
 	  var classes = (0, _classnames2.default)('text', className);
 	  var rest = (0, _lib.getUnhandledProps)(CommentText, props);
@@ -91966,10 +92181,10 @@
 	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 	
 	function Feed(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var events = props.events;
-	  var size = props.size;
+	  var children = props.children,
+	      className = props.className,
+	      events = props.events,
+	      size = props.size;
 	
 	  var classes = (0, _classnames2.default)('ui', className, size, 'feed');
 	  var rest = (0, _lib.getUnhandledProps)(Feed, props);
@@ -91984,12 +92199,11 @@
 	  }
 	
 	  var eventElements = (0, _map3.default)(events, function (eventProps) {
-	    var childKey = eventProps.childKey;
-	    var date = eventProps.date;
-	    var meta = eventProps.meta;
-	    var summary = eventProps.summary;
-	
-	    var eventData = _objectWithoutProperties(eventProps, ['childKey', 'date', 'meta', 'summary']);
+	    var childKey = eventProps.childKey,
+	        date = eventProps.date,
+	        meta = eventProps.meta,
+	        summary = eventProps.summary,
+	        eventData = _objectWithoutProperties(eventProps, ['childKey', 'date', 'meta', 'summary']);
 	
 	    var finalKey = childKey || [date, meta, summary].join('-');
 	
@@ -92089,14 +92303,14 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function FeedContent(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var extraImages = props.extraImages;
-	  var extraText = props.extraText;
-	  var date = props.date;
-	  var meta = props.meta;
-	  var summary = props.summary;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      extraImages = props.extraImages,
+	      extraText = props.extraText,
+	      date = props.date,
+	      meta = props.meta,
+	      summary = props.summary;
 	
 	  var classes = (0, _classnames2.default)(className, 'content');
 	  var rest = (0, _lib.getUnhandledProps)(FeedContent, props);
@@ -92200,9 +92414,9 @@
 	 * Show a feed date
 	 */
 	function FeedDate(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'date');
 	  var rest = (0, _lib.getUnhandledProps)(FeedDate, props);
@@ -92269,11 +92483,11 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function FeedExtra(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var images = props.images;
-	  var text = props.text;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      images = props.images,
+	      text = props.text;
 	
 	  var classes = (0, _classnames2.default)(className, (0, _lib.useKeyOnly)(images, 'images'), (0, _lib.useKeyOnly)(content || text, 'text'), 'extra');
 	  var rest = (0, _lib.getUnhandledProps)(FeedExtra, props);
@@ -92361,10 +92575,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function FeedMeta(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var like = props.like;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      like = props.like;
 	
 	  var classes = (0, _classnames2.default)(className, 'meta');
 	  var rest = (0, _lib.getUnhandledProps)(FeedMeta, props);
@@ -92445,10 +92659,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function FeedLike(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var icon = props.icon;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      icon = props.icon;
 	
 	  var classes = (0, _classnames2.default)(className, 'like');
 	  var rest = (0, _lib.getUnhandledProps)(FeedLike, props);
@@ -92535,11 +92749,11 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function FeedSummary(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var date = props.date;
-	  var user = props.user;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      date = props.date,
+	      user = props.user;
 	
 	  var classes = (0, _classnames2.default)(className, 'summary');
 	  var rest = (0, _lib.getUnhandledProps)(FeedSummary, props);
@@ -92622,9 +92836,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function FeedUser(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'user');
 	  var rest = (0, _lib.getUnhandledProps)(FeedUser, props);
@@ -92699,16 +92913,16 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function FeedEvent(props) {
-	  var content = props.content;
-	  var children = props.children;
-	  var className = props.className;
-	  var date = props.date;
-	  var extraImages = props.extraImages;
-	  var extraText = props.extraText;
-	  var image = props.image;
-	  var icon = props.icon;
-	  var meta = props.meta;
-	  var summary = props.summary;
+	  var content = props.content,
+	      children = props.children,
+	      className = props.className,
+	      date = props.date,
+	      extraImages = props.extraImages,
+	      extraText = props.extraText,
+	      image = props.image,
+	      icon = props.icon,
+	      meta = props.meta,
+	      summary = props.summary;
 	
 	  var classes = (0, _classnames2.default)(className, 'event');
 	  var rest = (0, _lib.getUnhandledProps)(FeedEvent, props);
@@ -92806,11 +93020,11 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function FeedLabel(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var icon = props.icon;
-	  var image = props.image;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      icon = props.icon,
+	      image = props.image;
 	
 	  var classes = (0, _classnames2.default)(className, 'label');
 	  var rest = (0, _lib.getUnhandledProps)(FeedLabel, props);
@@ -92942,14 +93156,14 @@
 	 * An item view presents large collections of site content for display
 	 **/
 	function Item(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var description = props.description;
-	  var extra = props.extra;
-	  var header = props.header;
-	  var image = props.image;
-	  var meta = props.meta;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      description = props.description,
+	      extra = props.extra,
+	      header = props.header,
+	      image = props.image,
+	      meta = props.meta;
 	
 	  var classes = (0, _classnames2.default)(className, 'item');
 	  var rest = (0, _lib.getUnhandledProps)(Item, props);
@@ -93070,14 +93284,14 @@
 	 * An item can contain content
 	 **/
 	function ItemContent(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
-	  var description = props.description;
-	  var extra = props.extra;
-	  var header = props.header;
-	  var meta = props.meta;
-	  var verticalAlign = props.verticalAlign;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content,
+	      description = props.description,
+	      extra = props.extra,
+	      header = props.header,
+	      meta = props.meta,
+	      verticalAlign = props.verticalAlign;
 	
 	  var classes = (0, _classnames2.default)(className, (0, _lib.useVerticalAlignProp)(verticalAlign), 'content');
 	  var rest = (0, _lib.getUnhandledProps)(ItemContent, props);
@@ -93181,9 +93395,9 @@
 	 * An item can contain a header
 	 **/
 	function ItemHeader(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'header');
 	  var rest = (0, _lib.getUnhandledProps)(ItemHeader, props);
@@ -93249,9 +93463,9 @@
 	 * An item can contain a description with a single or multiple paragraphs
 	 **/
 	function ItemDescription(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'description');
 	  var rest = (0, _lib.getUnhandledProps)(ItemDescription, props);
@@ -93317,9 +93531,9 @@
 	 * An item can contain extra content meant to be formatted separately from the main content
 	 **/
 	function ItemExtra(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'extra');
 	  var rest = (0, _lib.getUnhandledProps)(ItemExtra, props);
@@ -93385,9 +93599,9 @@
 	 * An item can contain content metadata.
 	 **/
 	function ItemMeta(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var content = props.content;
+	  var children = props.children,
+	      className = props.className,
+	      content = props.content;
 	
 	  var classes = (0, _classnames2.default)(className, 'meta');
 	  var rest = (0, _lib.getUnhandledProps)(ItemMeta, props);
@@ -93463,12 +93677,12 @@
 	 * A group of items
 	 **/
 	function ItemGroup(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var divided = props.divided;
-	  var items = props.items;
-	  var link = props.link;
-	  var relaxed = props.relaxed;
+	  var children = props.children,
+	      className = props.className,
+	      divided = props.divided,
+	      items = props.items,
+	      link = props.link,
+	      relaxed = props.relaxed;
 	
 	  var classes = (0, _classnames2.default)('ui', className, (0, _lib.useKeyOnly)(divided, 'divided'), (0, _lib.useKeyOnly)(link, 'link'), (0, _lib.useKeyOrValueAndKey)(relaxed, 'relaxed'), 'items');
 	  var rest = (0, _lib.getUnhandledProps)(ItemGroup, props);
@@ -93483,9 +93697,8 @@
 	  }
 	
 	  var itemsJSX = (0, _map3.default)(items, function (item) {
-	    var childKey = item.childKey;
-	
-	    var itemProps = _objectWithoutProperties(item, ['childKey']);
+	    var childKey = item.childKey,
+	        itemProps = _objectWithoutProperties(item, ['childKey']);
 	
 	    var finalKey = childKey || [itemProps.content, itemProps.description, itemProps.header, itemProps.meta].join('-');
 	
@@ -93641,16 +93854,16 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function Statistic(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var color = props.color;
-	  var floated = props.floated;
-	  var horizontal = props.horizontal;
-	  var inverted = props.inverted;
-	  var label = props.label;
-	  var size = props.size;
-	  var text = props.text;
-	  var value = props.value;
+	  var children = props.children,
+	      className = props.className,
+	      color = props.color,
+	      floated = props.floated,
+	      horizontal = props.horizontal,
+	      inverted = props.inverted,
+	      label = props.label,
+	      size = props.size,
+	      text = props.text,
+	      value = props.value;
 	
 	  var classes = (0, _classnames2.default)('ui', color, (0, _lib.useValueAndKey)(floated, 'floated'), (0, _lib.useKeyOnly)(horizontal, 'horizontal'), (0, _lib.useKeyOnly)(inverted, 'inverted'), size, className, 'statistic');
 	  var rest = (0, _lib.getUnhandledProps)(Statistic, props);
@@ -93759,11 +93972,11 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function StatisticGroup(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var horizontal = props.horizontal;
-	  var items = props.items;
-	  var widths = props.widths;
+	  var children = props.children,
+	      className = props.className,
+	      horizontal = props.horizontal,
+	      items = props.items,
+	      widths = props.widths;
 	
 	  var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(horizontal, 'horizontal'), (0, _lib.useWidthProp)(widths), 'statistics', className);
 	  var rest = (0, _lib.getUnhandledProps)(StatisticGroup, props);
@@ -93847,9 +94060,9 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function StatisticLabel(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var label = props.label;
+	  var children = props.children,
+	      className = props.className,
+	      label = props.label;
 	
 	  var classes = (0, _classnames2.default)(className, 'label');
 	  var rest = (0, _lib.getUnhandledProps)(StatisticLabel, props);
@@ -93912,10 +94125,10 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function StatisticValue(props) {
-	  var children = props.children;
-	  var className = props.className;
-	  var text = props.text;
-	  var value = props.value;
+	  var children = props.children,
+	      className = props.className,
+	      text = props.text,
+	      value = props.value;
 	
 	  var classes = (0, _classnames2.default)((0, _lib.useKeyOnly)(text, 'text'), className, 'value');
 	  var rest = (0, _lib.getUnhandledProps)(StatisticValue, props);
@@ -97089,6 +97302,8 @@
 	            var loadingCategories = _props2.loadingCategories;
 	
 	
+	            console.log(this.props.ownProps);
+	
 	            var rendered = categories.map(function (category) {
 	                return _react2.default.createElement(_categoryItem2.default, {
 	                    key: category.id,
@@ -97133,7 +97348,8 @@
 	    return {
 	        categories: categories,
 	        loadingCategories: loadingCategories,
-	        selectedCategory: selectedCategory
+	        selectedCategory: selectedCategory,
+	        ownProps: ownProps
 	    };
 	};
 	
@@ -101732,6 +101948,485 @@
 	};
 	
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)((0, _radium2.default)(StepMenuPopup));
+
+/***/ },
+/* 1176 */,
+/* 1177 */,
+/* 1178 */,
+/* 1179 */,
+/* 1180 */,
+/* 1181 */,
+/* 1182 */,
+/* 1183 */,
+/* 1184 */,
+/* 1185 */,
+/* 1186 */,
+/* 1187 */,
+/* 1188 */,
+/* 1189 */,
+/* 1190 */,
+/* 1191 */,
+/* 1192 */,
+/* 1193 */,
+/* 1194 */,
+/* 1195 */,
+/* 1196 */,
+/* 1197 */,
+/* 1198 */,
+/* 1199 */,
+/* 1200 */,
+/* 1201 */,
+/* 1202 */,
+/* 1203 */,
+/* 1204 */,
+/* 1205 */,
+/* 1206 */,
+/* 1207 */,
+/* 1208 */,
+/* 1209 */,
+/* 1210 */,
+/* 1211 */,
+/* 1212 */,
+/* 1213 */,
+/* 1214 */,
+/* 1215 */,
+/* 1216 */,
+/* 1217 */,
+/* 1218 */,
+/* 1219 */,
+/* 1220 */,
+/* 1221 */,
+/* 1222 */,
+/* 1223 */,
+/* 1224 */,
+/* 1225 */,
+/* 1226 */,
+/* 1227 */,
+/* 1228 */,
+/* 1229 */,
+/* 1230 */,
+/* 1231 */,
+/* 1232 */,
+/* 1233 */,
+/* 1234 */,
+/* 1235 */,
+/* 1236 */,
+/* 1237 */,
+/* 1238 */,
+/* 1239 */,
+/* 1240 */,
+/* 1241 */,
+/* 1242 */,
+/* 1243 */,
+/* 1244 */,
+/* 1245 */,
+/* 1246 */,
+/* 1247 */,
+/* 1248 */,
+/* 1249 */,
+/* 1250 */,
+/* 1251 */,
+/* 1252 */,
+/* 1253 */,
+/* 1254 */,
+/* 1255 */,
+/* 1256 */,
+/* 1257 */,
+/* 1258 */,
+/* 1259 */,
+/* 1260 */,
+/* 1261 */,
+/* 1262 */,
+/* 1263 */,
+/* 1264 */,
+/* 1265 */,
+/* 1266 */,
+/* 1267 */,
+/* 1268 */,
+/* 1269 */,
+/* 1270 */,
+/* 1271 */,
+/* 1272 */,
+/* 1273 */,
+/* 1274 */,
+/* 1275 */,
+/* 1276 */,
+/* 1277 */,
+/* 1278 */,
+/* 1279 */,
+/* 1280 */,
+/* 1281 */,
+/* 1282 */,
+/* 1283 */,
+/* 1284 */,
+/* 1285 */,
+/* 1286 */,
+/* 1287 */,
+/* 1288 */,
+/* 1289 */,
+/* 1290 */,
+/* 1291 */,
+/* 1292 */,
+/* 1293 */,
+/* 1294 */,
+/* 1295 */,
+/* 1296 */,
+/* 1297 */,
+/* 1298 */,
+/* 1299 */,
+/* 1300 */,
+/* 1301 */,
+/* 1302 */,
+/* 1303 */,
+/* 1304 */,
+/* 1305 */,
+/* 1306 */,
+/* 1307 */,
+/* 1308 */,
+/* 1309 */,
+/* 1310 */,
+/* 1311 */,
+/* 1312 */,
+/* 1313 */,
+/* 1314 */
+/*!********************************!*\
+  !*** ./~/lodash/_getRawTag.js ***!
+  \********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var Symbol = __webpack_require__(/*! ./_Symbol */ 688);
+	
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var nativeObjectToString = objectProto.toString;
+	
+	/** Built-in value references. */
+	var symToStringTag = Symbol ? Symbol.toStringTag : undefined;
+	
+	/**
+	 * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+	 *
+	 * @private
+	 * @param {*} value The value to query.
+	 * @returns {string} Returns the raw `toStringTag`.
+	 */
+	function getRawTag(value) {
+	  var isOwn = hasOwnProperty.call(value, symToStringTag),
+	      tag = value[symToStringTag];
+	
+	  try {
+	    value[symToStringTag] = undefined;
+	    var unmasked = true;
+	  } catch (e) {}
+	
+	  var result = nativeObjectToString.call(value);
+	  if (unmasked) {
+	    if (isOwn) {
+	      value[symToStringTag] = tag;
+	    } else {
+	      delete value[symToStringTag];
+	    }
+	  }
+	  return result;
+	}
+	
+	module.exports = getRawTag;
+
+
+/***/ },
+/* 1315 */
+/*!*************************************!*\
+  !*** ./~/lodash/_objectToString.js ***!
+  \*************************************/
+/***/ function(module, exports) {
+
+	/** Used for built-in method references. */
+	var objectProto = Object.prototype;
+	
+	/**
+	 * Used to resolve the
+	 * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var nativeObjectToString = objectProto.toString;
+	
+	/**
+	 * Converts `value` to a string using `Object.prototype.toString`.
+	 *
+	 * @private
+	 * @param {*} value The value to convert.
+	 * @returns {string} Returns the converted string.
+	 */
+	function objectToString(value) {
+	  return nativeObjectToString.call(value);
+	}
+	
+	module.exports = objectToString;
+
+
+/***/ },
+/* 1316 */
+/*!***********************************!*\
+  !*** ./~/lodash/_castFunction.js ***!
+  \***********************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var identity = __webpack_require__(/*! ./identity */ 727);
+	
+	/**
+	 * Casts `value` to `identity` if it's not a function.
+	 *
+	 * @private
+	 * @param {*} value The value to inspect.
+	 * @returns {Function} Returns cast function.
+	 */
+	function castFunction(value) {
+	  return typeof value == 'function' ? value : identity;
+	}
+	
+	module.exports = castFunction;
+
+
+/***/ },
+/* 1317 */
+/*!******************************!*\
+  !*** ./~/lodash/fp/isNil.js ***!
+  \******************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var convert = __webpack_require__(/*! ./convert */ 872),
+	    func = convert('isNil', __webpack_require__(/*! ../isNil */ 1318), __webpack_require__(/*! ./_falseOptions */ 906));
+	
+	func.placeholder = __webpack_require__(/*! ./placeholder */ 875);
+	module.exports = func;
+
+
+/***/ },
+/* 1318 */
+/*!***************************!*\
+  !*** ./~/lodash/isNil.js ***!
+  \***************************/
+/***/ function(module, exports) {
+
+	/**
+	 * Checks if `value` is `null` or `undefined`.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @since 4.0.0
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is nullish, else `false`.
+	 * @example
+	 *
+	 * _.isNil(null);
+	 * // => true
+	 *
+	 * _.isNil(void 0);
+	 * // => true
+	 *
+	 * _.isNil(NaN);
+	 * // => false
+	 */
+	function isNil(value) {
+	  return value == null;
+	}
+	
+	module.exports = isNil;
+
+
+/***/ },
+/* 1319 */
+/*!********************************************************************!*\
+  !*** ./~/semantic-ui-react/dist/commonjs/elements/Reveal/index.js ***!
+  \********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+	
+	var _Reveal = __webpack_require__(/*! ./Reveal */ 1320);
+	
+	var _Reveal2 = _interopRequireDefault(_Reveal);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = _Reveal2.default;
+
+/***/ },
+/* 1320 */
+/*!*********************************************************************!*\
+  !*** ./~/semantic-ui-react/dist/commonjs/elements/Reveal/Reveal.js ***!
+  \*********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _classnames = __webpack_require__(/*! classnames */ 853);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _react = __webpack_require__(/*! react */ 301);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lib = __webpack_require__(/*! ../../lib */ 698);
+	
+	var _RevealContent = __webpack_require__(/*! ./RevealContent */ 1321);
+	
+	var _RevealContent2 = _interopRequireDefault(_RevealContent);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * A reveal displays additional content in place of previous content when activated.
+	 */
+	function Reveal(props) {
+	  var active = props.active,
+	      children = props.children,
+	      className = props.className,
+	      disabled = props.disabled,
+	      effect = props.effect,
+	      instant = props.instant;
+	
+	
+	  var classes = (0, _classnames2.default)('ui', effect, (0, _lib.useKeyOnly)(active, 'active'), (0, _lib.useKeyOnly)(disabled, 'disabled'), (0, _lib.useKeyOnly)(instant, 'instant'), 'reveal', className);
+	  var rest = (0, _lib.getUnhandledProps)(Reveal, props);
+	  var ElementType = (0, _lib.getElementType)(Reveal, props);
+	
+	  return _react2.default.createElement(
+	    ElementType,
+	    _extends({}, rest, { className: classes }),
+	    children
+	  );
+	}
+	
+	Reveal._meta = {
+	  name: 'Reveal',
+	  type: _lib.META.TYPES.ELEMENT,
+	  props: {
+	    effect: ['fade', 'small fade', 'move', 'move right', 'move up', 'move down', 'rotate', 'rotate left']
+	  }
+	};
+	
+	Reveal.propTypes = {
+	  /** An element type to render as (string or function). */
+	  as: _lib.customPropTypes.as,
+	
+	  /** An active reveal displays its hidden content. */
+	  active: _react.PropTypes.bool,
+	
+	  /** Primary content. */
+	  children: _react.PropTypes.node,
+	
+	  /** Additional classes. */
+	  className: _react.PropTypes.string,
+	
+	  /** A disabled reveal will not animate when hovered. */
+	  disabled: _react.PropTypes.bool,
+	
+	  /** An effect's name that will be applied to Reveal. */
+	  effect: _react.PropTypes.oneOf(Reveal._meta.props.effect),
+	
+	  /** An element can show its content without delay. */
+	  instant: _react.PropTypes.bool
+	};
+	
+	Reveal.Content = _RevealContent2.default;
+	
+	exports.default = Reveal;
+
+/***/ },
+/* 1321 */
+/*!****************************************************************************!*\
+  !*** ./~/semantic-ui-react/dist/commonjs/elements/Reveal/RevealContent.js ***!
+  \****************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	var _classnames = __webpack_require__(/*! classnames */ 853);
+	
+	var _classnames2 = _interopRequireDefault(_classnames);
+	
+	var _react = __webpack_require__(/*! react */ 301);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _lib = __webpack_require__(/*! ../../lib */ 698);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	/**
+	 * A content sub-component for the Reveal.
+	 */
+	function RevealContent(props) {
+	  var children = props.children,
+	      className = props.className,
+	      hidden = props.hidden,
+	      visible = props.visible;
+	
+	
+	  var classes = (0, _classnames2.default)('ui', (0, _lib.useKeyOnly)(hidden, 'hidden'), (0, _lib.useKeyOnly)(visible, 'visible'), 'content', className);
+	  var rest = (0, _lib.getUnhandledProps)(RevealContent, props);
+	  var ElementType = (0, _lib.getElementType)(RevealContent, props);
+	
+	  return _react2.default.createElement(
+	    ElementType,
+	    _extends({}, rest, { className: classes }),
+	    children
+	  );
+	}
+	
+	RevealContent._meta = {
+	  name: 'RevealContent',
+	  parent: 'Reveal',
+	  type: _lib.META.TYPES.ELEMENT
+	};
+	
+	RevealContent.propTypes = {
+	  /** An element type to render as (string or function). */
+	  as: _lib.customPropTypes.as,
+	
+	  /** Primary content. */
+	  children: _react.PropTypes.node,
+	
+	  /** Additional classes. */
+	  className: _react.PropTypes.string,
+	
+	  /** A reveal may contain content that is visible before interaction. */
+	  hidden: _react.PropTypes.bool,
+	
+	  /** A reveal may contain content that is hidden before user interaction. */
+	  visible: _react.PropTypes.bool
+	};
+	
+	exports.default = RevealContent;
 
 /***/ }
 /******/ ]);

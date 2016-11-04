@@ -9,7 +9,7 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.get('/dashboard', function(req, res, next){
+router.get('*', function(req, res, next){
     res.render("admin/manage");
 });
 
