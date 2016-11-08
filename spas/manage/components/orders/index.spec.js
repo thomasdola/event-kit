@@ -19,12 +19,5 @@ describe('Orders Component', () => {
             const wrapper = setup();
             expect(wrapper.instance()).toBeA(Orders);
         });
-
-        it('renders header menu');
-
-        it('renders a table', () => {
-            const wrapper = setup();
-            expect(wrapper.find(Table).length).toBe(1);
-        });
     });
 });

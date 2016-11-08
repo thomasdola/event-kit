@@ -54,7 +54,7 @@ export class OrdersTable extends React.Component{
                                 <Label style={styles.table.label} horizontal>new</Label>
                             </Table.Cell>
                             <Table.Cell>
-                                <Button size='mini' as={Link} to={`/manage/orders/${521452}`}>
+                                <Button compact size='mini' as={Link} to={`/manage/orders/${521452}`}>
                                     process
                                 </Button>
                             </Table.Cell>

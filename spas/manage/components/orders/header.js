@@ -4,10 +4,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { bindActionCreators } from 'redux';
-import { Menu, Icon } from 'semantic-ui-react';
+import { Menu, Icon, Button } from 'semantic-ui-react';
 
 import DateRangePicker from '../popups/date-picker';
-import { changeDateRange, updateOrdersPath } from '../../actions/orders';
+import { changeDateRange, updateOrdersPath, goBackToOrders } from '../../actions/orders';
 import { getOrderMetaSelector } from '../../selectors';
 
 const moment = require('moment');
@@ -42,6 +42,11 @@ export class Header extends React.Component {
         this.openCalendar = this.openCalendar.bind(this);
         this.handleDate = this.handleDate.bind(this);
         this.handleChangeStatus = this.handleChangeStatus.bind(this);
+        this.handleGoBack = this.handleGoBack.bind(this);
+    }
+
+    handleGoBack(){
+        this.props.goBackToOrders();
     }
 
     toggleCalendar(){
@@ -135,7 +140,14 @@ export class Header extends React.Component {
 
                     {
                         orderId 
-                        ? null
+                        ? (
+                            <Menu.Item 
+                                as='a'
+                                onClick={this.handleGoBack}
+                                className='Go__Back'>
+                                <Icon name='undo'/>
+                            </Menu.Item>
+                        )
                         : (
                             <DateRangePicker
                                 open={calendarOpened}
@@ -161,7 +173,7 @@ const mapStateToProps = (state, {selectedStatus}) => ({
 
 const mapDispatchToProps = dispatch => 
     bindActionCreators(
-        {changeDateRange, updateOrdersPath},
+        {changeDateRange, updateOrdersPath, goBackToOrders},
         dispatch
     );
 

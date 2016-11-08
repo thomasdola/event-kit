@@ -7,11 +7,12 @@ import { Menu } from 'semantic-ui-react';
 
 import { Header } from './header';
 
-const props = () => ({
-    dateRange: {start: new Date, end: new Date}
+const props = (orderId) => ({
+    dateRange: {start: new Date, end: new Date},
+    orderId
 });
 
-const setup = () => shallow(<Header {...props()}/>);
+const setup = (orderId = null) => shallow(<Header {...props(orderId)}/>);
 
 
 describe('Orders Header Component', () => {
@@ -47,8 +48,38 @@ describe('Orders Header Component', () => {
 
     describe('Data', () => {
         
-        it('', () => {
-            
+        it('renders order id when available', () => {
+            const wrapper = setup(465468);
+            expect(wrapper.find(Menu.Item).length).toBe(3);
+        });
+
+        it('renders go back button when order id available', () => {
+            const wrapper = setup(465468);
+            expect(wrapper.find('.Go__Back').length).toBe(1);
+        });
+    });
+
+    describe('Behaviour', () => {
+        
+        it('calls the handleChangeStatus when click on new', () => {
+            expect.spyOn(Header.prototype, 'handleChangeStatus');
+            const wrapper = setup();
+            wrapper.find(Menu.Item).at(1).simulate('click', {})
+            expect(Header.prototype.handleChangeStatus).toHaveBeenCalled();
+        });
+
+        it('calls the handleChangeStatus when click on pending', () => {
+            expect.spyOn(Header.prototype, 'handleChangeStatus');
+            const wrapper = setup();
+            wrapper.find(Menu.Item).at(2).simulate('click', {})
+            expect(Header.prototype.handleChangeStatus).toHaveBeenCalled();
+        });
+
+        it('calls the handleChangeStatus when click on closed', () => {
+            expect.spyOn(Header.prototype, 'handleChangeStatus');
+            const wrapper = setup();
+            wrapper.find(Menu.Item).at(3).simulate('click', {})
+            expect(Header.prototype.handleChangeStatus).toHaveBeenCalled();
         });
     });
 });

@@ -1,3 +1,4 @@
+import Radium from 'radium';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
@@ -15,7 +16,14 @@ const styles = {
     },
 
     item: {
-        color: 'white'
+        color: 'white',
+
+        settings: {
+            position: 'absolute',
+            width: '100%',
+            bottom: 0,
+            color: 'white',
+        }
     }
 };
 
@@ -38,8 +46,8 @@ export class MainMenu extends React.Component {
                     as={Link}
                     to='/manage/dashboard'
                     style={styles.item}
-                    name='gamepad'>
-                    <Icon name='gamepad' />
+                    name='dashboard'>
+                    <Icon name='dashboard' />
                     Dashboard
                 </Menu.Item>
 
@@ -47,15 +55,42 @@ export class MainMenu extends React.Component {
                     as={Link}
                     to={`/manage/orders?status=new&start=${moment(start).format('L')}&end=${moment(end).format('L')}`}
                     style={styles.item}
-                    name='video camera'>
-                    <Icon name='video camera' />
+                    name='book'>
+                    <Icon name='book' />
                     Orders
                 </Menu.Item>
 
                 <Menu.Item 
+                    as={Link}
+                    to='/manage/services'
                     style={styles.item}
-                    name='video play'>
-                    <Icon name='video play' />
+                    name='services'>
+                    <Icon name='umbrella' />
+                    Services
+                </Menu.Item>
+
+                <Menu.Item 
+                    as={Link}
+                    to='/manage/partners'
+                    style={styles.item}
+                    name='partners'>
+                    <Icon name='building' />
+                    Partners
+                </Menu.Item>
+
+                <Menu.Item 
+                    as={Link}
+                    to='/manage/users'
+                    style={styles.item}
+                    name='users'>
+                    <Icon name='users' />
+                    Users
+                </Menu.Item>
+
+                <Menu.Item 
+                    style={styles.item.settings}
+                    name='settings'>
+                    <Icon name='settings' />
                     Settings
                 </Menu.Item>
             </Menu>
@@ -68,4 +103,4 @@ const mapStateToProps = ({ dateRange }) => ({
     dateRange
 });
 
-export default connect(mapStateToProps)(MainMenu);
+export default connect(mapStateToProps)(Radium(MainMenu));

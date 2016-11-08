@@ -1,7 +1,7 @@
 import * as types from '../../helpers/constants';
 
 import http from 'superagent';
-import { push } from 'react-router-redux'
+import { push, goBack } from 'react-router-redux'
 
 const moment = require('moment');
 
@@ -25,6 +25,10 @@ export const changeDateRange = (start, end, status) => (dispatch) => {
 
 export const updateOrdersPath = (status, start, end) => dispatch => {
     dispatch(push(`/manage/orders?status=${status}&start=${moment(start).format('L')}&end=${moment(end).format('L')}`));
+};
+
+export const goBackToOrders = () => dispatch => {
+    dispatch(goBack());
 };
 
 export const fetchOrders = (path, testUri = null) => dispatch => {

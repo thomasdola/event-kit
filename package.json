@@ -8,7 +8,6 @@
     "build:watch": "webpack -d --watch --progress",
     "seed": "node ./db/seed/index",
     "routes": "routes",
-    
     "test:front:actions": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/kit/actions/**/*.spec.js",
     "test:front:actions:watch": "npm run test:front:actions -- --watch",
     "test:front:reducers": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/kit/reducers/**/*.spec.js",
@@ -17,7 +16,6 @@
     "test:front:watch": "npm run test:front -- --watch",
     "test:front:components": "./node_modules/.bin/mocha test-setup.js --reporter dot spas/kit/components/**/*.spec.js",
     "test:front:components:watch": "npm run test:front:components -- --watch",
-
     "test:manage:components": "./node_modules/.bin/mocha test-setup.js --reporter spec spas/manage/components/**/*.spec.js",
     "test:manage:components:watch": "npm run test:manage:components -- --watch",
     "test:manage:reducers": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/manage/reducers/**/*.spec.js",
@@ -40,6 +38,7 @@
     "es6-promise": "^4.0.5",
     "express": "~4.13.4",
     "express-session": "^1.14.1",
+    "history": "^4.4.0",
     "isomorphic-fetch": "^2.2.1",
     "isthereinternet": "0.0.1",
     "jade": "~1.11.0",
@@ -60,7 +59,7 @@
     "react-dom": "^15.3.2",
     "react-input-mask": "^0.7.5",
     "react-redux": "^4.4.5",
-    "react-router": "^2.8.1",
+    "react-router": "^3.0.0",
     "react-router-redux": "^4.0.6",
     "react-slick": "^0.14.5",
     "redux": "^3.6.0",
