@@ -7,6 +7,16 @@ export class Dashboard extends React.Component {
         super(props);
     }
 
+    componentDidMount () {
+        console.log('dashboard being mounted');
+    }
+
+    componentWillUnmount () {
+        console.log('dashboard being unmounted');
+    }
+    
+    
+
     render(){
         return (
             <Container>

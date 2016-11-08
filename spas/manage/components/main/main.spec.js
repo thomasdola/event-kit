@@ -21,10 +21,7 @@ describe('Main Component', () => {
         expect(wrapper.find(Container).length).toBe(1);
     });
 
-    it('renders the main side nav', () => {
-        const wrapper = setup();
-        expect(wrapper.find(MainMenu).length).toBe(1);
-    });
+    it('renders the main side nav');
 
     it('renders the main content area', () => {
         const wrapper = setup();

@@ -19,17 +19,11 @@ class DatePicker extends React.Component {
 
     constructor(props){
         super(props);
-
-        this.handleSelect = this.handleSelect.bind(this);
-    }
-
-    handleSelect(range){
-        this.props.onDateSelected(range);
     }
 
     render(){
 
-        const { open, trigger, value } = this.props;
+        const { open, trigger, value, onDateSelected } = this.props;
 
         return (
             <Popup flowing
@@ -46,7 +40,7 @@ class DatePicker extends React.Component {
                     selectionType='range'
                     maximumDate={new Date()}
                     value={value}
-                    onSelect={this.handleSelect} />  
+                    onSelect={range => onDateSelected(range)} />  
             
             </Popup>
         );

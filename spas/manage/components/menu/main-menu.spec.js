@@ -5,7 +5,9 @@ import { Menu } from 'semantic-ui-react';
 
 import { MainMenu } from './main-menu';
 
-const props = {};
+const props = {
+    dateRange: {start: new Date, end: new Date}
+};
 
 const setup = () => shallow(<MainMenu {...props}/>);
 

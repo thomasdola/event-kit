@@ -8,16 +8,22 @@
     "build:watch": "webpack -d --watch --progress",
     "seed": "node ./db/seed/index",
     "routes": "routes",
+    
     "test:front:actions": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/kit/actions/**/*.spec.js",
-    "test:front:actions:watch": "npm run test:front:actions -- -G --watch",
+    "test:front:actions:watch": "npm run test:front:actions -- --watch",
     "test:front:reducers": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/kit/reducers/**/*.spec.js",
-    "test:front:reducers:watch": "npm run test:front:reducers -- -G --watch",
+    "test:front:reducers:watch": "npm run test:front:reducers -- --watch",
     "test:front": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/**/*.spec.js",
-    "test:front:watch": "npm run test:front -- -G --watch",
+    "test:front:watch": "npm run test:front -- --watch",
     "test:front:components": "./node_modules/.bin/mocha test-setup.js --reporter dot spas/kit/components/**/*.spec.js",
-    "test:front:components:watch": "npm run test:front:components -- -G --watch",
-    "test:manage:components": "./node_modules/.bin/mocha test-setup.js --reporter dot spas/manage/components/**/*.spec.js",
-    "test:manage:components:watch": "npm run test:manage:components -- -G --watch"
+    "test:front:components:watch": "npm run test:front:components -- --watch",
+
+    "test:manage:components": "./node_modules/.bin/mocha test-setup.js --reporter spec spas/manage/components/**/*.spec.js",
+    "test:manage:components:watch": "npm run test:manage:components -- --watch",
+    "test:manage:reducers": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/manage/reducers/**/*.spec.js",
+    "test:manage:reducers:watch": "npm run test:manage:reducers -- --watch",
+    "test:manage:actions": "./node_modules/.bin/mocha test-setup.js --reporter nyan ./spas/manage/actions/**/*.spec.js",
+    "test:manage:actions:watch": "npm run test:manage:actions -- --watch"
   },
   "dependencies": {
     "axios": "^0.15.2",

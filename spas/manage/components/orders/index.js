@@ -1,86 +1,50 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import { Table, Segment, Button, Label } from 'semantic-ui-react';
 
 import Header from './header';
+import OrdersTable from './table';
 
 const styles = {
-    default: {},
-
-    table: {
-        borderRadius: 0,
-        button: {},
-        label: {
-            backgroundColor: 'rgb(128, 0, 128)',
-            color: 'white'
-        }
-    }
+    default: {}
 };
 
 export class Orders extends React.Component {
 
     constructor(props){
         super(props);
-    }
+    }    
+    
 
     render(){
 
-        console.log('selected route', this.props.seletedStatus)
+        const { children, selectedStatus, orderId } = this.props;
 
         return (
             <div>
                 
                 <Header
-                    selectedStatus={this.props.seletedStatus}
+                    selectedStatus={selectedStatus}
+                    orderId={orderId}
                 />
 
-                <Segment basic
-                    loading={false}
-                >
-                
-                    <Table padded selectable 
-                        basic='very'
-                        style={styles.table}
-                    >
-                        <Table.Header>
-                            <Table.Row>
-                            <Table.HeaderCell>Order ID</Table.HeaderCell>
-                            <Table.HeaderCell>Client Name</Table.HeaderCell>
-                            <Table.HeaderCell>Client Number</Table.HeaderCell>
-                            <Table.HeaderCell>Amount</Table.HeaderCell>
-                            <Table.HeaderCell>Status</Table.HeaderCell>
-                            <Table.HeaderCell>Action</Table.HeaderCell>
-                            </Table.Row>
-                        </Table.Header>
+                {
+                    children 
+                    ? children
+                    : (
+                        <OrdersTable/>
+                    )
+                }
 
-                        <Table.Body>
-
-                            <Table.Row>
-                                <Table.Cell>521452</Table.Cell>
-                                <Table.Cell>Thomas Paulson</Table.Cell>
-                                <Table.Cell>0248089578</Table.Cell>
-                                <Table.Cell>50000</Table.Cell>
-                                <Table.Cell>
-                                    <Label style={styles.table.label} horizontal>new</Label>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <Button size='mini'>
-                                        process
-                                    </Button>
-                                </Table.Cell>
-                            </Table.Row>
-
-                        </Table.Body>
-                        </Table>
-                
-                </Segment>
             </div>
         );
     }
 }
 
-const mapStateToProps = (state, {params: {status}}) => ({
-    seletedStatus: status
+const mapStateToProps = (state, {location: {query: {status}}, params: {orderId}}) => ({
+    selectedStatus: status,
+    orderId
 });
 
 export default connect(mapStateToProps)(Orders);

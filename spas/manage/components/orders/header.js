@@ -3,17 +3,23 @@ import Radium from 'radium';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router';
+import { bindActionCreators } from 'redux';
 import { Menu, Icon } from 'semantic-ui-react';
 
 import DateRangePicker from '../popups/date-picker';
+import { changeDateRange, updateOrdersPath } from '../../actions/orders';
+import { getOrderMetaSelector } from '../../selectors';
 
 const moment = require('moment');
+const momentRange = require('moment-range');
 
 
 const styles = {
     defaut: {
         border: 0,
-        borderRadius: 0
+        borderRadius: 0,
+        height: '5%',
+        marginBottom: 0
     },
     item: {
         ':hover': {},
@@ -28,13 +34,14 @@ export class Header extends React.Component {
 
         this.state = {
             calendarOpened: false,
-            date: moment.range(new Date(), new Date())
+            date: moment.range(props.dateRange.start, props.dateRange.end)
         }
 
         this.toggleCalendar = this.toggleCalendar.bind(this);
         this.closeCalendar = this.closeCalendar.bind(this);
         this.openCalendar = this.openCalendar.bind(this);
         this.handleDate = this.handleDate.bind(this);
+        this.handleChangeStatus = this.handleChangeStatus.bind(this);
     }
 
     toggleCalendar(){
@@ -49,23 +56,32 @@ export class Header extends React.Component {
         this.setState({calendarOpened: false});
     }
 
+    handleChangeStatus(status){
+        const { selectedStatus, updateOrdersPath, dateRange } = this.props;
+        if(selectedStatus !== status){
+            // we need to update the orders path that the ordersFetcherActor will react to.
+            return updateOrdersPath(status, dateRange.start, dateRange.end);
+        } 
+        return ; 
+    }
+
     handleDate(range){
         this.setState({
             date: range
         }, () => {
             window.setTimeout(() => {
                 this.closeCalendar();
-                console.log(`Start -> ${range.start} <=> End -> ${range.end}`);
             }, 100)
         });
+
+        this.props.changeDateRange(range.start, range.end, this.props.selectedStatus);
         
     }
 
     render(){
 
         const { calendarOpened, date } = this.state;
-        const { selectedStatus } = this.props;
-        console.log('from header', selectedStatus);
+        const { selectedStatus, orderId } = this.props;
 
         const datePickerTigger = (
             <Menu.Item
@@ -78,49 +94,76 @@ export class Header extends React.Component {
 
         return (
             <Menu pointing borderless
+                className='Oders__Header__Menu'
                 style={styles.defaut}
-                >
+                    >
                 <Menu.Item header>Orders</Menu.Item>
 
-                <Menu.Item 
-                    as={Link}
-                    to='/manage/orders/new'
-                    active={selectedStatus === 'new'}
-                    name='new'
-                >
-                    new
-                </Menu.Item>
-                <Menu.Item 
-                    as={Link}
-                    to='/manage/orders/pending'
-                    active={selectedStatus === 'pending'}
-                    name='pending'>
-                    pending
-                </Menu.Item>
-                <Menu.Item 
-                    as={Link}
-                    to='/manage/orders/closed'
-                    active={selectedStatus === 'closed'}
-                    name='closed'>
-                    closed
-                </Menu.Item>
+                {
+                    orderId
+                    ? (
+                        <Menu.Item>
+                            ORDER ID: {orderId}
+                        </Menu.Item>
+                    )
+                    : (
+                        <Menu.Menu>
+                            <Menu.Item 
+                                onClick={e => this.handleChangeStatus('new')}
+                                active={selectedStatus === 'new'}
+                                name='new'
+                                >
+                                new
+                            </Menu.Item>
+                            <Menu.Item 
+                                onClick={e => this.handleChangeStatus('pending')}
+                                active={selectedStatus === 'pending'}
+                                name='pending'>
+                                pending
+                            </Menu.Item>
+                            <Menu.Item 
+                                onClick={e => this.handleChangeStatus('closed')}
+                                active={selectedStatus === 'closed'}
+                                name='closed'>
+                                closed
+                            </Menu.Item>
+                        </Menu.Menu>
+                    )
+                }
 
                 <Menu.Menu position='right'>
-                    <DateRangePicker
-                        open={calendarOpened}
-                        value={date}
-                        trigger={datePickerTigger}
-                        onDateSelected={this.handleDate}
-                        />
+
+                    {
+                        orderId 
+                        ? null
+                        : (
+                            <DateRangePicker
+                                open={calendarOpened}
+                                value={date}
+                                trigger={datePickerTigger}
+                                onDateSelected={this.handleDate}
+                                />
+                        )
+                    }
+
                 </Menu.Menu>
             </Menu>
         );
     }
 }
 
+Header.displayName = 'Header';
+
 const mapStateToProps = (state, {selectedStatus}) => ({
-    selectedStatus
+    selectedStatus,
+    dateRange: state.dateRange
 });
 
+const mapDispatchToProps = dispatch => 
+    bindActionCreators(
+        {changeDateRange, updateOrdersPath},
+        dispatch
+    );
 
-export default connect(mapStateToProps)(Header);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header);

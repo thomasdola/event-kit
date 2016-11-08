@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Link } from 'react-router';
 import { Menu, Icon } from 'semantic-ui-react';
+const moment = require('moment');
 
 const styles = {
     default: {
@@ -24,6 +26,9 @@ export class MainMenu extends React.Component {
     }
 
     render(){
+
+        const { dateRange: {start, end} } = this.props
+
         return (
             
             <Menu 
@@ -40,7 +45,7 @@ export class MainMenu extends React.Component {
 
                 <Menu.Item 
                     as={Link}
-                    to='/manage/orders/new'
+                    to={`/manage/orders?status=new&start=${moment(start).format('L')}&end=${moment(end).format('L')}`}
                     style={styles.item}
                     name='video camera'>
                     <Icon name='video camera' />
@@ -59,4 +64,8 @@ export class MainMenu extends React.Component {
     }
 }
 
-export default MainMenu;
+const mapStateToProps = ({ dateRange }) => ({
+    dateRange
+});
+
+export default connect(mapStateToProps)(MainMenu);
