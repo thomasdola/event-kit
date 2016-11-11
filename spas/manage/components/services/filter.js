@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Header, Dropdown, Icon, List } from 'semantic-ui-react';
+import { Segment, Header, Dropdown, Icon, List, Accordion } from 'semantic-ui-react';
 
 const styles = {
     default: {
@@ -10,7 +10,7 @@ const styles = {
         borderTop: 0
     },
     items: {
-        height: '94.5%',
+        height: '100%',
         margin: 0,
         borderRadius: 0,
         boxShadow: 'none',
@@ -40,10 +40,16 @@ export class ServicesFilter extends React.Component {
 
     constructor(props){
         super(props);
+
+        this.state = {
+            activeIndex: 0
+        }
     }
 
 
     render(){
+
+        const { activeIndex } = this.state;
 
         const categoriesList = (
             <List relaxed divided>
@@ -64,6 +70,40 @@ export class ServicesFilter extends React.Component {
             </List>
         );
 
+        const panel = (
+            <div>
+                <Accordion.Title>
+                    <Icon name='dropdown' />
+                    category one
+                </Accordion.Title>
+                <Accordion.Content>
+                    <List relaxed animated divided>
+                        <List.Item >sub category one</List.Item>
+                        <List.Item >sub category two</List.Item>
+                    </List>
+                </Accordion.Content>
+            </div>
+        );
+
+        const categoriesGroup = (
+            <Accordion
+                onTitleClick={(e, i) => console.log(i)}
+                >
+
+                <Accordion.Title>
+                    <Icon name='dropdown' />
+                    category one
+                </Accordion.Title>
+                <Accordion.Content>
+                    <List relaxed animated divided>
+                        <List.Item >sub category one</List.Item>
+                        <List.Item >sub category two</List.Item>
+                    </List>
+                </Accordion.Content>
+
+            </Accordion>
+        );
+
         const partnersList = (
             <List relaxed animated divided>
                 <List.Item >partner one</List.Item>
@@ -72,25 +112,9 @@ export class ServicesFilter extends React.Component {
         );
 
         return (
-            <div>
-                <Segment className='Filter__Header' style={styles.header}>
-                    <Header as='h4'>
-                        <Icon name='grid layout' />
-                        <Header.Content>
-                        group by
-                        {' '}
-                        <Dropdown inline 
-                            onChange={(name, value) => console.log(value)}
-                            options={options} 
-                            defaultValue={options[0].value} />
-                        </Header.Content>
-                    </Header>
-                </Segment>
-                
-                <Segment className='Filter__Items' style={styles.items}>
-                    { categoriesList }
-                </Segment>
-            </div>
+            <Segment className='Filter__Items' style={styles.items}>
+                { categoriesGroup }
+            </Segment>
         );
     }
 }

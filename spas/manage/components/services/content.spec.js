@@ -4,8 +4,26 @@ import { shallow } from 'enzyme';
 import { Menu } from 'semantic-ui-react';
 
 import {ServicesContent} from './content';
+import { Service } from './service';
 
-const props = () => ({});
+const props = () => ({
+    services: [
+        {
+        img: '/path/to/image.jpg',
+        amount: 2000,
+        name: 'service one',
+        fixed: true,
+        id: 2548
+    },
+    {
+        img: '/path/to/image.jpg',
+        amount: 2000,
+        name: 'service one',
+        fixed: true,
+        id: 2548
+    }
+    ]
+});
 
 const setup = () => shallow(<ServicesContent {...props}/>);
 
@@ -13,7 +31,18 @@ const setup = () => shallow(<ServicesContent {...props}/>);
 describe('ServicesContent Component', () => {
     
     describe('Markup', () => {
-        const wrapper = setup();
-        expect(wrapper.instance()).toBeA(ServicesContent);
+
+        it('renders component', () => {
+            const wrapper = setup();
+            expect(wrapper.instance()).toBeA(ServicesContent);
+        });
+    });
+
+    describe('Data', () => {
+        
+        it('renders the services', () => {
+            const wrapper = setup();
+            expect(wrapper.find(Service).length).toBe(2);
+        })
     });
 });

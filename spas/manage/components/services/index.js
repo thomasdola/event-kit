@@ -52,6 +52,8 @@ export class Services extends React.Component{
 
                 </Grid>
 
+                {this.props.children}
+
             </Container>
         );
     }
