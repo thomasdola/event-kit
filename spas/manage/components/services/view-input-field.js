@@ -12,7 +12,7 @@ const styles = {
 
 const ViewField = ({ name, fieldKey, value, checkLabel, onCheckChange, onInputChange, onDropChange, onCancel, onUpdate, 
                     onEdit, edit, showCheckbox, placeholder, placeholders, showDropdown, dropOptions, ckeckValue, imagesField,
-                    amountField, packagesField, packageField, values }) => {
+                    amountField, packagesField, packageField, values, checkboxKey }) => {
 
     return (
         <Segment basic clearing style={styles.default} key={fieldKey}>
@@ -44,11 +44,13 @@ const ViewField = ({ name, fieldKey, value, checkLabel, onCheckChange, onInputCh
                                                     ? (
                                                         <Dropdown 
                                                             placeholder={placeholder} search selection 
+                                                            value={value}
                                                             onChange={(e, {value}) => onDropChange({fieldKey, value})}
                                                             options={dropOptions} />
                                                     )
                                                     : (
                                                         <input type='text' 
+                                                            value={value}
                                                             placeholder={placeholder} 
                                                             onChange={({target: {value}}) => onInputChange({fieldKey, value})}/>
                                                     )
@@ -71,7 +73,7 @@ const ViewField = ({ name, fieldKey, value, checkLabel, onCheckChange, onInputCh
                                                         <Checkbox slider 
                                                             label={checkLabel} 
                                                             checked={ckeckValue}
-                                                            onChange={(e, value) => onCheckChange({fieldKey, value})}/>
+                                                            onChange={(e, {checked}) => onCheckChange({fieldKey: checkboxKey, value: checked})}/>
                                                     )
                                                     : null
                                                 }
@@ -109,7 +111,7 @@ const ViewField = ({ name, fieldKey, value, checkLabel, onCheckChange, onInputCh
                                             value={values[2]}
                                             placeholder={`${placeholders[2]}...`} />
                                             
-                                        <Button size='mini' icon='checkmark' onClick={e => onUpdate()} />
+                                        <Button size='mini' icon='checkmark' onClick={e => onUpdate(fieldKey)} />
                                     </Input>
                                 )
                                 : name
@@ -148,6 +150,7 @@ const ViewField = ({ name, fieldKey, value, checkLabel, onCheckChange, onInputCh
 ViewField.PropTypes = {
     name: React.PropTypes.string.isRequired,
     fieldKey: React.PropTypes.string.isRequired,
+    checkboxKey: React.PropTypes.string,
     value: React.PropTypes.string.isRequired,
     values: React.PropTypes.array.isRequired,
     placeholder: React.PropTypes.string.isRequired,

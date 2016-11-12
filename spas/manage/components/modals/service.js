@@ -1,10 +1,14 @@
 import _ from 'lodash';
 import Radium from 'radium';
 import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Modal, Button, Container, Segment, Checkbox, Reveal, Label, Card,
     Table, Image, Form, List, Input, Icon, Grid, Dropdown } from 'semantic-ui-react';
 
 import ViewInputField from '../services/view-input-field';
+import { goBackToServices } from '../../actions/services';
+import { compareObj } from '../../helpers';
 
 const DropZone = require('react-dropzone');
 
@@ -40,9 +44,22 @@ const checklistOptions = [
     {text: 'step two', value: 'step two'}
 ];
 
-const packages = [
-    {start: 100, end: 200, amount: 5000}
-];
+const service = {
+    name: 'service one',
+    category: 'wedding',
+    checklist: 'step one',
+    partner: 'partner one',
+    amount: 200,
+    fixed: false,
+    packages: [
+        {start: 0, end: 10, amount: 200}
+    ],
+    images: [
+        '/images/cow.jpg',
+        '/images/cow.jpg',
+        '/images/cow.jpg'
+    ]
+}
 
 
 class ServiceModal extends React.Component {
@@ -59,16 +76,28 @@ class ServiceModal extends React.Component {
                 end: '',
                 amount: ''
             },
+
             service: {
+                name: '',
+                category: '',
+                checklist: '',
+                partner: '',
+                amount: '',
+                fixed: null,
+                packages: [],
                 images: {
                     new: [], 
                     old: []
                 }
-            }
+            },
+
+            serviceBuffer: {}
         }
 
         this.handleEdit = this.handleEdit.bind(this);
         this.cancelEdit = this.cancelEdit.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.handleCancel = this.handleCancel.bind(this);
         this.handleAdding = this.handleAdding.bind(this);
         this.handleUpdate = this.handleUpdate.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -77,32 +106,86 @@ class ServiceModal extends React.Component {
     }
 
     componentDidMount() {
-        // this.setState({service: this.props.service});
+        console.log('call again')
+        const local = Object.assign({}, service, {images: {old: service.images, new: []}});
+        this.setState({service: Object.assign({}, local)});
+        this.setState({serviceBuffer: _.cloneDeep(local)});
     }
 
 
     handleImages(files){
 
+        const pS = this.state.service;
+        const images = Object.assign({}, pS.images, {new: [...pS.images.new, ...files]});
+        const nS = Object.assign({}, pS, {images});
+
         this.setState({
-            service: {
-                images: Object.assign({}, this.state.service.images, {new: [...this.state.service.images.new, ...files]})
-            }
+            service: nS
         });
         
-        console.log(this.state.service.images);
+        console.log(this.state.service);
         this.cancelEdit();
     }
     
 
-    handleUpdate(){
-        console.log('updating...');
+    handleUpdate(fieldKey){
+        if(this.getKey(fieldKey) === 'packages'){
+            const { newPackage, service} = this.state;
+            if(newPackage.start && newPackage.end && newPackage.amount){
+                const packages = [...service.packages, newPackage];
+                const nS = Object.assign({}, service, {packages});
+                return this.setState({service: nS});
+            }else{
+                return ;
+            }
+        }
+
+        this.cancelEdit();
     }
 
-    handleChange({fieldKey, value}){
-        console.log(`${fieldKey} changed to ${value}`);
+    handleChange({fieldKey, value}, extraKey){
+        let key = this.getKey(fieldKey);
+        // console.log(fieldKey, value);
+
+        if(!key) return ;
+
+        if(key === 'packages'){
+            const nPs = Object.assign({}, this.state.newPackage, {[extraKey]: value});
+            return this.setState({newPackage: nPs});
+        }
+        
+        const pS = this.state.service;
+        const nS = Object.assign({}, pS, {[key]: value});
+        this.setState({service: nS});
+
+        if(key === 'fixed') return this.cancelEdit();
+    }
+
+    getKey(fieldKey){
+        switch(fieldKey){
+            case 'keyForName':
+                return 'name';
+            case 'keyForPackages':
+                return 'packages'
+            case 'keyForPackage':
+                return 'package'
+            case 'keyForPartner':
+                return 'partner';
+            case 'keyForCategory':
+                return 'category'
+            case 'keyForChecklist': 
+                return 'checklist';
+            case 'keyForAmount':
+                return 'amount';
+            case 'keyForAmountFixed':
+                return 'fixed'
+            default: 
+                return null;
+        }
     }
 
     handleEdit(key){
+        console.log(key);
         this.setState({
             edit: true,
             key
@@ -111,49 +194,57 @@ class ServiceModal extends React.Component {
     }
 
     handleImageRemove(index, key){
-        console.log(key)
-        const images = this.state.service.images;
-        const imgs = images[key];
-        imgs.splice(index, 1);
+        const pS = this.state.service;
+        const oImages = pS.images;
+        const oKImages = oImages[key];
+        oKImages.splice(index, 1);
+        const nImages = Object.assign({}, oImages, {[key]: oKImages})
+        const nS = Object.assign({}, pS, {images: nImages});
 
         this.setState({
-            service: {
-                images: Object.assign({}, images, {[key]: imgs})
-            }
-        })
-
-
-        console.log('removing ....', index)
+            service: nS
+        });
     }
 
     cancelEdit(){
-        this.setState({edit: false,  addingPackage: false})
+        this.setState({edit: false});
     }
 
     handleAdding(key){
         this.setState({addingPackage: true, key, edit: true});
     }
 
+    handleClose(){
+        this.props.goBackToServices();
+    }
+
+    handleCancel(){
+        this.setState({service: _.cloneDeep(this.state.serviceBuffer)});
+    }
+
 
     render(){
 
-        const { edit, key, addingPackage, newPackage, service } = this.state;
+        const { edit, key, addingPackage, newPackage, service, serviceBuffer } = this.state;
 
-        const packageElems = packages.map(p => (
-            <ViewInputField
-                key={Math.random()}
+        console.log('cp in render', compareObj(service, serviceBuffer));
+
+        const packageElems = service.packages.map((p, index) => {
+            const fieldKey = Math.random();
+            return (<ViewInputField
+                key={fieldKey}
                 name={`from ${p.start} to ${p.end} : \u20B5 ${p.amount}`}
-                fieldKey={'keyForPackage'}
+                fieldKey={`keyForPackage_${index}`}
                 placeholders={['start', 'end', 'amount']}
                 values={[p.start, p.end, p.amount]}
                 packageField
-                edit={edit && key === 'keyForPackage'}
+                edit={edit && key === `keyForPackage_${index}`}
                 onInputChange={this.handleChange}
                 onCancel={this.cancelEdit}
                 onUpdate={this.handleUpdate}
                 onEdit={this.handleEdit}
-                />
-        ));
+                />)
+        });
 
         const serviceView = (
             <Container>
@@ -162,7 +253,7 @@ class ServiceModal extends React.Component {
                 <ViewInputField
                     name={'Name'}
                     fieldKey={'keyForName'}
-                    value={'Service One'}
+                    value={service.name}
                     placeholder={'service name...'}
                     edit={edit && key === 'keyForName'}
                     onInputChange={this.handleChange}
@@ -174,7 +265,7 @@ class ServiceModal extends React.Component {
                 <ViewInputField
                     name={'Partner'}
                     fieldKey={'keyForPartner'}
-                    value={'Partner One'}
+                    value={service.partner}
                     placeholder={'partner name...'}
                     edit={edit && key === 'keyForPartner'}
                     onInputChange={this.handleChange}
@@ -186,7 +277,7 @@ class ServiceModal extends React.Component {
                 <ViewInputField
                     name={'Category'}
                     fieldKey={'keyForCategory'}
-                    value={'Category One'}
+                    value={service.category}
                     placeholder={'choose checklist...'}
                     showDropdown
                     dropOptions={categoryOptions}
@@ -200,7 +291,7 @@ class ServiceModal extends React.Component {
                 <ViewInputField
                     name={'Checklist'}
                     fieldKey={'keyForChecklist'}
-                    value={'Step One'}
+                    value={service.checklist}
                     placeholder={'choose checklist...'}
                     showDropdown
                     dropOptions={checklistOptions}
@@ -215,11 +306,12 @@ class ServiceModal extends React.Component {
                     name={'Amount'}
                     checkLabel={'Fixed?'}
                     fieldKey={'keyForAmount'}
-                    value={1500}
+                    value={service.amount}
                     placeholder={'service amount...'}
                     showCheckbox
+                    checkboxKey={'keyForAmountFixed'}
                     amountField
-                    ckeckValue={true}
+                    ckeckValue={service.fixed}
                     edit={edit && key === 'keyForAmount'}
                     onInputChange={this.handleChange}
                     onCheckChange={this.handleChange}
@@ -230,30 +322,38 @@ class ServiceModal extends React.Component {
 
                 
 
-                <Segment.Group>
+                
+                {
+                    service.fixed 
+                    ? null
+                    : (
+                        <Segment.Group>
 
-                    <ViewInputField
-                        name={'Packages'}
-                        checkLabel={'Fixed?'}
-                        fieldKey={'keyForPackages'}
-                        placeholders={['start', 'end', 'amount']}
-                        values={[newPackage.start, newPackage.end, newPackage.amount]}
-                        packagesField
-                        edit={edit && key === 'keyForPackages'}
-                        onInputChange={this.handleChange}
-                        onCancel={this.cancelEdit}
-                        onUpdate={this.handleUpdate}
-                        onEdit={this.handleEdit}
-                        />
-                    
-                    <Segment.Group>
-                    
-                        { packageElems }
+                            <ViewInputField
+                                name={'Packages'}
+                                checkLabel={'Fixed?'}
+                                fieldKey={'keyForPackages'}
+                                placeholders={['start', 'end', 'amount']}
+                                values={[newPackage.start, newPackage.end, newPackage.amount]}
+                                packagesField
+                                edit={edit && key === 'keyForPackages'}
+                                onInputChange={this.handleChange}
+                                onCancel={this.cancelEdit}
+                                onUpdate={this.handleUpdate}
+                                onEdit={this.handleEdit}
+                                />
+                            
+                            <Segment.Group>
+                            
+                                { packageElems }
 
-                    </Segment.Group>
+                            </Segment.Group>
 
-                </Segment.Group>
+                        </Segment.Group>
+                    )
+                }
 
+                
                 <Segment.Group>
                     <ViewInputField
                         name={'Images'}
@@ -268,7 +368,7 @@ class ServiceModal extends React.Component {
                         <Image.Group size='small'>
 
                             {
-                                service.images.old.map(src => (
+                                service.images.old.map((src, index) => (
                                     <Image key={Math.random()}
                                         label={{ as: 'a', size: 'mini', icon: 'trash', corner: 'left', onClick: e => this.handleImageRemove(index, 'old') }}
                                         src={src} />
@@ -292,6 +392,7 @@ class ServiceModal extends React.Component {
                     style={{display: 'none'}} 
                     onDrop={this.handleImages} 
                     onFileDialogCancel={this.cancelEdit}/>    
+                    
             </Container>
         );
 
@@ -307,7 +408,7 @@ class ServiceModal extends React.Component {
                 </Modal.Content>
 
                 {
-                    this.state.edit 
+                    compareObj(service, serviceBuffer) 
                     ? (
                         <Modal.Actions>
                             <Button compact
@@ -326,7 +427,7 @@ class ServiceModal extends React.Component {
                             <Button compact 
                                 onClick={this.handleCancel}
                                 size='mini' 
-                                content='cancel' />
+                                content='reset' />
 
                             <Button compact 
                                 onClick={this.handleUpdate}
@@ -341,6 +442,15 @@ class ServiceModal extends React.Component {
     }
 }
 
+const mapDispatchToProps = dispatch => 
+    bindActionCreators({
+        goBackToServices
+    }, dispatch);
+
+const mapStateToProps = ({ service }) => ({
+    service
+})
+
 // ServiceModal = Radium(ServiceModal)
 
-export default ServiceModal;
+export default connect(null, mapDispatchToProps)(ServiceModal);
